@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在这篇文章中，我们将讲解 Vue 实例的 Props 和 Methods，接着讲解最常见的 Vue 模板语法，并通过实例的方式将这些模板语法都实践一番，最后将讲解 Vue 组件的组合，并完成了我们的发表商品页面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（三）">
+<meta property="og:url" content="https://tuture.co/2019/12/18/5e10a46/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="在这篇文章中，我们将讲解 Vue 实例的 Props 和 Methods，接着讲解最常见的 Vue 模板语法，并通过实例的方式将这些模板语法都实践一番，最后将讲解 Vue 组件的组合，并完成了我们的发表商品页面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/092faf4/cover-3.jpg">
+<meta property="article:published_time" content="2019-12-17T16:00:00.509Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:34.087Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/092faf4/cover-3.jpg">
+  <link rel="canonical" href="https://tuture.co/2019/12/18/5e10a46/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（三） | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2019/12/18/5e10a46/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（三）
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-18 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-18T00:00:00+08:00">2019-12-18</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:34" itemprop="dateModified" datetime="2021-07-11T15:16:34+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>11k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>10 分钟</span>
+            </span>
+          
+            <div class="post-description">在这篇文章中，我们将讲解 Vue 实例的 Props 和 Methods，接着讲解最常见的 Vue 模板语法，并通过实例的方式将这些模板语法都实践一番，最后将讲解 Vue 组件的组合，并完成了我们的发表商品页面。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/092faf4/cover-3.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5k" title="https://github.com/tuture-dev/vue-online-shop-frontend"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="用模板语法和双向绑定实现数据的添加"><a href="#用模板语法和双向绑定实现数据的添加" class="headerlink" title="用模板语法和双向绑定实现数据的添加"></a>用模板语法和双向绑定实现数据的添加</h2><p>这篇文章中，我们将讲解 Vue 实例的 Props 和 Methods，接着讲解最常见的 Vue 模板语法，并通过实例的方式将这些模板语法都实践了一番，最后我们讲解了 Vue 组件的组合，并完成了我们的发表商品页面。</p>
+<p>当我们完成了商城应用的基本页面框架之后，我们就可以开始考虑具体页面的内容了。首先我们要考虑的就是数据的来源，即添加商品页面。有了添加商品的入口，我们就可以展示商品列表，获取商品详情，甚至是修改商品信息。</p>
+<p>不过在此之前，我们打算先复习一下 Vue 的一些重要知识点。如果你已经很熟悉了，可以直接跳到下面实现 ProductForm.vue 的代码部分。</p>
+<h3 id="Vue-实例：Props-和-Methods"><a href="#Vue-实例：Props-和-Methods" class="headerlink" title="Vue 实例：Props 和 Methods"></a>Vue 实例：Props 和 Methods</h3><h4 id="Props"><a href="#Props" class="headerlink" title="Props"></a>Props</h4><p><code>props</code> 是 Vue 进行组件之间传参的形式。比如我们有如两个组件 <code>New.vue</code> 和 <code>ProductForm.vue</code>，在 <code>New.vue</code> 组件中需要使用到 <code>ProductForm.vue</code> 组件。其中 <code>New.vue</code> 组件是用来创建商品的，它的代码大致是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ProductForm <span class="keyword">from</span> <span class="string">'@/components/ProductForm.vue'</span>;</span><br><span class="line"></span><br><span class="line">&lt;ProductForm :manufacturers=<span class="string">"manufacturers"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>它需要给 <code>ProductForm.vue</code> 组件传递一个 <code>manufacturers</code> 属性，以确保我们在创建商品时，可以选择这个商品所属的制造商，接着我们就可以在 <code>ProductForm.vue</code> 中的 <code>props</code> 中取到这个 <code>manufacturers</code> 属性。<code>ProductForm.vue</code> 的代码大致是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;!-- 模板部分 --&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">  props: ['manufacturers'],</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们在 <code>ProductForm.vue</code> 的 <code>script</code> 部分导出的对象里面找到 <code>props</code> 属性，然后取到 <code>manufacturers</code> 属性。</p>
+<h4 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h4><p>然后是 <code>methods</code> ，<code>methods</code> 是用来定义在组件中会用到的一些方法，如果说我们前面提到的 <code>data</code> ，是从数据从逻辑层（JS）向视图层（Html）流动的话，那么这里的 <code>methods</code> 就是视图层触发事件，如 click、submit 等，反过来修改逻辑层的数据的方法，<code>methods</code> 使得数据可以双向流动。</p>
+<p>让我们在完善一下我们的 <code>ProductForm.vue</code> ，看一下 Methods 在 Vue 中是如何运作的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;form @submit.prevent=<span class="string">"saveProduct"</span>&gt;</span><br><span class="line">&lt;!-- 其他表单，如 input 等 --&gt;</span><br><span class="line"></span><br><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-group new-button"</span>&gt;</span><br><span class="line">  &lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"button"</span>&gt;Add Product&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/form&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data: &#123; <span class="attr">isSaved</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  props: [<span class="string">'manufacturers'</span>],</span><br><span class="line">  methods: &#123;</span><br><span class="line">    saveProduct() &#123;</span><br><span class="line">       <span class="keyword">this</span>.isSaved = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 完成一些保存创建商品的逻辑 ...</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们可以通过在 <code>template</code> （视图层）通过点击提交按钮，发起表单提交事件，进而调用在 <code>script</code> 中定义在 <code>methods</code> 属性中的 <code>saveProduct</code> 方法，这个方法可以进一步修改定义在定义在 <code>data</code> 属性中的数据；甚至如果父组件 <code>New.vue</code> 传递了方法（以 <code>props</code> 的形式）给 <code>ProductForm.vue</code> 组件，我们可在 <code>saveProduct</code> 调用这个传递下来的方法，进而可以影响到父组件 <code>New.vue</code> 中的数据。我们将在后面的正式实现 <code>ProductForm</code> 组件时讲解到它。</p>
+<h3 id="模板语法：v-on"><a href="#模板语法：v-on" class="headerlink" title="模板语法：v-on"></a>模板语法：v-on</h3><p>接下来我们再来谈一谈 v-bind 和 v-on 。</p>
+<p>在 Vue 中，我们通过 <code>v-on</code> 的方式接管了之前在 HTML 中 <code>onEvent</code> ：</p>
+<p>比如之前我们在 HTML 中的写法是这样的：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onclick</span>=<span class="string">"alert('I love tuture')"</span>&gt;</span></span><br><span class="line">Hello Tuture</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在在 Vue 的模板语法中我们需要写出这样：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-on:click</span>=<span class="string">"alert('I love tuture')"</span>&gt;</span></span><br><span class="line">Hello Tuture</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>类似的 <code>onEvent</code> 都要改成 <code>v-on:Event</code>。然后这样写显得比较冗余，所以 Vue 支持简化写法，用 <code>@</code> 替换 <code>v-on:</code> 部分，我们就可以写出这样：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> @<span class="attr">click</span>=<span class="string">"alert('I love tuture')"</span>&gt;</span></span><br><span class="line">Hello Tuture</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>调用事件之后我们一般有一些这样的操作，比如禁用浏览器默认行为，然后自己去处理事件，获取后端数据，以前我们会这样写：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onclick</span>=<span class="string">"saveProduct()"</span>&gt;</span></span><br><span class="line">Hello Tuture</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="keyword">var</span> saveProduct = <span class="function"><span class="keyword">function</span> <span class="params">(e)</span> </span>&#123;</span></span><br><span class="line">  e.preventDefault();</span><br><span class="line"></span><br><span class="line"><span class="actionscript">  <span class="comment">// do something you like</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是这样写又显得特别繁琐了，Vue 也觉得这样可以简化，于是我们直接将这些禁止默认行为的调用作为绑定事件的属性来进行处理，于是乎在 Vue 中我们可以写出这样：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div @click.prevent=<span class="string">"saveProduct"</span>&gt;</span><br><span class="line">  Hello Tuture</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  methods: &#123;</span><br><span class="line">    saveProduct() &#123;</span><br><span class="line">      <span class="comment">// do something you like</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>不知道看了上面的长文，你有没有一点晕，不管你晕不晕，我是得喝口水缓一下。 - v -</p>
+<h3 id="模板语法：v-bind"><a href="#模板语法：v-bind" class="headerlink" title="模板语法：v-bind"></a>模板语法：v-bind</h3><p>我们已经看到在 Vue 模板中我们可以使用如下的功能：</p>
+<ul>
+<li><code>{{}}</code> 插值语法将 <code>data</code> 渲染到 HTML 元素内容中</li>
+<li><code>v-on</code> 或者简化写法 <code>@</code> ，等用来取代 HTML 的事件绑定</li>
+</ul>
+<p>有了上面的功能，我们可以让 HTML 动起来了，但是还缺点什么，比如我们的 HTML 属性，如 <code>id</code>、<code>class</code> 等，是不是也能动态的获取变化值，你还别说，还真的可以，Vue 模板语法为我们提供了 <code>v-bind</code> 用于动态绑定属性值，我们来看个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;option v-bind:id=<span class="string">"_id"</span>  v-bind:value=<span class="string">"value"</span> /&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">  data: &#123; _id: '1', value: "Xiaomi" &#125;,</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们在 <code>script</code> 中导出的对象属性 <code>data</code> 中，定义了 <code>_id</code> 和 <code>value</code> 值，然后我们通过在 <code>&lt;template&gt;</code> 模板中使用 <code>v-bind</code> 语法动态的给 <code>option</code> 标签的 <code>id</code> 和 <code>value</code> 属性赋值，最后的结果看起来是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;option id=<span class="string">"1"</span> value=<span class="string">"Xiaomi"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然，当需要绑定的属性多了，每次都写 <code>v-bind</code> 显得相当繁琐，所以 Vue 为我们提供了 <code>v-bind</code> 的简洁语法 <code>:</code>，即我们之前的绑定语法从 <code>v-bind:id=&quot;_id&quot;</code> 变成了 <code>:id=&quot;_id&quot;</code>。</p>
+<p>上面的代码用简洁语法改写如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;option :id=<span class="string">"_id"</span>  :value=<span class="string">"value"</span> /&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">  data: &#123; _id: '1', value: "Xiaomi" &#125;,</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="模板语法：v-model-双向绑定"><a href="#模板语法：v-model-双向绑定" class="headerlink" title="模板语法：v-model 双向绑定"></a>模板语法：v-model 双向绑定</h3><p>前面我们提到通过 <code>{{}}</code> 插值语法渲染来自 <code>data</code> 的数据实现了逻辑层向视图层的数据流动，通过 <code>methods</code> 在视图层操作逻辑层的数据，实现了视图层的数据向逻辑层的数据流动，从而达到了双向绑定，当我们的应用越来越复杂，我们会发现这样的数据双向流动会越来越频繁，而且粒度也会大小不一，有很多单纯修改某个值的方法调用就会显得特别繁杂，因此 Vue 通过提供 <code>v-model</code> 进行了视图层和逻辑层的双向绑定，让我们来看个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 其他代码 ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">  <span class="attr">type</span>=<span class="string">"text"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">placeholder</span>=<span class="string">"Name"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-model</span>=<span class="string">"name"</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 其他代码 ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">  data: &#123; name: <span class="string">'ProductForm'</span> &#125;,</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们通过申明 <code>v-mode</code> 将此 input 的值和我们在 Vue 实例中的 <code>model</code> 的 <code>name</code> 属性进行了双向绑定，即当 data 中的 <code>name</code> 发生变化，input 的值也会跟着变化，当 input 的值发生变化，我们 data 中的 <code>name</code> 的值也会被修改，这一切都是自动发生的，不需要我们额外的添加 <code>methods</code> 里面的方法调用来手动修改。</p>
+<h3 id="模板语法：循环"><a href="#模板语法：循环" class="headerlink" title="模板语法：循环"></a>模板语法：循环</h3><p>好了，Vue 替我们接管了 HTML 元素属性值、事件处理、元素内容，这些都还只属于原来 HTML 的部分，它更强大的一点就是将 JS 的功能引入了模板语法中，使得我们可以实现类似循环，条件选择操作等功能。</p>
+<p>接下来我们先来看一下 Vue 为我们提供的 “循环” 模板语法， 它使得我们可以快速渲染大量具有相似结构的数据，比如渲染一个数组的数据，生成一个 HTML 元素列表，这在我们平时看到的新闻 App 里面很常见，我们浏览新闻时，发现其实每条新闻的结构都很相似，并且有很多条新闻（可能多大几百上千条），如果每一条我们都手动写 HTML 代码的话，无疑显得相当繁琐，并且数据一多，我们手动就显得无能为力了，而 Vue 为我们提供的 “循环” 模板语法，使得我们可以通过非常简单的写法就可以渲染大量数据，我们来看个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">manufacturers = [</span></span><br><span class="line"><span class="comment">  &#123; _id: 1, name: 'Apple' &#125;,</span></span><br><span class="line"><span class="comment">  &#123; _id: 2, name: 'Xiaomi' &#125;</span></span><br><span class="line"><span class="comment">]</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">model = &#123; _id: 1, name: 'Apple' &#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span> <span class="attr">v-for</span>=<span class="string">"manufacturer in manufacturers"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">:value</span>=<span class="string">"manufacturer._id"</span> <span class="attr">:selected</span>=<span class="string">"manufacturer._id == model._id"</span>&gt;</span>&#123;&#123;manufacturer.name&#125;&#125;<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后渲染的结果为：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"1"</span> <span class="attr">selected</span>=<span class="string">"true"</span>&gt;</span>Apple<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"2"</span> <span class="attr">selected</span>=<span class="string">"false"</span>&gt;</span>Xiaomi<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意到，如果我们在写 “循环” 语法时，使用了一个额外的标签 <code>template</code> 来包裹我们需要渲染的 HTML 元素，这也是 Vue 推荐的写法；我们在 <code>template</code> 标签的属性上添加 <code>v-for</code> 然后给它赋值 <code>&quot;manufacturer in manufacturers&quot;</code>，通过这样的形式进行列表数据的遍历，每次从 <code>manufacturers</code> 中取一个元素，并赋值给 <code>manufacturer</code> ，然后我们就可以在 <code>option</code> 标签中使用 <code>manufacturer</code> 和我们定义的 <code>model</code> 进行比较。</p>
+<p>因为我们的 <code>model._id</code> 为 <code>1</code>，它和 <code>manufacturers</code> 数组的第一项元素的 <code>_id</code> 一致，所以我们返回的两个 <code>option</code> 标签，第一个 <code>selected</code> 属性为 <code>true</code>，第二个为 <code>false</code>。</p>
+<h3 id="模板语法：条件选择"><a href="#模板语法：条件选择" class="headerlink" title="模板语法：条件选择"></a>模板语法：条件选择</h3><p>上面的讲述了循环是如何在 Vue 中使用的，下面我们来看一看条件语法是如何在 Vue 中使用的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;span v-<span class="keyword">if</span>=<span class="string">"isEditing"</span>&gt;Update Product&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">&lt;span v-else&gt;Add Product&lt;/</span>span&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data: &#123; <span class="attr">isEditing</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，通过在标签上加 <code>v-if</code> 并后面紧跟加 <code>v-else</code> 的标签我们可以判断最终渲染的标签，比如我们这里 <code>isEditing</code> 为 <code>false</code>，那么我们最终渲染的结果为：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;span&gt;Add Product&lt;<span class="regexp">/span&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当然你可以添加诸如 <code>v-else-if</code> 的标签来做多重判断。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>这里的带 <code>v-if</code>、<code>v-else-if</code> 或 <code>v-else</code> 的标签需要依次紧跟着前面的标签，不能在这些带条件属性的标签中插入其他不带条件的标签，比如下面这段代码就是错误的：</p><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-if</span>=<span class="string">"isEditing"</span>&gt;</span>Update Product<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>我是错误插入的标签<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-else</span>&gt;</span>Add Product<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    data: &#123; isEditing: <span class="literal">false</span> &#125;,</span></span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          </div>
+
+<h3 id="动手实现"><a href="#动手实现" class="headerlink" title="动手实现"></a>动手实现</h3><p>讲解完 Vue 的基础知识之后，我们马上将所有的知识运用起来，来编写我们的 <code>ProductForm.vue</code> 组件，它用来添加或者更新商品的信息。</p>
+<p>我们在 <code>src/components</code> 中创建 <code>ProductForm.vue</code> 表单组件，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/components/products/ProductForm.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvZjJmYTUxNi9zcmMvY29tcG9uZW50cy9wcm9kdWN0cy9Qcm9kdWN0Rm9ybS52dWU=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/f2fa516/src/components/products/ProductForm.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">form</span> @<span class="attr">submit.prevent</span>=<span class="string">"saveProduct"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-lg-5 col-md-5 col-sm-12 col-xs-12"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>Name<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">"text"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">"Name"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"model.name"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">"name"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>Price<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">"number"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">"Price"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"model.price"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">"price"</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>Manufacturer<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">select</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">"text"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"model.manufacturer"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">"manufacturer"</span></span></span><br><span class="line"><span class="tag">        &gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">template</span> <span class="attr">v-for</span>=<span class="string">"manufacturer in manufacturers"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">option</span></span></span><br><span class="line"><span class="tag">              <span class="attr">:value</span>=<span class="string">"manufacturer._id"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">:selected</span>=<span class="string">"manufacturer._id == (model.manufacturer &amp;&amp; model.manufacturer._id)"</span></span></span><br><span class="line"><span class="tag">            &gt;</span></span><br><span class="line">              &#123;&#123;manufacturer.name&#125;&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-lg-4 col-md-4 col-sm-12 col-xs-12"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>Image<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">"text"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">lass</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">"Image"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"model.image"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">"image"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>Description<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">textarea</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"form-control"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">placeholder</span>=<span class="string">"Description"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">rows</span>=<span class="string">"5"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"model.description"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">name</span>=<span class="string">"description"</span></span></span><br><span class="line"><span class="tag">        &gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group new-button"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"button"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-pencil"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- Conditional rendering for input text --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-if</span>=<span class="string">"isEditing"</span>&gt;</span>Update Product<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-else</span>&gt;</span>Add Product<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    props: [<span class="string">'model'</span>, <span class="string">'manufacturers'</span>, <span class="string">'isEditing'</span>],</span></span><br><span class="line">    methods: &#123;</span><br><span class="line">      saveProduct() &#123;</span><br><span class="line"><span class="actionscript">        <span class="keyword">this</span>.$emit(<span class="string">'save-product'</span>, <span class="keyword">this</span>.model);</span></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码看起来很长，你可能被吓到了，让我们一段一段来拆解它。</p>
+<h4 id="script-部分"><a href="#script-部分" class="headerlink" title="script 部分"></a>script 部分</h4><p>这里我们的 <code>props</code> 接收来自父组件的三个参数：<code>model</code>、<code>manufacturers</code>、<code>isEditing</code>。</p>
+<p>然后我们定义了一个 <code>saveProduct</code> 方法，就是当用户填写完商品信息的表单之后，点击提交按钮会触发的方法，在 <code>saveProduct</code> 内部，我们调用了父组件的 <code>save-product</code> 方法，并把修改后的 <code>this.model</code> 变量内容传给父组件。所以这里我们还可以看到，<code>methods</code> 不仅可以使得数据可以双向流动，而且还可以在子组件反向操作父组件的内容，使得数据还可以上下流动。</p>
+<h4 id="template-部分"><a href="#template-部分" class="headerlink" title="template 部分"></a>template 部分</h4><p>接下来我们再来谈一谈 <code>template</code> 里面发生的事情。</p>
+<p>可以看到 <code>template</code> 里面就是一个表单，这个表单定义了一个 <code>submit</code> 事件，并且使用了禁用默认事件的简洁写法 <code>@submit.prevent</code>。 这个事件触发会调用我们上面提到的 <code>saveProduct</code> 方法。</p>
+<p>接着我们定义了好几个 <code>class</code> 为 <code>form-group</code> 的元素块，每个块代表我们创建商品所需要填写的相关信息，我们注意到，前两个 <code>form-group</code> 使用 <code>v-model</code> 双向绑定语法分别绑定了 <code>model</code> 的 <code>name</code> 和 <code>price</code> 属性。</p>
+<p>第三个 <code>form-group</code> 我们首先在 <code>select</code> 标签中使用 <code>v-model</code> 双向绑定了 <code>model.manufacturer</code>，表示我们在视图里面进行选择时，会修改对应的 <code>model.manufacturer</code> 属性。</p>
+<p>接着我们对 <code>manufacturers</code> 进行循环遍历，构造多个 <code>option</code> 标签选项，然后使用了属性绑定语法的简洁写法绑定了 <code>option</code> 的 <code>value</code> 和 <code>selected</code> 属性，<code>value</code> 属性赋值为 <code>manufacturer._id</code>，<code>selected</code> 属性会进行判断，<code>model.manufacturer &amp;&amp; model.manufacturer._id</code> 表示首先检验 <code>model</code> 的 <code>manufacturer</code> 属性是否存在，正常情况下它应该是一个对象，如果 <code>model.manufacturer</code> 属性存在，那么获取 <code>model.manufacturer._id</code>，然后用获取到的这个 <code>model.manufacturer._id</code> 和 <code>manufacturer._id</code> 进行比较，如果一致，那么 <code>selected</code> 属性为 <code>true</code>，不一致就为 <code>false</code>。</p>
+<p>然后我们来看一下第二段 <code>form-group</code>，也就是第 4-6 个 <code>form-group</code>。</p>
+<p>可以看到前两个 <code>form-group</code> 使用 <code>v-model</code> 双向绑定了 <code>model.image</code> 和 <code>model.description</code> ，表示当用户上传了商品图片和描述之后，对应的 <code>model.image</code> 就会变成用户上传的商品图片，<code>model.description</code> 就会变成用户撰写的商品描述。</p>
+<p>最后一个 <code>form-group</code> 我们使用了条件选择语法，判断 <code>isEditing</code>，来渲染不同的按钮文案。</p>
+<h3 id="Vue-组件组合"><a href="#Vue-组件组合" class="headerlink" title="Vue 组件组合"></a>Vue 组件组合</h3><p>编写完上面的表单之后，我们在 <code>New.vue</code> 中引入我们创建的表单组件：</p>
+<figure class="highlight html"><figcaption><span>src/pages/admin/New.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvZjJmYTUxNi9zcmMvcGFnZXMvYWRtaW4vTmV3LnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/f2fa516/src/pages/admin/New.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  [tuture-del]</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    [tuture-del]</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      [tuture-del]</span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>This is Admin/New<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">      [tuture-del]</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    [tuture-del]</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  [tuture-add]</span><br><span class="line">  <span class="tag">&lt;<span class="name">product-form</span></span></span><br><span class="line"><span class="tag">    [<span class="attr">tuture-add</span>]</span></span><br><span class="line"><span class="tag">    @<span class="attr">save-product</span>=<span class="string">"addProduct"</span></span></span><br><span class="line"><span class="tag">    [<span class="attr">tuture-add</span>]</span></span><br><span class="line"><span class="tag">    <span class="attr">:model</span>=<span class="string">"model"</span></span></span><br><span class="line"><span class="tag">    [<span class="attr">tuture-add</span>]</span></span><br><span class="line"><span class="tag">    <span class="attr">:manufacturers</span>=<span class="string">"manufacturers"</span></span></span><br><span class="line"><span class="tag">    [<span class="attr">tuture-add</span>]</span></span><br><span class="line"><span class="tag">  &gt;</span></span><br><span class="line">    [tuture-add]</span><br><span class="line">  <span class="tag">&lt;/<span class="name">product-form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">[tuture-add] [tuture-add]</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  [tuture-add]<span class="keyword">import</span> ProductForm <span class="keyword">from</span> <span class="string">'@/components/products/ProductForm.vue'</span>;</span></span><br><span class="line"><span class="javascript">  [tuture-add]<span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line">  [tuture-add]  data() &#123;</span><br><span class="line"><span class="actionscript">  [tuture-add]    <span class="keyword">return</span> &#123;</span></span><br><span class="line">  [tuture-add]      model: &#123;&#125;,</span><br><span class="line">  [tuture-add]      manufacturers: [</span><br><span class="line">  [tuture-add]        &#123;</span><br><span class="line"><span class="actionscript">  [tuture-add]          _id: <span class="string">'sam'</span>,</span></span><br><span class="line"><span class="actionscript">  [tuture-add]          name: <span class="string">'Samsung'</span>,</span></span><br><span class="line">  [tuture-add]        &#125;,</span><br><span class="line">  [tuture-add]        &#123;</span><br><span class="line"><span class="actionscript">  [tuture-add]          _id: <span class="string">'apple'</span>,</span></span><br><span class="line"><span class="actionscript">  [tuture-add]          name: <span class="string">'Apple'</span>,</span></span><br><span class="line">  [tuture-add]        &#125;,</span><br><span class="line">  [tuture-add]      ],</span><br><span class="line">  [tuture-add]    &#125;;</span><br><span class="line">  [tuture-add]  &#125;,</span><br><span class="line">  [tuture-add]  methods: &#123;</span><br><span class="line">  [tuture-add]    addProduct(model) &#123;</span><br><span class="line"><span class="javascript">  [tuture-add]      <span class="built_in">console</span>.log(<span class="string">'model'</span>, model);</span></span><br><span class="line">  [tuture-add]    &#125;,</span><br><span class="line">  [tuture-add]  &#125;,</span><br><span class="line">  [tuture-add]  components: &#123;</span><br><span class="line"><span class="actionscript">  [tuture-add]    <span class="string">'product-form'</span>: ProductForm</span></span><br><span class="line">  [tuture-add]  &#125;</span><br><span class="line">  [tuture-add]&#125;</span><br><span class="line">  [tuture-add]</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当一个组件要在模板语法中使用另外一个组件时，需要申明此组件，即在组件的 <code>components</code> 属性中申明要使用的组件，比如我们上面使用名为 <code>&#39;product-form&#39;</code> 的名称来申明使用 <code>ProductForm</code> 组件，这样在 <code>template</code> 中我们就可以以 <code>&lt;product-form /&gt;</code> 形式使用导入的表单组件。</p>
+<p>同时我们在组件的 <code>data</code> 中定义了 <code>model</code> 和 <code>manufacturers</code> 以及在 <code>methods</code> 中定义了 <code>addProduct</code> 方法，并将它们以属性绑定 <code>:model=&quot;model&quot;</code>、<code>:manufacturers=&quot;manufacturers&quot;</code> 和事件绑定 <code>@save-product=&quot;saveProduct&quot;</code> 的方式传递给表单组件。</p>
+<p>当保存上面编写的代码之后，我们打开浏览器，点击导航链接 <code>Admin</code>，然后点击子导航链接 <code>New Products</code>，切换到我们的 <code>New.vue</code> 添加商品页面，我们可以看到如下的效果：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f71022a22e3093.jpeg"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>到现在为止，我们已经了解了 Vue 的基础部分，包括：</p>
+<ul>
+<li>用路由进行多页面的跳转和导航</li>
+<li>用嵌套路由和动态路由合理组织页面</li>
+<li>Vue 组件和 Vue 实例</li>
+<li>Vue 模板语法</li>
+</ul>
+<p>掌握了这些知识后，我们已经可以实现很多前端的功能，完成一些简单的 Vue 应用了。但是如果要完成数据逻辑复杂的大型应用，目前学到的知识就力不从心了。但是没关系，我们将在后面学习 Vuex 这一前端状态管理工具，有了 Vuex 的加持，我们就能用 Vuex 写出任意复杂的应用了。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2019/12/18/5e10a46/" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（三）">https://tuture.co/2019/12/18/5e10a46/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/03/892fa12/" rel="next" title="一杯茶的时间，上手 Node.js">
+                  <i class="fa fa-chevron-left"></i> 一杯茶的时间，上手 Node.js
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/26/34a473b/" rel="prev" title="Taro 小程序开发大型实战（一）：熟悉的 React，熟悉的 Hooks">
+                  Taro 小程序开发大型实战（一）：熟悉的 React，熟悉的 Hooks <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#用模板语法和双向绑定实现数据的添加"><span class="nav-number">1.</span> <span class="nav-text">用模板语法和双向绑定实现数据的添加</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-实例：Props-和-Methods"><span class="nav-number">1.1.</span> <span class="nav-text">Vue 实例：Props 和 Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Props"><span class="nav-number">1.1.1.</span> <span class="nav-text">Props</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Methods"><span class="nav-number">1.1.2.</span> <span class="nav-text">Methods</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法：v-on"><span class="nav-number">1.2.</span> <span class="nav-text">模板语法：v-on</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法：v-bind"><span class="nav-number">1.3.</span> <span class="nav-text">模板语法：v-bind</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法：v-model-双向绑定"><span class="nav-number">1.4.</span> <span class="nav-text">模板语法：v-model 双向绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法：循环"><span class="nav-number">1.5.</span> <span class="nav-text">模板语法：循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法：条件选择"><span class="nav-number">1.6.</span> <span class="nav-text">模板语法：条件选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动手实现"><span class="nav-number">1.7.</span> <span class="nav-text">动手实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#script-部分"><span class="nav-number">1.7.1.</span> <span class="nav-text">script 部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#template-部分"><span class="nav-number">1.7.2.</span> <span class="nav-text">template 部分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-组件组合"><span class="nav-number">1.8.</span> <span class="nav-text">Vue 组件组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.9.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

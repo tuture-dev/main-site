@@ -1,0 +1,16 @@
+# tuture robots.txt
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/
+Allow: /about/
+Allow: /FAQ/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /images/
+Disallow: /fonts/
+
+Sitemap: https://tuture.co/sitemap.xml
+Sitemap: https://tuture.co/baidusitemap.xml

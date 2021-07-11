@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="为什么要用构建工具？如果你只会js+css+html，最多再加上jquery，那么当你听到构建工具这个说法是不是蒙的？这种情况下我不建议你学习webpack，建议你学下 vue 或者 react 框架，这两个框架都有自己的脚手架，所谓脚手架就是别人用构建工具帮你搭好了原始项目，你可以在不懂构建工具的情况下进行前端开发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一小时的时间，上手 Webpack">
+<meta property="og:url" content="https://tuture.co/2020/03/18/@70fc9b9/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="为什么要用构建工具？如果你只会js+css+html，最多再加上jquery，那么当你听到构建工具这个说法是不是蒙的？这种情况下我不建议你学习webpack，建议你学下 vue 或者 react 框架，这两个框架都有自己的脚手架，所谓脚手架就是别人用构建工具帮你搭好了原始项目，你可以在不懂构建工具的情况下进行前端开发。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/%4070fc9b9.md/webpack-cover-1.jpg">
+<meta property="article:published_time" content="2020-03-17T16:00:00.509Z">
+<meta property="article:modified_time" content="2021-07-11T02:09:59.410Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/%4070fc9b9.md/webpack-cover-1.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/03/18/@70fc9b9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一小时的时间，上手 Webpack | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/03/18/@70fc9b9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">一小时的时间，上手 Webpack
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-18 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-18T00:00:00+08:00">2020-03-18</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 10:09:59" itemprop="dateModified" datetime="2021-07-11T10:09:59+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Webpack/" itemprop="url" rel="index"><span itemprop="name">Webpack</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Webpack/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>5.4k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>5 分钟</span>
+            </span>
+          
+            <div class="post-description">为什么要用构建工具？如果你只会js+css+html，最多再加上jquery，那么当你听到构建工具这个说法是不是蒙的？这种情况下我不建议你学习webpack，建议你学下 vue 或者 react 框架，这两个框架都有自己的脚手架，所谓脚手架就是别人用构建工具帮你搭好了原始项目，你可以在不懂构建工具的情况下进行前端开发。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/%4070fc9b9.md/webpack-cover-1.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3MvdG4ydWp3S3JlV3JJdEVTVURhcjl1Zw==" title="https://mp.weixin.qq.com/s/tn2ujwKreWrItESUDar9ug"><img alt class="avatar" data-src="/images/avatars/manyipai.png"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3MvdG4ydWp3S3JlV3JJdEVTVURhcjl1Zw==" title="https://mp.weixin.qq.com/s/tn2ujwKreWrItESUDar9ug"><p class="nickName">慢一拍</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2JyaWRnZVRvVmlsbGFnZS93ZWJwYWNrLWxlYXJuaW5n" title="https://github.com/bridgeToVillage/webpack-learning"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>为什么要用构建工具？如果你只会 js+css+html，最多再加上 jquery，那么当你听到构建工具这个说法是不是蒙的？这种情况下我不建议你学习 webpack，建议你学下 vue 或者 react 框架，这两个框架都有自己的脚手架，所谓脚手架就是别人用构建工具帮你搭好了原始项目，你可以在不懂构建工具的情况下进行前端开发。不过这就是初级前端的基本工作，给我一个环境，让我安心的写业务代码。</p>
+<p>实际上，仅仅做上述工作也没什么不好，你可以钻研 css，研究 js 深度语法，甚至去不断精进算法与数据结构都是高级进阶之路。</p>
+<p>我想说的是如果你有一天对 webpack 感兴趣了，ok，欢迎你来到大前端世界！webpack 是一个强大且可扩展的前端构建工具，还有包括 grunt、gulp 等同类工具都是基于 node.js 为底层驱动平台实现的。</p>
+<p>为什么需要构建或者说编译呢？因为像 es6、less 及 sass、模板语法、vue 指令及 jsx 在浏览器中是无法直接执行的，必须经过构建这一个操作才能保证项目运行，所以前端构建打包很重要。除了这些，前端构建还能解决一些 web 应用性能问题，比如：依赖打包、资源嵌入、文件压缩及 hash 指纹等。具体的我不再展开，总之前端构建工程化已经是趋势。</p>
+<p>至于为什么选择 webpack，因为这个工具配置非常灵活，支持插件化扩展，社区生态很丰富，官方迭代更新速度快，作为程序员，这是一个靠谱的选择。</p>
+<p>好了，废话不多说，下面直接上干货，教你半小时上手，用 webpack 构建开发一个小项目。学东西要快，可以不用理解清楚每个概念，先动手，不然等你学会得要一个星期了。</p>
+<h3 id="node-安装"><a href="#node-安装" class="headerlink" title="node 安装"></a>node 安装</h3><p>首先要保证你的电脑有 node 环境，node 安装比较简单，直接在官网<span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2VuL+S4i+i9vW5vZGXlronoo4XljIXlsLHlj6/ku6XkuobvvIzms6jmhI/ov5nph4zmnInkuKTkuKrniYjmnKzvvIzlt6bovrnmmK/nqLPlrprniYjmnKzvvIzlj7PovrnmmK/mnIDmlrDniYjmnKzvvIzkuIDoiKznlKjnqLPlrprniYjmnKzlsLHlj6/ku6XkuobjgILlhbfkvZPnmoTlronoo4Xov4fnqIvkuI3mmK/mnKzmlofnmoTkuLvopoHlhoXlrrnvvIznvZHkuIrmnInlvojlpJrlronoo4XmlZnnqIvjgILmnInkuoZub2Rl546v5aKD77yM5ZCO6Z2i5bCx5Y+v5Lul6YCa6L+HbnBt6L+b6KGMd2VicGFja+eahOWuieijhe+8jG5wbeaYr+S4gOS4quWMheeuoeeQhuW3peWFt++8jOWuieijhW5vZGXlsLHkvJroh6rliqjlronoo4VucG3jgILlpoLmnpzmnInlv4XopoHmiJHlj6/ku6XlnKjmiJHnmoTlhazkvJflj7fph4zkuZ/lhpnkuKrmlZnnqIvjgII=" title="https://nodejs.org/en/下载node安装包就可以了，注意这里有两个版本，左边是稳定版本，右边是最新版本，一般用稳定版本就可以了。具体的安装过程不是本文的主要内容，网上有很多安装教程。有了node环境，后面就可以通过npm进行webpack的安装，npm是一个包管理工具，安装node就会自动安装npm。如果有必要我可以在我的公众号里也写个教程。">https://nodejs.org/en/下载node安装包就可以了，注意这里有两个版本，左边是稳定版本，右边是最新版本，一般用稳定版本就可以了。具体的安装过程不是本文的主要内容，网上有很多安装教程。有了node环境，后面就可以通过npm进行webpack的安装，npm是一个包管理工具，安装node就会自动安装npm。如果有必要我可以在我的公众号里也写个教程。<i class="fa fa-external-link"></i></span></p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e63faa1.png"></p>
+<h3 id="webpack-安装及配置"><a href="#webpack-安装及配置" class="headerlink" title="webpack 安装及配置"></a>webpack 安装及配置</h3><h4 id="webpack-安装"><a href="#webpack-安装" class="headerlink" title="webpack 安装"></a>webpack 安装</h4><p>首先创建一个 my_webpack 文件夹作为项目文件夹，进入当前文件夹，通过命令行工具 cmd 执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm init -y</span><br><span class="line">npm install webpack webpack-cli --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>安装完了检查版本，确认安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./node_modules/.bin/webpack -v</span><br></pre></td></tr></table></figure>
+
+<p>安装成功后，文件夹下面会有这些内容</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e641d3e.png"></p>
+<h4 id="webpack-配置"><a href="#webpack-配置" class="headerlink" title="webpack 配置"></a>webpack 配置</h4><p>然后在根目录创建一个空配置文件 webpack.config.js，创建以下内容：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    index: <span class="string">'./src/index.js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.join(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">    filename: <span class="string">'index.js'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>entry 代表打包入口，output 需要指定输出地址及打包出来的文件名，mode 指开发环境。然后在项目根目录中创建 src 文件夹及 dist 文件夹，src 文件夹里创建 index.js 及 hellowebpack.js 两个文件，最后在 dist 目录创建一个 index.html 文件，完整目录如下：</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e643faf.png"></p>
+<p>hellowebpack.js 文件里输入以下内容：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">hellowebpack</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'hellowebpack'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着在 index.js 中引用 hellowebpack.js 文件中的这个函数</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; hellowebpack &#125; <span class="keyword">from</span> <span class="string">'./hellowebpack'</span>;</span><br><span class="line"><span class="built_in">document</span>.write(hellowebpack());</span><br></pre></td></tr></table></figure>
+
+<p>这个时候到./node_modules/.bin/目录下执行 webpack 打包命令，我们会看到 dist 目录下多出一个 index.js 文件，打开会看到压缩代码。</p>
+<p>我们在 dist 目录下的 indext.html 文件创建如下内容，在浏览器打开此页面就能看到效果。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./index.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>看到这应该明白了吧，在 src 目录下面是开发内容，后面用 <code>webpack</code> 代码打包后，会在 dist 目录下生成一个<code>index.js</code> 文件，最后在 index.html 页引用，这就是 webpack 打包项目的基本流程。</p>
+<p>前面在运行打包要进入 <code>./node\_modules/.bin/</code> 目录下执行 webpack 打包命令，比较麻烦，这里添加一个配置就可以更方便打包。在 <code>package.json</code> 文件下的 script 节点添加一项配置 <code>&quot;build&quot;: &quot;webpack&quot;</code>，然后再删掉 dist 目录，再运行   <code>npm run build</code> 就可以方便地打包了。</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e6447a9.png"></p>
+<h3 id="webpack-入门示例"><a href="#webpack-入门示例" class="headerlink" title="webpack 入门示例"></a>webpack 入门示例</h3><h4 id="webpack-解析-es6"><a href="#webpack-解析-es6" class="headerlink" title="webpack 解析 es6"></a>webpack 解析 es6</h4><p>到这一步需要掌握一个新的概念：loaders，所谓 loaders 就是说把原本 webpack 不支持加载的文件或者文件内容通过 loaders 进行加载解析，实现应用的目的。这里讲解 es6 解析，原生支持 js 解析，但是不能解析 es6，需要 babel-loader ，而 babel-loader  又依赖 babel。来看步骤：先安装 babel-loader，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i @babel/core @babel/preset-env babel-loader -D</span><br></pre></td></tr></table></figure>
+
+<p>再在根目录创建 <code>.babelrc</code> 文件，增加以下内容</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"presets"</span>: [<span class="string">"@babel/preset-env"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着在 webpack.config.js 文件下添加 module 属性，属性内容是一个 rules 集合，内容如下</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.js$/</span>,</span><br><span class="line">      use: <span class="string">'babel-loader'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>rules 集合的每个元素都是一个文件类型的配置信息，这里只有一个 js 文件，后面会讲到 css、less 及各种格式的图片等；test 是一个正则，用来匹配文件后缀名；use 表示此 loader 名称。</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e6460b4.png"></p>
+<p>前面例子里创建了 hellowebapck.js 文件，然后在 index.js 文件中被引用。里面用到的 import 是 es6 方法，有的浏览器并不支持 es6，如果直接用 webpack 打包在这浏览器上是会出错的，但是刚才已经安装并配置了 babel-loader，可以实现解析 es6 方法，babel 还可以解析 jsx 语法。现在执行 npm run build 进行构建，就可以看到效果是成功的。（这个其实用一个 ie 浏览器就可以验证 es6 解析前后的效果）</p>
+<h4 id="webpack-加载-css、less-等样式文件"><a href="#webpack-加载-css、less-等样式文件" class="headerlink" title="webpack 加载 css、less 等样式文件"></a>webpack 加载 css、less 等样式文件</h4><p>css-loader 用于加载 css 文件并生成 commonjs 对象，style-loader 用于将样式通过 style 标签插入到 head 中</p>
+<p><strong>安装 loader</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i style-loader css-loader -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.js$/</span>,</span><br><span class="line">      use: <span class="string">'babel-loader'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.css$/</span>,</span><br><span class="line">      use: [<span class="string">'style-loader'</span>, <span class="string">'css-loader'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，这里的解析 css 用到了两个 loader，所以 use 对象里是个数组，需要格外注意到 loader 顺序，是先写 style-loader，再写 css-loader,但是执行的时候是先加载 css-loader，将 css 解析好后再将 css 传递给 style-loader；</p>
+<p>接下来在项目中加一个 public.css 文件，在里面写入一个样式：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.color-text</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将此文件在 src/index.js 文件中引用，如下所示。</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e675670.png"></p>
+<p>我们知道此文件做为打包入口文件，最后打包后在 dist 目录下，我们可以直接到 dist 目录下的 index.html 文件内，添加一个 div 标签，加上样式名 color-text，以验证样式打包及引用效果</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./index.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"color-text"</span>&gt;</span>text-color<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e677986.png"></p>
+<p>然后运行 npm run build 命令，执行成功后，在浏览器打开 dist 目录下 index.html 文件，会看到以下内容，样式文件被成功打包并发挥了作用：</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e67748f.png"></p>
+<p>解析 less 文件也是一样的，直接把 public.css 文件改成 less 后缀，此时是不能解析的，需要安装 less 依赖，添加配置。</p>
+<p><strong>安装 less 相关依赖</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i less less-loader -D</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加 less 文件解析配置</strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.js$/</span>,</span><br><span class="line">      use: <span class="string">'babel-loader'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.css$/</span>,</span><br><span class="line">      use: [<span class="string">'style-loader'</span>, <span class="string">'css-loader'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/.less$/</span>,</span><br><span class="line">      use: [<span class="string">'style-loader'</span>, <span class="string">'css-loader'</span>, <span class="string">'less-loader'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>这些步骤完成后，再运行 <code>npm run build</code> 命令进行打包，最后在浏览器查看 <code>dist\index.html</code> ，会发现效果是一样的。</p>
+<h4 id="webpack-加载图片"><a href="#webpack-加载图片" class="headerlink" title="webpack 加载图片"></a>webpack 加载图片</h4><p>图片在 webpack 中的打包步骤跟上面类似，只不过 loader 不同。</p>
+<p><strong>安装 file-loader</strong></p>
+<p>执行以下命令，安装 file-loader 依赖</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i file-loader -D</span><br></pre></td></tr></table></figure>
+
+<p>然后在 webpack.config.js 配置文件 <code>module</code> 节点下添加解析配置内容：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="regexp">/.(jpg|png|gif|jpeg)$/</span>,</span><br><span class="line">    use: <span class="string">'file-loader'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>随便找一张图片放在 src 目录下，在同级目录的 public.css 文件中加上背景图片样式，输入内容如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.color-text</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">url</span>(beautiful.jpg) no-repeat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后运行 npm run build 命令进行构建，最后执行时并没有图片展示，但是我们在 dist 目录下发现了刚才打包过来的图片，如图所示。这就尴尬了，虽然图片是打包过来了，问题是我每次还在拷贝复制一下名称再引用，这很不科学。</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e679b91.jpeg"></p>
+<p>有没有更好的办法加载图片呢？答案是肯定的！看步骤：</p>
+<p><strong>安装 url-loader</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i url-loader -D</span><br></pre></td></tr></table></figure>
+
+<p>url-loader 直接内置了 file-loader，是对它的再封装，在配置文件里可以直接去掉 file，用 url 替换。</p>
+<p>在 webpack.config.js 文件添加配置内容，注意 limit 是指图片大小上限，单位是字节，如果图片大小小于这个值，就会被打包为 base64 格式，否则就仍是图片。由于这个图片有 120K，我这里设置为 160000，差不多是 150 多 K 了。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="regexp">/.(jpg|png|gif|jpeg)$/</span>,</span><br><span class="line">    use: [&#123;</span><br><span class="line">        loader:<span class="string">'url-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">            limit:<span class="number">160000</span>,</span><br><span class="line">            name: <span class="string">'imgs/[name].[hash].[ext]'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行 npm run build 查看效果，发现成功了，再看 dist 目录下的 index.js 文件，发现内容多了很多，其实就是多了这张图片的 base64 数据。</p>
+<p><img alt data-src="https://static.powerformer.com/c/@70fc9b9.md/70eb2e67a9ee.jpeg"></p>
+<p>好了，这篇文章就写到这里，如果你按我的步骤来，一定可以轻松体验入门。当然，要真正达到应用水平，还要继续深入学习，webpack 的内容还有很多，比如如何加载 vue 指令或者 jsx 语法，如何打包组件等，后面我会继续带来入门教程。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/03/18/@70fc9b9/" title="一小时的时间，上手 Webpack">https://tuture.co/2020/03/18/@70fc9b9/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Webpack/" rel="tag"><i class="fa fa-tag"></i> Webpack</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/16/@2629c44/" rel="next" title="爬虫养成记--顺藤摸瓜回首掏（女生定制篇）">
+                  <i class="fa fa-chevron-left"></i> 爬虫养成记--顺藤摸瓜回首掏（女生定制篇）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/23/@10aaf06/" rel="prev" title="爬虫养成记--千军万马来相见（详解多线程）">
+                  爬虫养成记--千军万马来相见（详解多线程） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#node-安装"><span class="nav-number">2.</span> <span class="nav-text">node 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-安装及配置"><span class="nav-number">3.</span> <span class="nav-text">webpack 安装及配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-安装"><span class="nav-number">3.1.</span> <span class="nav-text">webpack 安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-配置"><span class="nav-number">3.2.</span> <span class="nav-text">webpack 配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-入门示例"><span class="nav-number">4.</span> <span class="nav-text">webpack 入门示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-解析-es6"><span class="nav-number">4.1.</span> <span class="nav-text">webpack 解析 es6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-加载-css、less-等样式文件"><span class="nav-number">4.2.</span> <span class="nav-text">webpack 加载 css、less 等样式文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-加载图片"><span class="nav-number">4.3.</span> <span class="nav-text">webpack 加载图片</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这是一套基于实战的系列教程，从最简单的爬虫程序开始，授人予渔，详细剖析程序设计的思路，完整展现爬虫是如何一步步调试到最终完成。分享关于爬虫的各种知识、技巧，旨在帮助大家认识爬虫、设计爬虫、使用爬虫最后享受爬虫带给我们在工作和生活上的各种便利。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫养成记——先跨进这个精彩的世界（女生定制篇）">
+<meta property="og:url" content="https://tuture.co/2020/03/05/@5e60587/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="这是一套基于实战的系列教程，从最简单的爬虫程序开始，授人予渔，详细剖析程序设计的思路，完整展现爬虫是如何一步步调试到最终完成。分享关于爬虫的各种知识、技巧，旨在帮助大家认识爬虫、设计爬虫、使用爬虫最后享受爬虫带给我们在工作和生活上的各种便利。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/%405e60587.md/spider-1-cover.jpg">
+<meta property="article:published_time" content="2020-03-04T16:00:00.509Z">
+<meta property="article:modified_time" content="2021-07-11T02:09:59.484Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/%405e60587.md/spider-1-cover.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/03/05/@5e60587/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>爬虫养成记——先跨进这个精彩的世界（女生定制篇） | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/03/05/@5e60587/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">爬虫养成记——先跨进这个精彩的世界（女生定制篇）
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-05T00:00:00+08:00">2020-03-05</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 10:09:59" itemprop="dateModified" datetime="2021-07-11T10:09:59+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Python/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>4.7k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>4 分钟</span>
+            </span>
+          
+            <div class="post-description">这是一套基于实战的系列教程，从最简单的爬虫程序开始，授人予渔，详细剖析程序设计的思路，完整展现爬虫是如何一步步调试到最终完成。分享关于爬虫的各种知识、技巧，旨在帮助大家认识爬虫、设计爬虫、使用爬虫最后享受爬虫带给我们在工作和生活上的各种便利。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/%405e60587.md/spider-1-cover.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NyeGs=" title="https://github.com/crxk"><img alt class="avatar" data-src="/images/avatars/crxk.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NyeGs=" title="https://github.com/crxk"><p class="nickName">crxk</p><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><ol>
+<li>基本的 python 编程知识<ol>
+<li>这里使用 Python3 作为开发环境</li>
+<li>同时具备基本的装包知识</li>
+</ol>
+</li>
+<li>基本的网页编程知识</li>
+<li>初步了解 HTTP 协议</li>
+</ol><a id="more"></a>
+
+
+<h2 id="这是最简单的计算机程序"><a href="#这是最简单的计算机程序" class="headerlink" title="这是最简单的计算机程序"></a>这是最简单的计算机程序</h2><p>说起爬虫每个人都或多或少的听过与之相关的内容，觉得它或高深、或有趣。作为一名写代码四五年的初级码农来看，爬虫程序是计算机程序里面最简单也是最有趣的程序。<strong>只要会上网冲浪就有写爬虫程序的天赋</strong>。</p>
+<p>爬虫为什么是虫呢？因为虫子的头脑比较简单，爬虫程序也是 ++“一根筋”++ ，不需要讳莫如深的数学知识，也不用设计精巧的各类算法。我们只需要用计算机能听懂的“大白话”平铺直叙就可以啦。</p>
+<h2 id="开发爬虫的基本套路"><a href="#开发爬虫的基本套路" class="headerlink" title="开发爬虫的基本套路"></a>开发爬虫的基本套路</h2><p>一句话总结所有爬虫程序的作用： 模拟人类上网的操作，以此来查找、下载、存储数据。<br>接下来我要以 <span class="exturl" data-url="aHR0cHM6Ly93d3cubmFucmVudHUuY2Mvc2d0cC8=" title="https://www.nanrentu.cc/sgtp/">男人图<i class="fa fa-external-link"></i></span>这个网站为例，分享套路。</p>
+<h3 id="step-1：-打开目标网址"><a href="#step-1：-打开目标网址" class="headerlink" title="step 1： 打开目标网址"></a>step 1： 打开目标网址</h3><blockquote>
+<p>此处强烈推荐 Chrome</p>
+</blockquote>
+<p>首先打开这个网址：<span class="exturl" data-url="aHR0cHM6Ly93d3cubmFucmVudHUuY2Mvc2d0cC/vvIw=" title="https://www.nanrentu.cc/sgtp/，">https://www.nanrentu.cc/sgtp/，<i class="fa fa-external-link"></i></span> 会看到以下界面</p>
+<p><img alt="3I7ph6.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a8597fab14761.jpeg">。</p>
+<p>现在我们只是用浏览器手动打开了这个页面，接下来我们要用代码，让程序也打开这个页面。这就要分析一下浏览器是如何打开这个页面的了，请看简易流程图。</p>
+<p><img alt="3IHqeJ.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a8598ad0b1cf4.png"></p>
+<p>在 python 中，可以使用 <strong>requests</strong> 这一工具包来发送 HTTP 请求。为了了解程序所“看到” 页面是什么样子的，我们需要把程序所得到 HTML 文件保存到本地，然后再用浏览器打开，就能和程序感同身受了。从而达到“人机合一”的境界。</p>
+<p>光说不练假把式，让我们马上来新建一个 <code>index.py</code> 文件，然后在其中编写如下内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">"https://www.nanrentu.cc/sgtp/"</span></span><br><span class="line">response = requests.get(url)</span><br><span class="line"><span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"result.html"</span>,<span class="string">'a'</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(response.text)</span><br></pre></td></tr></table></figure>
+
+<p>在浏览器打开写入的 HTML 文件是这样的</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9pbWdjaHIuY29tL2kvM0lxTTM2" title="https://imgchr.com/i/3IqM36"><img alt="3IqM36.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a8598c1bd9871.png"><i class="fa fa-external-link"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9pbWdjaHIuY29tL2kvM0lxSzl4" title="https://imgchr.com/i/3IqK9x"><img alt="3IqK9x.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a8598ce662bd1.png"><i class="fa fa-external-link"></i></span></p>
+<p>这怎么和在浏览器中看到的不一样呢？</p>
+<p>这个时候我就要亮出一件绝世宝贝————Chrome 调试台（按 F12）来给您分析一波了。<br><img alt="3ILhFA.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a859844c9acfb.png"></p>
+<p>其实我们在浏览器中看到的页面并不仅仅是 HTML 页面，而是 css、js、html 以及各种媒体资源综合在一起并有浏览器最终渲染而出页面，红框的部分，标出了在这个过程中所加载的各个资源。</p>
+<p>当我们用程序去请求服务器时，得到仅仅是 HTML 页面，所以程序和我们所看到的页面就大相径庭了。不过没关系 HTML 是主干，抓住了主干其他的只需要顺藤摸瓜就可以了。</p>
+<h3 id="step2：找到目标资源"><a href="#step2：找到目标资源" class="headerlink" title="step2：找到目标资源"></a>step2：找到目标资源</h3><p>打开这个网址以后，各位小仙女就可以各取所需咯，想体验萧亚轩的快乐嘛？那目标就是小鲜肉；馋彭于晏的那样的身子了？那肌肉帅哥就是你的菜。此外韩国欧巴，欧美型男也是应有尽有。</p>
+<p>人类是高级生物，眼睛会自动聚焦的目标身上，但是爬虫是“一根筋”啊，它可不会自动聚焦，我们还得帮它指引道路。</p>
+<p>写过前端页面的朋友都知道 CSS 样式用过各种选择器来绑定到对应的节点上，那么我们也可以通过 CSS 的选择器来选中我们想要的元素，从而提取信息。Chrome 中已经准备了 CSS 选择器神器，可以生成我们想要元素的选择器。</p>
+<p>具体过程如下：第三步为好好欣赏小哥哥们~</p>
+<p><img alt="3o8dJg.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a8598e105bfa9.png"></p>
+<h3 id="step3：解析页面"><a href="#step3：解析页面" class="headerlink" title="step3：解析页面"></a>step3：解析页面</h3><p>这个时候要介绍页面解析神器<strong>pyquery</strong>，这个工具库可以通过我们所复制的 CSS 选择器，在 HTML 页面中查找对应元素，并且能很便捷地提取各种属性。那么接下来我们就把这个小哥哥解析出来吧。</p>
+<p>我们首先安装 <code>PyQuery</code> 这个包，具体可以使用 pip 包管理器安装，然后将代码修改成如下这样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> pyquery <span class="keyword">import</span> PyQuery <span class="keyword">as</span> pq</span><br><span class="line">url = <span class="string">"https://www.nanrentu.cc/sgtp/"</span></span><br><span class="line">response = requests.get(url)</span><br><span class="line"><span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"result.html"</span>,<span class="string">'w'</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(response.text)</span><br><span class="line">    <span class="comment"># 开始解析</span></span><br><span class="line">    doc = pq(response.text)</span><br><span class="line">    <span class="comment"># 把复制的选择器粘贴进去</span></span><br><span class="line">    <span class="comment"># 选择对应的节点</span></span><br><span class="line">    imgElement = doc(<span class="string">'body &gt; div:nth-child(5) &gt; div &gt; div &gt; div:nth-child(2) &gt; ul &gt; li:nth-child(3) &gt; a &gt; img'</span>)</span><br><span class="line">    <span class="comment"># 提取属性，获取图片链接</span></span><br><span class="line">    imgSrc = imgElement.attr(<span class="string">'src'</span>)</span><br><span class="line">    <span class="comment"># 将图片链接输出在屏幕上</span></span><br><span class="line">    print(imgSrc)</span><br></pre></td></tr></table></figure>
+
+<h3 id="step4：存储目标"><a href="#step4：存储目标" class="headerlink" title="step4：存储目标"></a>step4：存储目标</h3><p>这么好看的小哥哥怎么能只让他在互联网上呆着呢？把他放进硬盘里的<strong>学习资料</strong>文件夹里才是最安全的。接下来，我们就把小哥哥放到碗里来。</p>
+<p>下载图片的过程其实和抓取 HTML 页面的流程是一样的，也是利用 <strong>requests</strong> 发送请求从而获取到数据流再保存到本地。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> pyquery <span class="keyword">import</span> PyQuery <span class="keyword">as</span> pq</span><br><span class="line">url = <span class="string">"https://www.nanrentu.cc/sgtp/"</span></span><br><span class="line">response = requests.get(url)</span><br><span class="line"><span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"result.html"</span>,<span class="string">'w'</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(response.text)</span><br><span class="line">    doc = pq(response.text)</span><br><span class="line">    imgElement = doc(<span class="string">'body &gt; div:nth-child(5) &gt; div &gt; div &gt; div:nth-child(2) &gt; ul &gt; li:nth-child(3) &gt; a &gt; img'</span>)</span><br><span class="line">    imgSrc = imgElement.attr(<span class="string">'src'</span>)</span><br><span class="line">    print(imgSrc)</span><br><span class="line">    <span class="comment"># 下载图片</span></span><br><span class="line">    imgResponse = requests.get(imgSrc)</span><br><span class="line">    <span class="keyword">if</span> imgResponse.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="comment"># 填写文件路径 以二进制的形式写入文件</span></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'学习文件/boy.jpg'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(imgResponse.content)</span><br><span class="line">            f.close()</span><br></pre></td></tr></table></figure>
+
+<p>此时先来看看效果</p>
+<p><img alt="3odp8K.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a859880095609.png"></p>
+<h3 id="四步虫"><a href="#四步虫" class="headerlink" title="四步虫"></a>四步虫</h3><p>至此仅仅十多行代码就完成了一个小爬虫，是不是很简单。其实爬虫的基本思路就这四步，所谓复杂的爬虫就是在这个四步的基础上不断演化而来的。爬虫最终的目的是为了获取各种资源（文本或图片），所有的操作都是以资源为核心的。</p>
+<ol>
+<li>打开资源</li>
+<li>定位资源</li>
+<li>解析资源</li>
+<li>下载资源</li>
+</ol>
+<h2 id="更多的小哥哥"><a href="#更多的小哥哥" class="headerlink" title="更多的小哥哥"></a>更多的小哥哥</h2><p>通过上述步骤我们只能获取到一个小哥哥，集美们就说了，我直接右击鼠标下载也可以啊，干嘛费劲写爬虫呢？那接下来，我们就升级一波选择器，把小哥哥们装进数组，统统搞到碗里来。</p>
+<h3 id="重构代码"><a href="#重构代码" class="headerlink" title="重构代码"></a>重构代码</h3><p>为了以后写代码更方便，要先进行一个简单的重构，让代码调理清晰。</p>
+<ol>
+<li>增加入口函数</li>
+<li>封装对于图片的操作</li>
+</ol>
+<p>重构后的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> pyquery <span class="keyword">import</span> PyQuery <span class="keyword">as</span> pq</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">saveImage</span><span class="params">(imgUrl,name)</span>:</span></span><br><span class="line">    imgResponse = requests.get(imgUrl)</span><br><span class="line">    fileName = <span class="string">"学习文件/%s.jpg"</span> % name</span><br><span class="line">    <span class="keyword">if</span> imgResponse.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">with</span> open(fileName, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(imgResponse.content)</span><br><span class="line">            f.close()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    baseUrl = <span class="string">"https://www.nanrentu.cc/sgtp/"</span></span><br><span class="line">    response = requests.get(baseUrl)</span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">"result.html"</span>,<span class="string">'w'</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(response.text)</span><br><span class="line">        doc = pq(response.text)</span><br><span class="line">        imgElement = doc(<span class="string">'body &gt; div:nth-child(5) &gt; div &gt; div &gt; div:nth-child(2) &gt; ul &gt; li:nth-child(3) &gt; a &gt; img'</span>)</span><br><span class="line">        imgSrc = imgElement.attr(<span class="string">'src'</span>)</span><br><span class="line">        print(imgSrc)</span><br><span class="line">        saveImage(imgSrc,<span class="string">'boy'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="升级选择器"><a href="#升级选择器" class="headerlink" title="升级选择器"></a>升级选择器</h3><p>有过前端编程经验的同学们可以看出来，Chrome 自动生成的选择器指定了具体的某个子元素，所以就只选中了一个小哥哥，那么接下来我们要分析出通用的选择器，把臭弟弟们一锅端。</p>
+<p><img alt="3oy7nK.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a85996666300f.png"></p>
+<p>多拿着鼠标点点这个调试台，一层层地看这个 HTML 文件的元素层级，找到其中相同重复的地方，这就是我们的突破口所在。</p>
+<p>我们可以看出图片都在一个类名为 h-piclist 的 <code>&lt;ul&gt;</code> 标签中，那么我们可写出以下的选择器 <code>.h-piclist &gt; li &gt; a &gt; img</code>。这样就选中了这一页所有的图片元素。接着用一个 for 循环遍历就可以了。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> pyquery <span class="keyword">import</span> PyQuery <span class="keyword">as</span> pq</span><br><span class="line"></span><br><span class="line"><span class="comment"># 引入UUID为图片命名</span></span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">saveImage</span><span class="params">(imgUrl,name)</span>:</span></span><br><span class="line">    imgResponse = requests.get(imgUrl)</span><br><span class="line">    fileName = <span class="string">"学习文件/%s.jpg"</span> % name</span><br><span class="line">    <span class="keyword">if</span> imgResponse.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">with</span> open(fileName, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(imgResponse.content)</span><br><span class="line">            f.close()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    baseUrl = <span class="string">"https://www.nanrentu.cc/sgtp/"</span></span><br><span class="line">    response = requests.get(baseUrl)</span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">"result.html"</span>,<span class="string">'w'</span>,encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(response.text)</span><br><span class="line">        doc = pq(response.text)</span><br><span class="line">        <span class="comment"># 选则这一页中所有的目标图片元素</span></span><br><span class="line">        imgElements = doc(<span class="string">'.h-piclist &gt; li &gt; a &gt; img'</span>).items()</span><br><span class="line">        <span class="comment"># 遍历这些图片元素</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> imgElements:</span><br><span class="line">            imgSrc = i.attr(<span class="string">'src'</span>)</span><br><span class="line">            print(imgSrc)</span><br><span class="line">            saveImage(imgSrc,uuid.uuid1().hex)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="无法下载的图片"><a href="#无法下载的图片" class="headerlink" title="无法下载的图片"></a>无法下载的图片</h3><p><span class="exturl" data-url="aHR0cHM6Ly9pbWdjaHIuY29tL2kvM28yWWdz" title="https://imgchr.com/i/3o2Ygs"><img alt="3o2Ygs.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a85994d41ebe6.png"><i class="fa fa-external-link"></i></span></p>
+<p>可以看出图片的连接已经全部拿到了，但是当去下载图片时却发生了一些意外，请求图片竟然没有反应。这是哪里出了问题呢？图片连接全部拿到，证明代码没毛病，把图片链接放到浏览器里正常打开，证明连接没毛病，那现在可能就是网络有毛病了。</p>
+<ol>
+<li>网速慢</li>
+<li>网络波动</li>
+<li>对方网站有防爬措施</li>
+<li>……</li>
+</ol>
+<p>这时候因素很多，我们首先用最简单的方法来解决问题，断线重连。把笔记本 WIFI 重启，重新加入网络，再运行程序。</p>
+<p>惊喜来了，臭弟弟们成功入库。</p>
+<p><img alt="3o2T8H.png" data-src="https://static.powerformer.com/c/@5e60587.md/170a86202fde364b.jpeg"></p>
+<p>当然啦，这种方式并不是银弹，我们需要有更多的技巧来提升爬虫程序的“演技”，我们的爬虫程序表现的越像个人，那我们获取资源的成功率就会越高。</p>
+<p>看到这里，应该跨进爬虫世界的大门了，如果这个世界有主题曲的话那么一定是薛之谦的《演员》接下来的教程中会一遍磨砺“演技”，一遍获取更多的小哥哥。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/03/05/@5e60587/" title="爬虫养成记——先跨进这个精彩的世界（女生定制篇）">https://tuture.co/2020/03/05/@5e60587/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/03/-Oixkkq/" rel="next" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（六）">
+                  <i class="fa fa-chevron-left"></i> 从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（六）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/06/0X8ssR3/" rel="prev" title="Docker 筑梦师系列（二）：上手容器数据管理">
+                  Docker 筑梦师系列（二）：上手容器数据管理 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#预备知识"><span class="nav-number">1.</span> <span class="nav-text">预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这是最简单的计算机程序"><span class="nav-number">2.</span> <span class="nav-text">这是最简单的计算机程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发爬虫的基本套路"><span class="nav-number">3.</span> <span class="nav-text">开发爬虫的基本套路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#step-1：-打开目标网址"><span class="nav-number">3.1.</span> <span class="nav-text">step 1： 打开目标网址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step2：找到目标资源"><span class="nav-number">3.2.</span> <span class="nav-text">step2：找到目标资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step3：解析页面"><span class="nav-number">3.3.</span> <span class="nav-text">step3：解析页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#step4：存储目标"><span class="nav-number">3.4.</span> <span class="nav-text">step4：存储目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四步虫"><span class="nav-number">3.5.</span> <span class="nav-text">四步虫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多的小哥哥"><span class="nav-number">4.</span> <span class="nav-text">更多的小哥哥</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重构代码"><span class="nav-number">4.1.</span> <span class="nav-text">重构代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级选择器"><span class="nav-number">4.2.</span> <span class="nav-text">升级选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无法下载的图片"><span class="nav-number">4.3.</span> <span class="nav-text">无法下载的图片</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

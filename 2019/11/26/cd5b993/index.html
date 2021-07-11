@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Node.js 已经成为 Web 后台开发圈一股不容忽视的力量，凭借其良好的异步性能、丰富的 npm 库以及 JavaScript 语言方面的优势，已经成为了很多大公司开发其后台架构的重要技术之一，而 Express 框架则是其中知名度最高、也是最受欢迎的后端开发框架。在这篇教程中，你将了解 Express 在 Node 内置 http 模块的基础上做了怎样的封装，并掌握路由和中间件这两个关键概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一杯茶的时间，上手 Express 框架开发">
+<meta property="og:url" content="https://tuture.co/2019/11/26/cd5b993/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="Node.js 已经成为 Web 后台开发圈一股不容忽视的力量，凭借其良好的异步性能、丰富的 npm 库以及 JavaScript 语言方面的优势，已经成为了很多大公司开发其后台架构的重要技术之一，而 Express 框架则是其中知名度最高、也是最受欢迎的后端开发框架。在这篇教程中，你将了解 Express 在 Node 内置 http 模块的基础上做了怎样的封装，并掌握路由和中间件这两个关键概念">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/cd5b993/cover.png">
+<meta property="article:published_time" content="2019-11-26T04:31:31.116Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:33.948Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Express">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/cd5b993/cover.png">
+  <link rel="canonical" href="https://tuture.co/2019/11/26/cd5b993/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一杯茶的时间，上手 Express 框架开发 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2019/11/26/cd5b993/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">一杯茶的时间，上手 Express 框架开发
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-26 12:31:31" itemprop="dateCreated datePublished" datetime="2019-11-26T12:31:31+08:00">2019-11-26</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:33" itemprop="dateModified" datetime="2021-07-11T15:16:33+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Node-js/" itemprop="url" rel="index"><span itemprop="name">Node.js</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Node-js/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>15k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>13 分钟</span>
+            </span>
+          
+            <div class="post-description">Node.js 已经成为 Web 后台开发圈一股不容忽视的力量，凭借其良好的异步性能、丰富的 npm 库以及 JavaScript 语言方面的优势，已经成为了很多大公司开发其后台架构的重要技术之一，而 Express 框架则是其中知名度最高、也是最受欢迎的后端开发框架。在这篇教程中，你将了解 Express 在 Node 内置 http 模块的基础上做了怎样的封装，并掌握路由和中间件这两个关键概念，学习和使用模板引擎、静态文件服务、错误处理和 JSON API，最终开发出一个简单的个人简历网站。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/cd5b993/cover.png" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcw==" title="https://github.com/mRcfps"><img alt class="avatar" data-src="/images/avatars/mRcfps.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcw==" title="https://github.com/mRcfps"><p class="nickName">@mRcfps</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZQ==" title="https://github.com/mRcfps/express_resume"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="旧时代：用内置-http-模块实现一个服务器"><a href="#旧时代：用内置-http-模块实现一个服务器" class="headerlink" title="旧时代：用内置 http 模块实现一个服务器"></a>旧时代：用内置 http 模块实现一个服务器</h2><div class="note primary">
+            <p><strong>主要</strong></p><p>此教程属于<a href="https://tuture.co/roadmaps/node/">Node.js 后端工程师学习路线</a>的一部分，点击可查看全部内容。</p>
+          </div>
+
+<p>自从 Ryan Dahl 在 2009 年的 JSConf 正式推出 Node.js 平台后，这门技术的使用率就如同坐了火箭一般迅速上升，成为了最受喜爱的后端开发平台之一，而 Express 则是其中最为耀眼的 Web 框架。在正式开始这篇教程之前，我们将列举一下这篇教程所需要的预备知识、所用技术和学习目标。</p>
+<h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h3><p>本教程假定你已经知道了：</p>
+<ul>
+<li>JavaScript 语言基础知识（包括一些常用的 ES6+ 语法）</li>
+<li>Node.js 基础知识，特别是异步编程（这篇教程主要用到的是回调函数）和 Node 模块机制，还有 npm 的基本使用，可以参考<a href="https://tuture.co/2019/12/03/892fa12/">这篇教程</a>进行学习</li>
+<li>HTTP 协议基础知识，浏览器和服务器之间是如何互动的</li>
+</ul>
+<h3 id="所用技术"><a href="#所用技术" class="headerlink" title="所用技术"></a>所用技术</h3><ul>
+<li><strong>Node.js</strong>：8.x 及以上</li>
+<li><strong>npm</strong>：6.x 及以上</li>
+<li><strong>Express.js</strong>：4.x</li>
+</ul>
+<h3 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h3><p>读完这篇教程后，你将学会</p>
+<ul>
+<li>Express 框架的两大核心概念：路由和中间件</li>
+<li>用 Nodemon 加速开发迭代</li>
+<li>使用模板引擎渲染页面，并接入 Express 框架中</li>
+<li>使用 Express 的静态文件服务</li>
+<li>编写自定义的错误处理函数</li>
+<li>实现一个简单的 JSON API 端口</li>
+<li>通过子路由拆分逻辑，实现模块化</li>
+</ul>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>虽然数据库是后端开发中非常重要的环节，但 Express 并不内置处理数据库的模块，需要额外的第三方库提供支持。这篇教程将重点放在了 Express 相关的概念讲解上，因此不会涉及数据库的开发。在学完这篇教程后，你可以浏览 Express 相关的进阶教程。</p>
+          </div>
+
+<h3 id="用内置-http-模块创建服务器"><a href="#用内置-http-模块创建服务器" class="headerlink" title="用内置 http 模块创建服务器"></a>用内置 http 模块创建服务器</h3><p>在讲解 Express 之前，我们先了解一下怎么用 Node.js 内置的 http 模块来实现一个服务器，从而能够更好地了解 Express 对底层的 Node 代码做了哪些抽象和封装。如果你还没有安装 Node.js，可以去<span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnLw==" title="https://nodejs.org/">官方网站<i class="fa fa-external-link"></i></span>下载并安装。</p>
+<p>我们将实现一个个人简历网站。创建一个文件夹 express_resume，并进入其中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir express_resume &amp;&amp; <span class="built_in">cd</span> express_resume</span><br></pre></td></tr></table></figure>
+
+<p>创建 server.js 文件，代码如下：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzM3MmEwMjEvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/372a021/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'localhost'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = http.createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.statusCode = <span class="number">200</span>;</span><br><span class="line">  res.setHeader(<span class="string">'Content-Type'</span>, <span class="string">'text/html'</span>);</span><br><span class="line">  res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果你熟悉 Node.js，上面的代码含义很清晰：</p>
+<ol>
+<li>导入 http 模块</li>
+<li>指定服务器的主机名 <code>hostname</code> 和端口号 <code>port</code></li>
+<li>用 <code>http.createServer</code> 创建 HTTP 服务器，参数为一个回调函数，接受一个请求对象 <code>req</code> 和响应对象 <code>res</code>，并在回调函数中写入响应内容（状态码 200，类型为 HTML 文档，内容为 <code>Hello World</code>）</li>
+<li>在指定的端口开启服务器</li>
+</ol>
+<p>最后运行 server.js：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node server.js</span><br></pre></td></tr></table></figure>
+
+<p>用浏览器打开 <span class="exturl" data-url="bG9jYWxob3N0OjMwMDA=" title="localhost:3000">localhost:3000<i class="fa fa-external-link"></i></span>，可以看到 Hello World 的提示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/image.png"></p>
+<p>可以发现，直接用内置的 http 模块去开发服务器有以下明显的弊端：</p>
+<ul>
+<li><strong>需要写很多底层代码</strong>——例如手动指定 HTTP 状态码和头部字段，最终返回内容。如果我们需要开发更复杂的功能，涉及到多种状态码和头部信息（例如用户鉴权），这样的手动管理模式非常不方便</li>
+<li><strong>没有专门的路由机制</strong>——路由是服务器最重要的功能之一，通过路由才能根据客户端的不同请求 URL 及 HTTP 方法来返回相应内容。但是上面这段代码只能在 <code>http.createServer</code> 的回调函数中通过判断请求 <code>req</code> 的内容才能实现路由功能，搭建大型应用时力不从心</li>
+</ul>
+<p>由此就引出了 Express 对内置 http 的两大封装和改进：</p>
+<ul>
+<li>更强大的请求（Request）和响应（Response）对象，添加了很多实用方法</li>
+<li>灵活方便的路由的定义与解析，能够很方便地进行代码拆分</li>
+</ul>
+<p>接下来，我们将开始用 Express 来开发 Web 服务器！</p>
+<h2 id="新时代：用-Express-搭建服务器"><a href="#新时代：用-Express-搭建服务器" class="headerlink" title="新时代：用 Express 搭建服务器"></a>新时代：用 Express 搭建服务器</h2><p>在第一步中，我们把服务器放在了一个 JS 文件中，也就是一个 Node 模块。从现在开始，我们将把这个项目变成一个 npm 项目。输入以下命令创建 npm 项目：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>接着你可以一路回车下去（当然也可以仔细填），就会发现 package.json 文件已经创建好了。然后添加 Express 项目依赖：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install express</span><br></pre></td></tr></table></figure>
+
+<p>在开始用 Express 改写上面的服务器之前，我们先介绍一下上面提到的<strong>两大封装与改进</strong>。</p>
+<h3 id="更强大的-Request-和-Response-对象"><a href="#更强大的-Request-和-Response-对象" class="headerlink" title="更强大的 Request 和 Response 对象"></a>更强大的 Request 和 Response 对象</h3><p>首先是 Request 请求对象，通常我们习惯用 <code>req</code> 变量来表示。下面列举一些 <code>req</code> 上比较重要的成员（如果不知道是什么也没关系哦）：</p>
+<ul>
+<li><code>req.body</code>：客户端请求体的数据，可能是表单或 JSON 数据</li>
+<li><code>req.params</code>：请求 URI 中的路径参数</li>
+<li><code>req.query</code>：请求 URI 中的查询参数</li>
+<li><code>req.cookies</code>：客户端的 cookies</li>
+</ul>
+<p>然后是 Response 响应对象，通常用 <code>res</code> 变量来表示，可以执行一系列响应操作，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 发送一串 HTML 代码</span></span><br><span class="line">res.send(<span class="string">'HTML String'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送一个文件</span></span><br><span class="line">res.sendFile(<span class="string">'file.zip'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 渲染一个模板引擎并发送</span></span><br><span class="line">res.render(<span class="string">'index'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Response 对象上的操作非常丰富，并且还可以链式调用：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 设置状态码为 404，并返回 Page Not Found 字符串</span></span><br><span class="line">res.status(<span class="number">404</span>).send(<span class="string">'Page Not Found'</span>);</span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>在这里我们并没有简单地列举 Request 和 Response 的<span class="exturl" data-url="aHR0cDovL2V4cHJlc3Nqcy5jb20vZW4vNHgvYXBpLmh0bWw=" title="http://expressjs.com/en/4x/api.html">全部 API<i class="fa fa-external-link"></i></span> ，因为<a href="https://tuture.co">图雀社区</a>的理念是——从实战中学习和深化理解，拒绝枯燥的 API 记忆！</p>
+          </div>
+
+<h3 id="路由机制"><a href="#路由机制" class="headerlink" title="路由机制"></a>路由机制</h3><p>客户端（包括 Web 前端、移动端等等）向服务器发起请求时包括两个元素：<strong>路径</strong>（URI）以及 <strong>HTTP 请求方法</strong>（包括 GET、POST 等等）。路径和请求方法合起来一般被称为 API 端点（Endpoint）。而服务器根据客户端访问的端点选择相应处理逻辑的机制就叫做路由。</p>
+<p>在 Express 中，定义路由只需按下面这样的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.METHOD(PATH, HANDLER);</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>app</code> 就是一个 <code>express</code> 服务器对象</li>
+<li><code>METHOD</code> 可以是任何<strong>小写</strong>的 HTTP 请求方法，包括 <code>get</code>、<code>post</code>、<code>put</code>、<code>delete</code> 等等</li>
+<li><code>PATH</code> 是客户端访问的 URI，例如 <code>/</code> 或 <code>/about</code></li>
+<li><code>HANDLER</code> 是路由被触发时的回调函数，在函数中可以执行相应的业务逻辑</li>
+</ul>
+<h3 id="nodemon-加速开发"><a href="#nodemon-加速开发" class="headerlink" title="nodemon 加速开发"></a>nodemon 加速开发</h3><p><span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2Uvbm9kZW1vbg==" title="https://www.npmjs.com/package/nodemon">Nodemon<i class="fa fa-external-link"></i></span> 是一款颇受欢迎的开发服务器，能够检测工作区代码的变化，并自动重启。通过以下命令安装 nodemon：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install nodemon --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>这里我们将 nodemon 安装为开发依赖 <code>devDependencies</code>，因为仅仅只有在开发时才需要用到。同时我们在 package.json 中加入 <code>start</code> 命令，代码如下：</p>
+<figure class="highlight json"><figcaption><span>package.json</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzJiODQ5MjMvcGFja2FnZS5qc29u" title="https://github.com/mRcfps/express_resume/blob/2b84923/package.json">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"express_resume"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="attr">"main"</span>: <span class="string">"index.js"</span>,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"start"</span>: <span class="string">"nodemon server.js"</span>,</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="attr">"license"</span>: <span class="string">"ISC"</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"express"</span>: <span class="string">"^4.17.1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"nodemon"</span>: <span class="string">"^2.0.2"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="正式实现"><a href="#正式实现" class="headerlink" title="正式实现"></a>正式实现</h3><p>到了动手的时候了，我们用 Express 改写上面的服务器，代码如下：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzJiODQ5MjMvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/2b84923/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line">[tuture-add]<span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'localhost'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">[tuture-del]<span class="keyword">const</span> server = http.createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">[tuture-del]  res.statusCode = <span class="number">200</span>;</span><br><span class="line">[tuture-del]  res.setHeader(<span class="string">'Content-Type'</span>, <span class="string">'text/html'</span>);</span><br><span class="line">[tuture-del]  res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">[tuture-add]<span class="keyword">const</span> app = express();</span><br><span class="line">[tuture-add]app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-add]  res.send(<span class="string">'Hello World'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">[tuture-del]server.listen(port, () =&gt; &#123;</span><br><span class="line">[tuture-add]app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们首先用 <code>express()</code> 函数创建一个 Express 服务器对象，然后用上面提到的路由定义方法 <code>app.get</code> 定义了主页 <code>/</code> 的路由，最后同样调用 <code>listen</code> 方法开启服务器。</p>
+<p>从这一步开始，我们运行 <code>npm start</code> 命令即可开启服务器，并且同样可以看到 Hello World 的内容，但是代码却简单明了了不少。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>在运行 <code>npm start</code> 之后，可以让服务器一直打开着，编辑代码并保存后，Nodemon 就会自动重启服务器，运行最新的代码。</p>
+          </div>
+
+<h2 id="编写第一个中间件"><a href="#编写第一个中间件" class="headerlink" title="编写第一个中间件"></a>编写第一个中间件</h2><p>接下来我们开始讲解 Express 第二个重要的概念：<strong>中间件</strong>（Middleware）。</p>
+<h3 id="理解中间件"><a href="#理解中间件" class="headerlink" title="理解中间件"></a>理解中间件</h3><p>中间件并不是 Express 独有的概念。相反，它是一种广为使用的软件工程概念（甚至已经延伸到了其他行业），是指<strong>将具体的业务逻辑和底层逻辑解耦的组件</strong>（可查看这个<span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5NzMwNTgy" title="https://www.zhihu.com/question/19730582">讨论<i class="fa fa-external-link"></i></span>）。换句话说，中间件就是能够适用多个应用场景、可复用性良好的代码。</p>
+<p>Express 的简化版中间件流程如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/middleware.png"></p>
+<p>首先客户端向服务器发起请求，然后服务器依次执行每个中间件，最后到达路由，选择相应的逻辑来执行。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>这个是一个简化版的流程描述，目的是便于你对中间件有个初步的认识，在后面的章节中我们将进一步完善这一流程。</p>
+          </div>
+
+<p>有两点需要特别注意：</p>
+<ul>
+<li>中间件是<strong>按顺序执行</strong>的，因此在配置中间件时顺序非常重要，不能弄错</li>
+<li>中间件在执行内部逻辑的时候可以选择将请求传递给下一个中间件，也可以直接返回用户响应</li>
+</ul>
+<h3 id="Express-中间件的定义"><a href="#Express-中间件的定义" class="headerlink" title="Express 中间件的定义"></a>Express 中间件的定义</h3><p>在 Express 中，中间件就是一个函数：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">someMiddleware</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 自定义逻辑</span></span><br><span class="line">  next();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三个参数中，<code>req</code> 和 <code>res</code> 就是前面提到的 Request 请求对象和 Response 响应对象；而 <code>next</code> 函数则用来触发下一个中间件的执行。</p>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>如果忘记在中间件中调用 <code>next</code> 函数，并且又不直接返回响应时，服务器会直接卡在这个中间件不会继续执行下去哦！</p>
+          </div>
+
+<p>在 Express 使用中间件有两种方式：<strong>全局中间件</strong>和<strong>路由中间件</strong>。</p>
+<h4 id="全局中间件"><a href="#全局中间件" class="headerlink" title="全局中间件"></a>全局中间件</h4><p>通过 <code>app.use</code> 函数就可以注册中间件，并且此中间件会在用户发起<strong>任何请求</strong>都可能会执行，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.use(someMiddleware);</span><br></pre></td></tr></table></figure>
+
+<h4 id="路由中间件"><a href="#路由中间件" class="headerlink" title="路由中间件"></a>路由中间件</h4><p>通过在路由定义时注册中间件，此中间件只会在用户访问该路由对应的 URI 时执行，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">'/middleware'</span>, someMiddleware, (req, res) =&gt; &#123;</span><br><span class="line">  res.send(<span class="string">'Hello World'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>那么用户只有在访问 <code>/middleware</code> 时，定义的 <code>someMiddleware</code> 中间件才会被触发，访问其他路径时不会触发。</p>
+<h3 id="编写中间件"><a href="#编写中间件" class="headerlink" title="编写中间件"></a>编写中间件</h3><p>接下来我们就开始实现第一个 Express 中间件。功能很简单，就是在终端打印客户端的访问时间、 HTTP 请求方法和 URI。代码如下：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2YzMzE3MjIvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/f331722/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]<span class="function"><span class="keyword">function</span> <span class="title">loggingMiddleware</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> time = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">[tuture-add]  <span class="built_in">console</span>.log(<span class="string">`[<span class="subst">$&#123;time.toLocaleString()&#125;</span>] <span class="subst">$&#123;req.method&#125;</span> <span class="subst">$&#123;req.url&#125;</span>`</span>);</span><br><span class="line">[tuture-add]  next();</span><br><span class="line">[tuture-add]&#125;</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]app.use(loggingMiddleware);</span><br><span class="line">[tuture-add]</span><br><span class="line">app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.send(<span class="string">'Hello World'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<div class="note warning">
+            <p><strong>注意</strong></p><p>在中间件中写 <code>console.log</code> 语句是比较糟糕的做法，因为 <code>console.log</code>（包括其他同步的代码）都会阻塞 Node.js 的异步事件循环，降低服务器的吞吐率。在实际生产中，推荐使用第三方优秀的日志中间件，例如 <span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvbW9yZ2Fu" title="https://www.npmjs.com/package/morgan">morgan<i class="fa fa-external-link"></i></span>、<span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2Uvd2luc3Rvbg==" title="https://www.npmjs.com/package/winston">winston<i class="fa fa-external-link"></i></span> 等等。</p>
+          </div>
+
+<p>运行服务器，然后用浏览器尝试访问各个路径。这里我访问了首页（<span class="exturl" data-url="bG9jYWxob3N0OjMwMDA=" title="localhost:3000">localhost:3000<i class="fa fa-external-link"></i></span>）和 <code>/hello</code>（<span class="exturl" data-url="bG9jYWxob3N0OjMwMDAvaGVsbG8=" title="localhost:3000/hello">localhost:3000/hello<i class="fa fa-external-link"></i></span>，浏览器应该看到的是 404），可以看到控制台相应的输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[11&#x2F;28&#x2F;2019, 3:54:05 PM] GET &#x2F;</span><br><span class="line">[11&#x2F;28&#x2F;2019, 3:54:11 PM] GET &#x2F;hello</span><br></pre></td></tr></table></figure>
+
+<p>这里为了让你初步理解中间件的概念，我们只实现了一个功能很简单的中间件。实际上，中间件不仅可以读取 <code>req</code> 对象上的各个属性，还可以添加新的属性或修改已有的属性（后面的中间件和路由函数都可以获取），能够很方便地实现一些复杂的业务逻辑（例如用户鉴权）。</p>
+<h2 id="用模板引擎渲染页面"><a href="#用模板引擎渲染页面" class="headerlink" title="用模板引擎渲染页面"></a>用模板引擎渲染页面</h2><p>最后，我们的网站要开始展示一些实际内容了。Express 对当今主流的模板引擎（例如 Pug、Handlebars、EJS 等等）提供了很好的支持，可以做到两行代码接入。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>如果你不了解模板引擎，不用担心，这篇教程几乎不需要用到它的高级功能，你只需理解成一个“升级版的 HTML 文档”即可。</p>
+          </div>
+
+<p>这篇教程将使用 <span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvaGFuZGxlYmFycw==" title="https://www.npmjs.com/package/handlebars">Handlebars<i class="fa fa-external-link"></i></span> 作为模板引擎。首先添加 npm 包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hbs</span><br></pre></td></tr></table></figure>
+
+<p>创建 views 文件夹，用于放置所有的模板。然后在其中创建首页模板 index.hbs，代码如下：</p>
+<figure class="highlight hbs"><figcaption><span>views/index.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzVlZDFlNmMvdmlld3MvaW5kZXguaGJz" title="https://github.com/mRcfps/express_resume/blob/5ed1e6c/views/index.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>个人简历<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>我是一只小小的图雀，渴望学习技术，磨炼实战本领。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'/contact'</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>创建联系页面模板 contact.hbs，代码如下：</p>
+<figure class="highlight hbs"><figcaption><span>views/contact.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzVlZDFlNmMvdmlld3MvY29udGFjdC5oYnM=" title="https://github.com/mRcfps/express_resume/blob/5ed1e6c/views/contact.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>QQ：1234567<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>微信：一只图雀<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>邮箱：mrc@tuture.co<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>最后便是在 server.js 中配置和使用模板。配置模板的代码非常简单：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 指定模板存放目录</span></span><br><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'/path/to/templates'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定模板引擎为 Handlebars</span></span><br><span class="line">app.set(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在使用模板时，只需在路由函数中调用 <code>res.render</code> 方法即可：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 渲染名称为 hello.hbs 的模板</span></span><br><span class="line">res.render(<span class="string">'hello'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>修改后的 server.js 代码如下：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzVlZDFlNmMvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/5ed1e6c/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line">[tuture-add]<span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'localhost'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"></span><br><span class="line">[tuture-add]app.set(<span class="string">'views'</span>, <span class="string">'views'</span>);</span><br><span class="line">[tuture-add]app.set(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingMiddleware</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> time = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`[<span class="subst">$&#123;time.toLocaleString()&#125;</span>] <span class="subst">$&#123;req.method&#125;</span> <span class="subst">$&#123;req.url&#125;</span>`</span>);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">app.use(loggingMiddleware);</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-del]  res.send(<span class="string">'Hello World'</span>);</span><br><span class="line">[tuture-add]  res.render(<span class="string">'index'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">[tuture-add]app.get(<span class="string">'/contact'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-add]  res.render(<span class="string">'contact'</span>);</span><br><span class="line">[tuture-add]&#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>注意在上面的代码中，我们添加了 <code>GET /contact</code> 的路由定义。</p>
+<p>确保服务器在运行，访问我们的主页，可以看到：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/index.png"></p>
+<p>点击”联系方式“，跳转到相应页面：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/contact.png"></p>
+<h2 id="添加静态文件服务"><a href="#添加静态文件服务" class="headerlink" title="添加静态文件服务"></a>添加静态文件服务</h2><p>通常网站需要提供静态文件服务，例如图片、CSS 文件、JS 文件等等，而 Express 已经自带了静态文件服务中间件 <code>express.static</code>，使用起来非常方便。</p>
+<p>例如，我们添加静态文件中间件如下，并指定静态资源根目录为 <code>public</code>：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2I4NTg1ZDIvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/b8585d2/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(loggingMiddleware);</span><br><span class="line">[tuture-add]app.use(express.static(<span class="string">'public'</span>));</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.render(<span class="string">'index'</span>);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>假设项目的 public 目录里面有这些静态文件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public</span><br><span class="line">├── css</span><br><span class="line">│   └── style.css</span><br><span class="line">└── img</span><br><span class="line">    └── tuture-logo.png</span><br></pre></td></tr></table></figure>
+
+<p>就可以分别通过以下路径访问：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:3000&#x2F;css&#x2F;style.css</span><br><span class="line">http:&#x2F;&#x2F;localhost:3000&#x2F;img&#x2F;tuture-logo.png</span><br></pre></td></tr></table></figure>
+
+<p>样式文件 public/css/style.css 的代码如下（直接复制粘贴即可）：</p>
+<figure class="highlight css"><figcaption><span>public/css/style.css</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2I4NTg1ZDIvcHVibGljL2Nzcy9zdHlsZS5jc3M=" title="https://github.com/mRcfps/express_resume/blob/b8585d2/public/css/style.css">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: blue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> dashed grey;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: blueviolet;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>图片文件可通过这个 GitHub 上的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9yYXcvbWFzdGVyL3B1YmxpYy9pbWcvdHV0dXJlLWxvZ28ucG5n" title="https://github.com/mRcfps/express_resume/raw/master/public/img/tuture-logo.png">链接<i class="fa fa-external-link"></i></span>下载，然后下载到 public/img 目录中。当然，你也可以使用自己的图片，记得在模板中替换相应的链接就可以了。</p>
+<p>在首页模板 views/index.hbs 中加入 CSS 样式表和图片：</p>
+<figure class="highlight hbs"><figcaption><span>views/index.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2I4NTg1ZDIvdmlld3MvaW5kZXguaGJz" title="https://github.com/mRcfps/express_resume/blob/b8585d2/views/index.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml">[tuture-add]<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">href</span>=<span class="string">'/css/style.css'</span> /&gt;</span></span></span><br><span class="line"><span class="xml">[tuture-add]</span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>个人简历<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml">[tuture-add]<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'/img/tuture-logo.png'</span> <span class="attr">alt</span>=<span class="string">'Logo'</span> /&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>我是一只小小的图雀，渴望学习技术，磨炼实战本领。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'/contact'</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在联系模板 views/contact.hbs 中加入样式表：</p>
+<figure class="highlight hbs"><figcaption><span>views/contact.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2I4NTg1ZDIvdmlld3MvY29udGFjdC5oYnM=" title="https://github.com/mRcfps/express_resume/blob/b8585d2/views/contact.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml">[tuture-add]<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">href</span>=<span class="string">'/css/style.css'</span> /&gt;</span></span></span><br><span class="line"><span class="xml">[tuture-add]</span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>QQ：1234567<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>微信：一只图雀<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>再次运行服务器，并访问我们的网站。首页如下：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/index-with-style.png"></p>
+<p>联系我们页面如下：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/contact-with-style.png"></p>
+<p>可以看到样式表和图片都成功加载出来了！</p>
+<h2 id="处理-404-和服务器错误"><a href="#处理-404-和服务器错误" class="headerlink" title="处理 404 和服务器错误"></a>处理 404 和服务器错误</h2><p>人有悲欢离合，月有阴晴圆缺，服务器也有出错的时候。HTTP 错误一般分为两大类：</p>
+<ul>
+<li>客户端方面的错误（状态码 4xx），例如访问了不存在的页面（404）、权限不够（403）等等</li>
+<li>服务器方面的错误（状态码 5xx），例如服务器内部出现错误（500）或网关错误（503）等等</li>
+</ul>
+<p>如果你打开服务器，访问一个不存在的路径，例如 <code>localhost:3000/what</code>，就会出现这样的页面：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/raw-404.png"></p>
+<p>很显然，这样的用户体验是很糟糕的。</p>
+<p>在这一节中，我们将讲解如何在 Express 框架中处理 404（页面不存在）及 500（服务器内部错误）。在此之前，我们要完善一下 Express 中间件的运作流程，如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/middleware-new.png"></p>
+<p>这张示意图和之前的图有两点重大区别：</p>
+<ul>
+<li>每个路由定义本质上是一个<strong>中间件</strong>（更准确地说是一个<strong>中间件容器</strong>，可包含多个中间件），当 URI 匹配成功时直接返回响应，匹配失败时继续执行下一个路由</li>
+<li>每个中间件（包括路由）不仅可以调用 <code>next</code> 函数向下传递、直接返回响应，还可以<strong>抛出异常</strong></li>
+</ul>
+<p>从这张图就可以很清晰地看出怎么实现 404 和服务器错误的处理了：</p>
+<ul>
+<li>对于 404，只需在所有路由之后再加一个中间件，用来接收所有路由均匹配失败的请求</li>
+<li>对于错误处理，前面所有中间件抛出异常时都会进入错误处理函数，可以使用 Express 自带的，也可以自定义。</li>
+</ul>
+<h3 id="处理-404"><a href="#处理-404" class="headerlink" title="处理 404"></a>处理 404</h3><p>在 Express 中，可以通过中间件的方式处理访问不存在的路径：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.use(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>*</code> 表示匹配任何路径。将此中间件放在所有路由后面，即可捕获所有访问路径均匹配失败的请求。</p>
+<h3 id="处理内部错误"><a href="#处理内部错误" class="headerlink" title="处理内部错误"></a>处理内部错误</h3><p>Express 已经自带了错误处理机制，我们先来体验一下。在 server.js 中添加下面这条”坏掉“的路由（模拟现实中出错的情形）：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">'/broken'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Broken!'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然后开启服务器，访问 <code>localhost:3000/broken</code>：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/raw-broken.png"></p>
+<div class="note danger">
+            <p><strong>危险</strong></p><p>服务器直接返回了出错的调用栈！很明显，向用户返回这样的调用栈不仅体验糟糕，而且大大增加了被攻击的风险。</p>
+          </div>
+
+<p>实际上，Express 的默认错误处理机制可以通过设置 <code>NODE_ENV</code> 来进行切换。我们将其设置为生产环境 <code>production</code>，再开启服务器。如果你在 Linux、macOS 或 Windows 下的 Git Bash 环境中，可以运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">NODE_ENV=production node server.js</span><br></pre></td></tr></table></figure>
+
+<p>如果你在 Windows 下的命令行，运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">set</span> NODE_ENV=production</span><br><span class="line">node server.js</span><br></pre></td></tr></table></figure>
+
+<p>这时候访问 <code>localhost:3000/broken</code> 就会直接返回 Internal Server Error（服务器内部错误），不会显示任何错误信息：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/raw-500.png"></p>
+<p>体验还是很不好，更理想的情况是能够返回一个友好的自定义页面。这可以通过 Express 的自定义错误处理函数来解决，错误处理函数的形式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> (<span class="params">err, req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 处理错误逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和普通的中间件函数相比，多了第一个参数，也就是 <code>err</code> 异常对象。</p>
+<h3 id="实现自定义处理逻辑"><a href="#实现自定义处理逻辑" class="headerlink" title="实现自定义处理逻辑"></a>实现自定义处理逻辑</h3><p>通过上面的讲解，实现自定义的 404 和错误处理逻辑也就非常简单了。在 server.js 中添加如下代码：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzkzZWMxNDQvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/93ec144/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  res.render(<span class="string">'contact'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">[tuture-add]app.get(<span class="string">'/broken'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-add]  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Broken!'</span>);</span><br><span class="line">[tuture-add]&#125;);</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]app.use(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-add]  res.status(<span class="number">404</span>).render(<span class="string">'404'</span>, &#123; <span class="attr">url</span>: req.originalUrl &#125;);</span><br><span class="line">[tuture-add]&#125;);</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]app.use(<span class="function">(<span class="params">err, req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">[tuture-add]  <span class="built_in">console</span>.error(err.stack);</span><br><span class="line">[tuture-add]  res.status(<span class="number">500</span>).render(<span class="string">'500'</span>);</span><br><span class="line">[tuture-add]&#125;);</span><br><span class="line">[tuture-add]</span><br><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>在编写处理 404 的逻辑时，我们用到了模板引擎中的变量插值功能。具体而言，在 <code>res.render</code> 方法中将需要传给模板的数据作为第二个参数（例如这里的 <code>{ url: req.originalUrl }</code> 传入了用户访问的路径），在模板中就可以通过 <code>{{ url }}</code> 获取数据了。</p>
+          </div>
+
+<p>404 和 500 的模板代码分别如下：</p>
+<figure class="highlight hbs"><figcaption><span>views/404.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzkzZWMxNDQvdmlld3MvNDA0Lmhicw==" title="https://github.com/mRcfps/express_resume/blob/93ec144/views/404.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">href</span>=<span class="string">'/css/style.css'</span> /&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>找不到你要的页面了！<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>你所访问的路径 </span><span class="template-variable">&#123;&#123;url&#125;&#125;</span><span class="xml"> 不存在<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight hbs"><figcaption><span>views/500.hbs</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzkzZWMxNDQvdmlld3MvNTAwLmhicw==" title="https://github.com/mRcfps/express_resume/blob/93ec144/views/500.hbs">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">href</span>=<span class="string">'/css/style.css'</span> /&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>服务器好像开小差了<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>过一会儿再试试看吧！See your later~<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>再次运行服务器，访问一个不存在的路径：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/not-found.png"></p>
+<p>访问 <code>localhost:3000/broken</code>：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/broken.png"></p>
+<p>体验很不错！</p>
+<h2 id="三行代码实现-JSON-API"><a href="#三行代码实现-JSON-API" class="headerlink" title="三行代码实现 JSON API"></a>三行代码实现 JSON API</h2><p>在这篇教程的最后，我们将实现一个非常简单的 JSON API。如果你有过其他后端 API 开发（特别是 Java）的经验，那么你一定会觉得用 Express 实现一个 JSON API 端口简单得不可思议。在之前提到的 Response 对象中，Express 为我们封装了一个 <code>json</code> 方法，直接就可以将一个 JavaScript 对象作为 JSON 数据返回，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">res.json(&#123; <span class="attr">name</span>: <span class="string">'百万年薪'</span>, <span class="attr">price</span>: <span class="number">996</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>会返回 JSON 数据 <code>{ "name": "百万年薪", "price": 996 }</code>，状态码默认为 200。我们还可以指定状态码，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">res.status(<span class="number">502</span>).json(&#123; <span class="attr">error</span>: <span class="string">'公司关门了'</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>会返回 JSON 数据 <code>{ "error": "公司关门了"}</code>，状态码为 502。</p>
+<p>到了动手环节，让我们在 server.js 实现一个简单的 JSON API 端口 <code>/api</code>，返回关于图雀社区的一些数据：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iLzI2NjMwNGIvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/266304b/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  res.render(<span class="string">'contact'</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">[tuture-add]app.get(<span class="string">'/api'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-add]  res.json(&#123; <span class="attr">name</span>: <span class="string">'图雀社区'</span>, <span class="attr">website</span>: <span class="string">'https://tuture.co'</span> &#125;);</span><br><span class="line">[tuture-add]&#125;);</span><br><span class="line">[tuture-add]</span><br><span class="line">app.get(<span class="string">'/broken'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Broken!'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以用浏览器访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDozMDAwL2FwaQ==" title="http://localhost:3000/api">localhost:3000/api<i class="fa fa-external-link"></i></span> 端口，看到返回了想要的数据：</p>
+<p><img alt data-src="https://static.powerformer.com/c/cd5b993/api.png"></p>
+<p>或者你可以用 <span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vZm5uZy9wLzkxMzY0MzQuaHRtbA==" title="https://www.cnblogs.com/fnng/p/9136434.html">Postman<i class="fa fa-external-link"></i></span> 或 <span class="exturl" data-url="aHR0cHM6Ly9tYW4ubGludXhkZS5uZXQvY3VybA==" title="https://man.linuxde.net/curl">Curl<i class="fa fa-external-link"></i></span> 访问，也能看到想要的数据哦。</p>
+<h2 id="使用子路由拆分逻辑"><a href="#使用子路由拆分逻辑" class="headerlink" title="使用子路由拆分逻辑"></a>使用子路由拆分逻辑</h2><p>当我们的网站规模越来越大时，把所有代码都放在 server.js 中可不是一个好主意。“拆分逻辑”（或者说“模块化”）是最常见的做法，而在 Express 中，我们可以通过子路由 <code>Router</code> 来实现。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> router = express.Router();</span><br></pre></td></tr></table></figure>
+
+<p><code>express.Router</code> 可以理解为一个迷你版的 <code>app</code> 对象，但是它功能完备，同样支持注册中间件和路由：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 注册一个中间件</span></span><br><span class="line">router.use(someMiddleware);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加路由</span></span><br><span class="line">router.get(<span class="string">'/hello'</span>, helloHandler);</span><br><span class="line">router.post(<span class="string">'/world'</span>, worldHandler);</span><br></pre></td></tr></table></figure>
+
+<p>最后，由于 Express 中“万物皆中间件”的思想，一个 <code>Router</code> 也作为中间件加入到 <code>app</code> 中:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.use(<span class="string">'/say'</span>, router);</span><br></pre></td></tr></table></figure>
+
+<p>这样 <code>router</code> 下的全部路由都会加到 <code>/say</code> 之下，即相当于：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">app.get(<span class="string">'/say/hello'</span>, helloHandler);</span><br><span class="line">app.post(<span class="string">'/say/world'</span>, worldHandler);</span><br></pre></td></tr></table></figure>
+
+<h3 id="正式实现-1"><a href="#正式实现-1" class="headerlink" title="正式实现"></a>正式实现</h3><p>到了动手环节，首先创建 routes 目录，用于存放所有的子路由。创建 routes/index.js 文件，代码如下：</p>
+<figure class="highlight js"><figcaption><span>routes/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2ZjNGU4MDQvcm91dGVzL2luZGV4Lmpz" title="https://github.com/mRcfps/express_resume/blob/fc4e804/routes/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> router = express.Router();</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.render(<span class="string">'index'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/contact'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.render(<span class="string">'contact'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = router;</span><br></pre></td></tr></table></figure>
+
+<p>创建 routes/api.js，代码如下：</p>
+<figure class="highlight js"><figcaption><span>routes/api.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2ZjNGU4MDQvcm91dGVzL2FwaS5qcw==" title="https://github.com/mRcfps/express_resume/blob/fc4e804/routes/api.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> router = express.Router();</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.json(&#123; <span class="attr">name</span>: <span class="string">'图雀社区'</span>, <span class="attr">website</span>: <span class="string">'https://tuture.co'</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.post(<span class="string">'/new'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.status(<span class="number">201</span>).json(&#123; <span class="attr">msg</span>: <span class="string">'新的篇章，即将开始'</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = router;</span><br></pre></td></tr></table></figure>
+
+<p>最后我们把 server.js 中老的路由定义全部删掉，替换成刚刚实现的两个 <code>Router</code>，代码如下：</p>
+<figure class="highlight js"><figcaption><span>server.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21SY2Zwcy9leHByZXNzX3Jlc3VtZS9ibG9iL2ZjNGU4MDQvc2VydmVyLmpz" title="https://github.com/mRcfps/express_resume/blob/fc4e804/server.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">const</span> indexRouter = <span class="built_in">require</span>(<span class="string">'./routes/index'</span>);</span><br><span class="line">[tuture-add]<span class="keyword">const</span> apiRouter = <span class="built_in">require</span>(<span class="string">'./routes/api'</span>);</span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'localhost'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">app.use(loggingMiddleware);</span><br><span class="line">app.use(express.static(<span class="string">'public'</span>));</span><br><span class="line"></span><br><span class="line">[tuture-del]app.get(<span class="string">'/'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-del]  res.render(<span class="string">'index'</span>);</span><br><span class="line">[tuture-del]&#125;);</span><br><span class="line">[tuture-del]</span><br><span class="line">[tuture-del]app.get(<span class="string">'/contact'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-del]  res.render(<span class="string">'contact'</span>);</span><br><span class="line">[tuture-del]&#125;)</span><br><span class="line">[tuture-del]</span><br><span class="line">[tuture-del]app.get(<span class="string">'/api'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-del]  res.json(&#123; <span class="attr">name</span>: <span class="string">'图雀社区'</span>, <span class="attr">website</span>: <span class="string">'https://tuture.co'</span> &#125;);</span><br><span class="line">[tuture-del]&#125;);</span><br><span class="line">[tuture-del]</span><br><span class="line">[tuture-del]app.get(<span class="string">'/broken'</span>, (req, res) =&gt; &#123;</span><br><span class="line">[tuture-del]  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Broken!'</span>);</span><br><span class="line">[tuture-del]&#125;);</span><br><span class="line">[tuture-add]app.use(<span class="string">'/'</span>, indexRouter);</span><br><span class="line">[tuture-add]app.use(<span class="string">'/api'</span>, apiRouter);</span><br><span class="line"></span><br><span class="line">app.use(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span><br><span class="line">  res.status(<span class="number">404</span>).render(<span class="string">'404'</span>, &#123; <span class="attr">url</span>: req.originalUrl &#125;);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>是不是瞬间清爽了很多呢！如果你服务器还开着，可以测试一下之前的路由是否还能成功运行哦。这里我贴一下用 Curl 测试 <code>/api</code> 路由的结果：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ curl localhost:3000/api</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"图雀社区"</span>,<span class="string">"website"</span>:<span class="string">"https://tuture.co"</span>&#125;</span><br><span class="line">$ curl -X POST localhost:3000/api/new</span><br><span class="line">&#123;<span class="string">"msg"</span>:<span class="string">"新的篇章，即将开始"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，这篇教程也就结束了。所完成的网站的确很简单，但是希望你能从中学到 Express 的两大精髓：路由和中间件。掌握了这两大概念之后，后续进阶教程的学习也会轻松很多哦！</p>
+<div class="note primary">
+            <p><strong>主要</strong></p><p>此教程属于<a href="https://tuture.co/roadmaps/node/">Node.js 后端工程师学习路线</a>的一部分，点击可查看全部内容。</p>
+          </div>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2019/11/26/cd5b993/" title="一杯茶的时间，上手 Express 框架开发">https://tuture.co/2019/11/26/cd5b993/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Express/" rel="tag"><i class="fa fa-tag"></i> Express</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/19/55d393c/" rel="next" title="一杯茶的时间，上手 Django 框架开发">
+                  <i class="fa fa-chevron-left"></i> 一杯茶的时间，上手 Django 框架开发
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/28/d129c56/" rel="prev" title="Redux 包教包会（二）：趁热打铁，完全重构">
+                  Redux 包教包会（二）：趁热打铁，完全重构 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧时代：用内置-http-模块实现一个服务器"><span class="nav-number">1.</span> <span class="nav-text">旧时代：用内置 http 模块实现一个服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预备知识"><span class="nav-number">1.1.</span> <span class="nav-text">预备知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#所用技术"><span class="nav-number">1.2.</span> <span class="nav-text">所用技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#学习目标"><span class="nav-number">1.3.</span> <span class="nav-text">学习目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用内置-http-模块创建服务器"><span class="nav-number">1.4.</span> <span class="nav-text">用内置 http 模块创建服务器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新时代：用-Express-搭建服务器"><span class="nav-number">2.</span> <span class="nav-text">新时代：用 Express 搭建服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更强大的-Request-和-Response-对象"><span class="nav-number">2.1.</span> <span class="nav-text">更强大的 Request 和 Response 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由机制"><span class="nav-number">2.2.</span> <span class="nav-text">路由机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nodemon-加速开发"><span class="nav-number">2.3.</span> <span class="nav-text">nodemon 加速开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正式实现"><span class="nav-number">2.4.</span> <span class="nav-text">正式实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写第一个中间件"><span class="nav-number">3.</span> <span class="nav-text">编写第一个中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理解中间件"><span class="nav-number">3.1.</span> <span class="nav-text">理解中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Express-中间件的定义"><span class="nav-number">3.2.</span> <span class="nav-text">Express 中间件的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#全局中间件"><span class="nav-number">3.2.1.</span> <span class="nav-text">全局中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#路由中间件"><span class="nav-number">3.2.2.</span> <span class="nav-text">路由中间件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写中间件"><span class="nav-number">3.3.</span> <span class="nav-text">编写中间件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用模板引擎渲染页面"><span class="nav-number">4.</span> <span class="nav-text">用模板引擎渲染页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加静态文件服务"><span class="nav-number">5.</span> <span class="nav-text">添加静态文件服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理-404-和服务器错误"><span class="nav-number">6.</span> <span class="nav-text">处理 404 和服务器错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理-404"><span class="nav-number">6.1.</span> <span class="nav-text">处理 404</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理内部错误"><span class="nav-number">6.2.</span> <span class="nav-text">处理内部错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现自定义处理逻辑"><span class="nav-number">6.3.</span> <span class="nav-text">实现自定义处理逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三行代码实现-JSON-API"><span class="nav-number">7.</span> <span class="nav-text">三行代码实现 JSON API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用子路由拆分逻辑"><span class="nav-number">8.</span> <span class="nav-text">使用子路由拆分逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正式实现-1"><span class="nav-number">8.1.</span> <span class="nav-text">正式实现</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

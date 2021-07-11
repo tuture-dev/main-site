@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="当我第一次听说TDD(Test-Driven Develop, 测试驱动开发)的时候，我首先想到的是测试小姐姐们想搞事情？后面发现这个玩意儿是想干掉测试，那好，下面开始让我们干掉这群整天给我们找bug...下面开始从简单的单元测试上手Jest测试框架。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一杯茶的时间，上手Jest测试框架">
+<meta property="og:url" content="https://tuture.co/2020/04/04/9e7496d/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="当我第一次听说TDD(Test-Driven Develop, 测试驱动开发)的时候，我首先想到的是测试小姐姐们想搞事情？后面发现这个玩意儿是想干掉测试，那好，下面开始让我们干掉这群整天给我们找bug...下面开始从简单的单元测试上手Jest测试框架。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/jest-cover.jpg">
+<meta property="article:published_time" content="2020-04-04T07:21:17.967Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:34.088Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Jest">
+<meta property="article:tag" content="Typescript">
+<meta property="article:tag" content="TDD">
+<meta property="article:tag" content="Unit Test">
+<meta property="article:tag" content="ts-jest">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/jest-cover.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/04/04/9e7496d/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>一杯茶的时间，上手Jest测试框架 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/04/04/9e7496d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">一杯茶的时间，上手Jest测试框架
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-04 15:21:17" itemprop="dateCreated datePublished" datetime="2020-04-04T15:21:17+08:00">2020-04-04</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:34" itemprop="dateModified" datetime="2021-07-11T15:16:34+08:00">2021-07-11</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>9.7k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>9 分钟</span>
+            </span>
+          
+            <div class="post-description">当我第一次听说TDD(Test-Driven Develop, 测试驱动开发)的时候，我首先想到的是测试小姐姐们想搞事情？后面发现这个玩意儿是想干掉测试，那好，下面开始让我们干掉这群整天给我们找bug...下面开始从简单的单元测试上手Jest测试框架。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/jest-cover.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <h2 id="我们能学到什么"><a href="#我们能学到什么" class="headerlink" title="我们能学到什么"></a>我们能学到什么</h2><ol>
+<li>Jest 怎么 4 行代码完成一个测试用例</li>
+<li>Jest 怎么让测试用例覆盖率 100%</li>
+<li>Jest 怎么和 Typescript 完美结合（填坑实录）</li>
+<li>Jest 最锋利的功能 Mock Functions</li>
+</ol><a id="more"></a>
+<h2 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h2><h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 注意powershell中<span class="string">'&amp;&amp;'</span>替换为<span class="string">';'</span></span></span><br><span class="line">mkdir jest-just-go &amp;&amp; cd jest-just-go</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm i jest --save-dev</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-Jest-怎么-4-行代码完成一个测试用例"><a href="#1-Jest-怎么-4-行代码完成一个测试用例" class="headerlink" title="1.Jest 怎么 4 行代码完成一个测试用例"></a>1.Jest 怎么 4 行代码完成一个测试用例</h2><h3 id="初始化-Jest-默认配置"><a href="#初始化-Jest-默认配置" class="headerlink" title="初始化 Jest 默认配置"></a>初始化 Jest 默认配置</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npx jest --init</span><br></pre></td></tr></table></figure>
+
+<p><strong>初始化时会出现提示信息，按 y 或 enter 即可</strong></p>
+<h3 id="编写功能代码"><a href="#编写功能代码" class="headerlink" title="编写功能代码"></a>编写功能代码</h3><p>现在让我们正式开始，茶和图雀社区精心准备的甜品更搭哦。</p>
+<p>在项目根目录下新建<strong><code>src</code></strong>目录，存放我们的功能代码。然后创建<strong><code>src/dessert.js</code></strong>。</p>
+<figure class="highlight js"><figcaption><span>src/dessert.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dessert = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dessert.prototype = &#123;</span><br><span class="line">  enjoy: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Enjoy the '</span> + <span class="keyword">this</span>.name;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = dessert;</span><br></pre></td></tr></table></figure>
+
+<p>我们已经编写了一个甜品类型，它有一个提供品尝的方法<code>enjoy</code></p>
+<h3 id="编写测试用例"><a href="#编写测试用例" class="headerlink" title="编写测试用例"></a>编写测试用例</h3><p>下面开始编码，实现对上面甜品功能的单元测试。</p>
+<p>在项目根目录下新建<strong><code>__tests__</code></strong>目录，存放我们的测试用例。然后创建<strong><code>__tests__/dessert.test.js</code></strong>。</p>
+<figure class="highlight js"><figcaption><span>__tests__/dessert.test.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dessert = <span class="built_in">require</span>(<span class="string">'../src/dessert'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'test dessert feature'</span>, () =&gt; &#123;</span><br><span class="line">  test(<span class="string">'enjoy the cake'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> cake = <span class="keyword">new</span> dessert(<span class="string">'cake'</span>);</span><br><span class="line">    expect(cake.enjoy()).toBe(<span class="string">'Enjoy the cake'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>简单的四行代码，我们的第一个测试用例就已经大功告成。这里我们只需要注意<code>describe</code>、<code>test</code>、<code>expect</code>这 3 个 Jest 关键字就行了：</p>
+<ol>
+<li><strong><code>describe</code></strong>：组合同一类的<strong><code>test</code></strong>用例，可以添加<strong><code>beforeEach \ afterEach、beforeAll \ afterAll</code></strong>（这里由于篇幅，这一类进阶特性将放在后续的教程中）为其下所有 test 进行统一描述和处理。</li>
+<li><strong><code>test</code></strong>：描述具体的测试用例，是单元测试的最小单元。</li>
+<li><strong><code>expect</code></strong>：<strong><code>Jest</code></strong>最终落在了每一个对测试结果的期望上，通过<strong><code>expect</code></strong>中的返回值或是函数执行结果来和期望值进行对比。</li>
+</ol>
+<h3 id="执行测试"><a href="#执行测试" class="headerlink" title="执行测试"></a>执行测试</h3><p>回到控制台，输入:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm test</span><br></pre></td></tr></table></figure>
+
+<p>无需更多配置，测试结果显示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/s1.png"></p>
+<p>其中：</p>
+<ul>
+<li><strong><code>%Stmts</code></strong>是语句覆盖率（statement coverage）：是不是每个语句都执行了？</li>
+<li><strong><code>%Branch</code></strong>分支覆盖率（branch coverage）：是不是每个 if 代码块都执行了？</li>
+<li><strong><code>%Funcs</code></strong>函数覆盖率（function coverage）：是不是每个函数都调用了？</li>
+<li><strong><code>%Lines</code></strong>行覆盖率（line coverage）：是不是每一行都执行了？</li>
+</ul>
+<p><strong><code>%Stmts</code></strong>和<code>%Lines</code>的区别是：行覆盖率的颗粒度是大于语句覆盖率的，因为可能允许一行中有多条语句（js 开发中尤为常见）。</p>
+<p>我们更改<strong><code>__tests__</code></strong><code>/dessert.test.js</code>中的</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">expect(cake.enjoy()).toBe(<span class="string">'Enjoy the cake'</span>);</span><br><span class="line">改为;</span><br><span class="line">expect(cake.enjoy()).toBe(<span class="string">'enjoy the cake'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>执行测试命令查看测试不通过的情形：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/s2.png"></p>
+<h2 id="2-Jest-怎么让测试用例覆盖率达到-100"><a href="#2-Jest-怎么让测试用例覆盖率达到-100" class="headerlink" title="2.Jest 怎么让测试用例覆盖率达到 100%"></a>2.Jest 怎么让测试用例覆盖率达到 100%</h2><p>当我们的功能场景逐渐变得复杂，我们的测试就必须确保测试用例的覆盖率达到一个标准。最佳当然是 100%啦，这样才能保证测试小改改们找不到我们的茬，闲的没事就会主动找我们拉话话啦，美好生活从测试用例覆盖率 100%开始。</p>
+<h3 id="编写功能代码-1"><a href="#编写功能代码-1" class="headerlink" title="编写功能代码"></a>编写功能代码</h3><p>甜点不够怎么办？要不我们开家店吧！先让红豆烧和提拉米苏够吃先~</p>
+<figure class="highlight js"><figcaption><span>src/dessertFactoty.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dessert = <span class="built_in">require</span>(<span class="string">'./dessert'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dessertFactory = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">dessertFactory.produce = <span class="function"><span class="keyword">function</span> (<span class="params">type</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Red bean burning'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> dessert(<span class="string">'Red bean burning'</span>); <span class="comment">// 红豆烧</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Tiramisu'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> dessert(<span class="string">'Tiramisu'</span>); <span class="comment">// 提拉米苏</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'please choose a dessert type'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = dessertFactory;</span><br></pre></td></tr></table></figure>
+
+<p>现在想吃什么通过<strong><code>dessertFactory.produce(...)</code></strong> order 就 fine 啦</p>
+<h3 id="编写测试用例-1"><a href="#编写测试用例-1" class="headerlink" title="编写测试用例"></a>编写测试用例</h3><p>不过，要保证我们想吃的时候就必须能吃到（这个很重要），我们先验收先：</p>
+<figure class="highlight js"><figcaption><span>__tests__/dessertFactory.test.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dessertFactoty = <span class="built_in">require</span>(<span class="string">'../src/dessertFactoty'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'test dessertFactoty feature'</span>, () =&gt; &#123;</span><br><span class="line">  test(<span class="string">'produce all dessert'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> dessertType = [<span class="string">'Red bean burning'</span>, <span class="string">'Tiramisu'</span>];</span><br><span class="line">    expect(dessertFactoty.produce(dessertType[<span class="number">0</span>]).enjoy()).toBe(</span><br><span class="line">      <span class="string">'Enjoy the Red bean burning'</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>–“我不要你觉得，我要我觉得“，我要上档次的“验收报告“！</p>
+<p>–行，网页展示出来怎么样</p>
+<p>###</p>
+<p>配置<code>jest.config.js</code>保存测试用例覆盖率执行报告</p>
+<p>我们在执<code>初始化Jest默认配置</code>的时候，会生成在项目根目录下生成<code>jest.config.js</code>，里面列出了所有的配置项，未设置的已经被注释掉了。我们要将每次执行测试后生成的覆盖率报告保存下来需要找到下面这项配置属性并更改：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Indicates whether the coverage information should be collected while executing the test</span></span><br><span class="line">collectCoverage: <span class="literal">true</span>,</span><br></pre></td></tr></table></figure>
+
+<p>然后我们可以<strong>再次执行测试命令并用浏览器打开***</strong><code>.\coverage\lcov-report\index.html</code><strong>*</strong>查看测试用例覆盖率报告：**</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/d.gif"></p>
+<h3 id="修改测试用例使覆盖率达到-100"><a href="#修改测试用例使覆盖率达到-100" class="headerlink" title="修改测试用例使覆盖率达到 100%"></a>修改测试用例使覆盖率达到 100%</h3><p><strong><em><code>.\__tests__\dessertFactory.test.js</code></em></strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dessertFactoty = <span class="built_in">require</span>(<span class="string">'../src/dessertFactoty'</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'test dessertFactoty feature'</span>, () =&gt; &#123;</span><br><span class="line">  test(<span class="string">'produce all dessert'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> dessertType = [<span class="string">'Red bean burning'</span>, <span class="string">'Tiramisu'</span>];</span><br><span class="line">    expect(dessertFactoty.produce(dessertType[<span class="number">0</span>]).enjoy()).toBe(</span><br><span class="line">      <span class="string">'Enjoy the Red bean burning'</span>,</span><br><span class="line">    );</span><br><span class="line">    expect(dessertFactoty.produce(dessertType[<span class="number">1</span>]).enjoy()).toBe(</span><br><span class="line">      <span class="string">'Enjoy the Tiramisu'</span>,</span><br><span class="line">    );</span><br><span class="line">    expect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      dessertFactoty.produce(<span class="string">'Luckin Coffee'</span>);</span><br><span class="line">    &#125;).toThrow(<span class="string">'please choose a dessert type'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>再测试并查看覆盖率报告：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/s3.png"></p>
+<p>这里<strong><code>Functions列</code></strong>为什么不是 100%，大家可以点击<strong><code>dessertFactory.js</code></strong>根据详细说明分析推测。</p>
+<h2 id="3-Jest-怎么和-Typescript-完美结合（填坑实录）"><a href="#3-Jest-怎么和-Typescript-完美结合（填坑实录）" class="headerlink" title="3.Jest 怎么和 Typescript 完美结合（填坑实录）"></a>3.Jest 怎么和 Typescript 完美结合（填坑实录）</h2><p>搜索引擎上现有的 Jest+Typescript 的样例比较少，并且存在了一定的问题没有解决，这一部分我已经填平了坑，可以作为配置参考。</p>
+<h3 id="增加依赖"><a href="#增加依赖" class="headerlink" title="增加依赖"></a>增加依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm i ts-jest @types/jest typescript @types/node --save-dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="ts-初始化"><a href="#ts-初始化" class="headerlink" title="ts 初始化"></a>ts 初始化</h3><figure class="highlight json"><figcaption><span>tsconfig.json</span></figcaption><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="attr">"target"</span>: <span class="string">"es5"</span>,</span><br><span class="line">    <span class="attr">"module"</span>: <span class="string">"commonjs"</span>,</span><br><span class="line">    <span class="attr">"lib"</span>: [<span class="string">"es2015"</span>],</span><br><span class="line">    <span class="attr">"strict"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"declaration"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"outDir"</span>: <span class="string">"build"</span>,</span><br><span class="line">    <span class="attr">"sourceMap"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"include"</span>: [<span class="string">"src/**/*"</span>, <span class="string">"__test__/**/*"</span>],</span><br><span class="line">  <span class="attr">"exclude"</span>: [<span class="string">"node_modules"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改jest-config-js配置"><a href="#修改jest-config-js配置" class="headerlink" title="修改jest.config.js配置"></a>修改<code>jest.config.js</code>配置</h3><p>添加如下配置项：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// An array of file extensions your modules use</span></span><br><span class="line">moduleFileExtensions: [</span><br><span class="line">    <span class="string">"js"</span>,</span><br><span class="line">    <span class="string">"json"</span>,</span><br><span class="line">    <span class="string">"jsx"</span>,</span><br><span class="line">    <span class="string">"ts"</span>,</span><br><span class="line">    <span class="string">"tsx"</span>,</span><br><span class="line">    <span class="string">"node"</span></span><br><span class="line">],</span><br><span class="line"><span class="comment">// A preset that is used as a base for Jest's configuration</span></span><br><span class="line">preset: <span class="string">"ts-jest"</span>,</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改功能代码"><a href="#修改功能代码" class="headerlink" title="修改功能代码"></a>修改功能代码</h3><figure class="highlight ts"><figcaption><span>src/dessert.ts</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> dessert &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params">name: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line">  enjoy() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Enjoy the '</span> + <span class="keyword">this</span>.name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><figcaption><span>src/dessertFactoty.ts</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> dessert <span class="keyword">from</span> <span class="string">'./dessert'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> dessertFactory &#123;</span><br><span class="line">  <span class="keyword">static</span> produce(<span class="keyword">type</span>: <span class="built_in">string</span>) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (<span class="keyword">type</span>) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'Red bean burning'</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> dessert(<span class="string">'Red bean burning'</span>); <span class="comment">// 红豆烧</span></span><br><span class="line">      <span class="keyword">case</span> <span class="string">'Tiramisu'</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> dessert(<span class="string">'Tiramisu'</span>); <span class="comment">// 提拉米苏</span></span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'please choose a dessert type'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>###</p>
+<p>修改测试用例</p>
+<figure class="highlight ts"><figcaption><span>__tests__/dessert.test.ts</span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">const</span> dessert = <span class="built_in">require</span>(<span class="string">"../src/dessert"</span>);</span><br><span class="line">[tuture-add]<span class="keyword">import</span> dessert <span class="keyword">from</span> <span class="string">"../src/dessert"</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">"test dessert feature"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    test(<span class="string">"enjoy the cake"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> cake = <span class="keyword">new</span> dessert(<span class="string">'cake'</span>);</span><br><span class="line">[tuture-del]        expect(cake.enjoy()).toBe(<span class="string">"enjoy the cake"</span>);</span><br><span class="line">[tuture-add]        expect(cake.enjoy()).toBe(<span class="string">"Enjoy the cake"</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ts"><figcaption><span>__tests__/dessertFactory.test.ts</span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">const</span> dessertFactoty = <span class="built_in">require</span>(<span class="string">"../src/dessertFactoty"</span>);</span><br><span class="line">[tuture-add]<span class="keyword">import</span> dessertFactoty <span class="keyword">from</span> <span class="string">"../src/dessertFactoty"</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">"test dessertFactoty feature"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    test(<span class="string">"produce all dessert"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> dessertType = [<span class="string">'Red bean burning'</span>, <span class="string">'Tiramisu'</span>];</span><br><span class="line">        expect(dessertFactoty.produce(dessertType[<span class="number">0</span>]).enjoy()).toBe(<span class="string">"Enjoy the Red bean burning"</span>);</span><br><span class="line">[tuture-add]        expect(dessertFactoty.produce(dessertType[<span class="number">1</span>]).enjoy()).toBe(<span class="string">"Enjoy the Tiramisu"</span>);</span><br><span class="line">[tuture-add]        expect(<span class="function"><span class="params">()</span> =&gt;</span> &#123; dessertFactoty.produce(<span class="string">'Luckin Coffee'</span>) &#125;).toThrow(<span class="string">"please choose a dessert type"</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如同代码重构后我们通过测试用例可以快速检查是否改动出现差错一样，我们这次变更可以执行 Jest 测试命令，检查是否对功能无影响。</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/s4.png"></p>
+<h2 id="4-Jest-最锋利的功能-Mock-Functions"><a href="#4-Jest-最锋利的功能-Mock-Functions" class="headerlink" title="4.Jest 最锋利的功能 Mock Functions"></a>4.Jest 最锋利的功能 Mock Functions</h2><p>关于<strong><code>Jest</code></strong>测试框架中的 Mock 功能，我们主要关注两点：</p>
+<ol>
+<li><strong><code>mock function</code></strong>: 对函数进行 mock.</li>
+<li><strong><code>mock return value</code></strong>: 对返回值进行 mock.</li>
+</ol>
+<p>从以上两点可以衍生出<strong><code>Jest</code></strong>对于代码单元测试中两项常用的锋利功能：</p>
+<ol>
+<li>对功能中业务逻辑简化后的重新实现，方便有指向性的进行测试（比如忽略实际场景中的跨服务调用功能等，仅需将原有功能中对应的调用逻辑改为定义的测试数据即可）。</li>
+<li>对功能返回值的直接模拟。</li>
+</ol>
+<p>为甜点增加了评论功能。</p>
+<figure class="highlight ts"><figcaption><span>src/dessert.ts</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> dessert &#123;</span><br><span class="line">    name: <span class="built_in">string</span>;</span><br><span class="line">[tuture-add]    <span class="keyword">static</span> comment: <span class="built_in">string</span>[] = [];</span><br><span class="line">    <span class="keyword">constructor</span>(<span class="params">name: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    enjoy() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Enjoy the "</span> + <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">[tuture-add]    <span class="keyword">static</span> comments(message: <span class="built_in">string</span>) &#123;</span><br><span class="line">[tuture-add]        dessert.comment.push(message);</span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>专门建立一个互动区进行甜点的讨论。创建<strong><code>src/dessertCommentModule.ts</code></strong>:</p>
+<figure class="highlight ts"><figcaption><span>src/desserCommentModule.ts</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> dessert <span class="keyword">from</span> <span class="string">'./dessert'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> desserCommentModule &#123;</span><br><span class="line">  <span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">comments</span>(<span class="params">message: <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">    dessert.comments(message);</span><br><span class="line">    <span class="keyword">return</span> dessert.comment;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> desserCommentModule;</span><br></pre></td></tr></table></figure>
+
+<p>下面开始<code>test dessert feature with mock~</code>这一部分均已通过测试，建议深入研读代码，感受<strong><code>Jest mock</code></strong>每一处的奥妙。如果下面各处期望的结果都如你所料，那么你就是图雀社区最靓的仔：</p>
+<figure class="highlight ts"><figcaption><span>__tests__/dessert.test.ts</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> dessert <span class="keyword">from</span> <span class="string">"../src/dessert"</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> desserCommentModule <span class="keyword">from</span> <span class="string">"../src/desserCommentModule"</span>;</span><br><span class="line">[tuture-add]jest.mock(<span class="string">"../src/desserCommentModule"</span>);</span><br><span class="line"></span><br><span class="line">describe(<span class="string">"test dessert feature"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    test(<span class="string">"enjoy the cake"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> cake = <span class="keyword">new</span> dessert(<span class="string">'cake'</span>);</span><br><span class="line">        expect(cake.enjoy()).toBe(<span class="string">"Enjoy the cake"</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">[tuture-add]&#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]describe(<span class="string">"test dessert feature with mock"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]    test(<span class="string">"enjoy the cake with mock function"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> dessertFactoryMock = jest.fn(<span class="function"><span class="params">name</span> =&gt;</span> <span class="keyword">new</span> dessert(name));</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> cake = dessertFactoryMock(<span class="string">'cake'</span>);</span><br><span class="line">[tuture-add]        expect(cake.enjoy()).toBe(<span class="string">"Enjoy the cake"</span>);</span><br><span class="line">[tuture-add]        expect(dessertFactoryMock.mock.results[<span class="number">0</span>].value.enjoy()).toBe(<span class="string">"Enjoy the cake"</span>);</span><br><span class="line">[tuture-add]        <span class="built_in">console</span>.log(dessertFactoryMock.mock);</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add]    test(<span class="string">"enjoy the cake with mock return value"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> dessertFactoryMock = jest.fn(<span class="function"><span class="params">name</span> =&gt;</span> <span class="keyword">new</span> dessert(name));</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> cake = <span class="keyword">new</span> dessert(<span class="string">'cake'</span>);</span><br><span class="line">[tuture-add]        dessertFactoryMock.mockReturnValue(cake);</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> tiramisu = dessertFactoryMock(<span class="string">'tiramisu'</span>);</span><br><span class="line">[tuture-add]        expect(tiramisu.enjoy()).toBe(<span class="string">"Enjoy the cake"</span>);</span><br><span class="line">[tuture-add]        expect(tiramisu).toEqual(cake);</span><br><span class="line">[tuture-add]        expect(dessertFactoryMock.mock.results[<span class="number">0</span>].value).toEqual(cake);</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add]    test(<span class="string">"comment the dessert with mock module"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> mockedDessert = desserCommentModule <span class="keyword">as</span> jest.Mocked&lt;<span class="keyword">typeof</span> desserCommentModule&gt;;</span><br><span class="line">[tuture-add]        mockedDessert.comments.mockReturnValue([<span class="string">'not bad'</span>]);</span><br><span class="line">[tuture-add]        expect(mockedDessert.comments(<span class="string">"cake is so good"</span>)).toEqual([<span class="string">'not bad'</span>]);</span><br><span class="line">[tuture-add]        expect(dessert.comment).toEqual([]);</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add]    test(<span class="string">"comment the dessert with mock implementations"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> mockedDessert = desserCommentModule <span class="keyword">as</span> jest.Mocked&lt;<span class="keyword">typeof</span> desserCommentModule&gt;;</span><br><span class="line">[tuture-add]        mockedDessert.comments.mockImplementation(<span class="function">(<span class="params">message: <span class="built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">[tuture-add]            dessert.comments(message);</span><br><span class="line">[tuture-add]            <span class="keyword">return</span> [<span class="string">'not bad'</span>];</span><br><span class="line">[tuture-add]        &#125;);</span><br><span class="line">[tuture-add]        expect(mockedDessert.comments(<span class="string">"cake is so good"</span>)).toEqual([<span class="string">'not bad'</span>]);</span><br><span class="line">[tuture-add]        expect(dessert.comment).toEqual([<span class="string">'cake is so good'</span>]);</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：我们可以更改**</strong><code>test</code>*<strong>*为**</strong><code>test.only</code>*<strong>*仅对**</strong><code>test.only</code>*<strong>*的测试用例执行测试，降低测试时间并关注特定测试点。</strong></p>
+<h3 id="mock-function"><a href="#mock-function" class="headerlink" title="mock function"></a>mock function</h3><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line">test.only(<span class="string">"enjoy the cake with mock function"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;  ...</span><br></pre></td></tr></table></figure>
+
+<p>这里我们通过<strong><code>jest.fn</code></strong>进行了<strong><code>mock function</code></strong>功能的展示，通过执行<strong><code>npm test</code></strong>看到<strong><code>.mock</code></strong>的结构信息：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/0801.png"></p>
+<p><strong><code>.mock</code>**</strong>的中将会记录*<strong>*<code>mock function</code>**</strong>调用后的相关信息**。</p>
+<h3 id="mock-return-value"><a href="#mock-return-value" class="headerlink" title="mock return value"></a>mock return value</h3><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line">test(<span class="string">"enjoy the cake with mock return value"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  ....</span><br></pre></td></tr></table></figure>
+
+<p>这里我们通过<strong><code>.mockReturnValu</code></strong>可以将<strong><code>function mock</code></strong>的操作略过，直接会返回<strong><code>.mockReturnValue</code></strong>中填充的返回值。通过执行<strong><code>npm test</code></strong>验证。</p>
+<h3 id="mock-module"><a href="#mock-module" class="headerlink" title="mock module"></a>mock module</h3><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> desserCommentModule <span class="keyword">from</span> <span class="string">"../src/desserCommentModule"</span>;</span><br><span class="line">jest.mock(<span class="string">"../src/desserCommentModule"</span>);</span><br><span class="line">test.only(<span class="string">"comment the dessert with mock module"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>通过<strong><code>jest.mock</code></strong>，我们<strong><code>mock</code></strong>了甜点评论区，这项操作可以使我们对<code>dessertCommentModule</code>中的所有功能进行我们的测试定制。这里我们通过对评论功能进行<strong><code>mock return value</code></strong>，通过执行<strong><code>npm test</code></strong>看到：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/0802.png"></p>
+<p>并没有进入<code>dessertCommentModule</code>中的<code>comments</code>方法，直接返回了我们预置的返回值。</p>
+<h3 id="mock-implementations"><a href="#mock-implementations" class="headerlink" title="mock implementations"></a>mock implementations</h3><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line">test.only(<span class="string">"comment the dessert with mock implementations"</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>我们通过对评论功能进行<strong><code>mock implementations</code></strong>，通过执行<strong><code>npm test</code></strong>看到：</p>
+<p><img alt data-src="https://static.powerformer.com/c/9e7496d74a134c36ac47982eb4aaa59c/0803.png"></p>
+<p>进入了<strong><code>mockImplementation</code></strong>中的测试定制功能，并且调用了<code>dessert</code>中的<code>comments</code>方法。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p>*<span class="exturl" data-url="aHR0cHM6Ly9qZXN0anMuaW8vZG9jcy9lbi9nZXR0aW5nLXN0YXJ0ZWQ=" title="https://jestjs.io/docs/en/getting-started">https://jestjs.io/docs/en/getting-started<i class="fa fa-external-link"></i></span></p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p>*<span class="exturl" data-url="aHR0cHM6Ly93d3cudmFsZW50aW5vZy5jb20vYmxvZy9qZXN0" title="https://www.valentinog.com/blog/jest">https://www.valentinog.com/blog/jest<i class="fa fa-external-link"></i></span> *</p>
+<p><em><span class="exturl" data-url="aHR0cHM6Ly9kZXYudG8vbXVoYWppcmRldi91bml0LXRlc3Rpbmctd2l0aC10eXBlc2NyaXB0LWFuZC1qZXN0LTJnbG4=" title="https://dev.to/muhajirdev/unit-testing-with-typescript-and-jest-2gln">https://dev.to/muhajirdev/unit-testing-with-typescript-and-jest-2gln<i class="fa fa-external-link"></i></span></em></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="本文源码"><a href="#本文源码" class="headerlink" title="本文源码"></a>本文源码</h2><blockquote>
+<p><em><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3N0dWR5dG9vaGFyZC9qZXN0LWp1c3QtZ28=" title="https://github.com/studytoohard/jest-just-go">https://github.com/studytoohard/jest-just-go<i class="fa fa-external-link"></i></span></em></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/04/04/9e7496d/" title="一杯茶的时间，上手Jest测试框架">https://tuture.co/2020/04/04/9e7496d/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Jest/" rel="tag"><i class="fa fa-tag"></i> Jest</a>
+            
+              <a href="/tags/Typescript/" rel="tag"><i class="fa fa-tag"></i> Typescript</a>
+            
+              <a href="/tags/TDD/" rel="tag"><i class="fa fa-tag"></i> TDD</a>
+            
+              <a href="/tags/Unit-Test/" rel="tag"><i class="fa fa-tag"></i> Unit Test</a>
+            
+              <a href="/tags/ts-jest/" rel="tag"><i class="fa fa-tag"></i> ts-jest</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/30/@d5269af/" rel="next" title="你所需要的跨域问题的全套解决方案都在这里啦！（前后端都有）">
+                  <i class="fa fa-chevron-left"></i> 你所需要的跨域问题的全套解决方案都在这里啦！（前后端都有）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/04/06/C_ao1Yv/" rel="prev" title="类型即正义：TypeScript 从入门到实践（一）">
+                  类型即正义：TypeScript 从入门到实践（一） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#我们能学到什么"><span class="nav-number">1.</span> <span class="nav-text">我们能学到什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目初始化"><span class="nav-number">2.</span> <span class="nav-text">项目初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建工程"><span class="nav-number">2.1.</span> <span class="nav-text">创建工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">2.2.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">2.3.</span> <span class="nav-text">安装依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Jest-怎么-4-行代码完成一个测试用例"><span class="nav-number">3.</span> <span class="nav-text">1.Jest 怎么 4 行代码完成一个测试用例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化-Jest-默认配置"><span class="nav-number">3.1.</span> <span class="nav-text">初始化 Jest 默认配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写功能代码"><span class="nav-number">3.2.</span> <span class="nav-text">编写功能代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写测试用例"><span class="nav-number">3.3.</span> <span class="nav-text">编写测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行测试"><span class="nav-number">3.4.</span> <span class="nav-text">执行测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Jest-怎么让测试用例覆盖率达到-100"><span class="nav-number">4.</span> <span class="nav-text">2.Jest 怎么让测试用例覆盖率达到 100%</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编写功能代码-1"><span class="nav-number">4.1.</span> <span class="nav-text">编写功能代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写测试用例-1"><span class="nav-number">4.2.</span> <span class="nav-text">编写测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改测试用例使覆盖率达到-100"><span class="nav-number">4.3.</span> <span class="nav-text">修改测试用例使覆盖率达到 100%</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Jest-怎么和-Typescript-完美结合（填坑实录）"><span class="nav-number">5.</span> <span class="nav-text">3.Jest 怎么和 Typescript 完美结合（填坑实录）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加依赖"><span class="nav-number">5.1.</span> <span class="nav-text">增加依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ts-初始化"><span class="nav-number">5.2.</span> <span class="nav-text">ts 初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改jest-config-js配置"><span class="nav-number">5.3.</span> <span class="nav-text">修改jest.config.js配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改功能代码"><span class="nav-number">5.4.</span> <span class="nav-text">修改功能代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Jest-最锋利的功能-Mock-Functions"><span class="nav-number">6.</span> <span class="nav-text">4.Jest 最锋利的功能 Mock Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mock-function"><span class="nav-number">6.1.</span> <span class="nav-text">mock function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mock-return-value"><span class="nav-number">6.2.</span> <span class="nav-text">mock return value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mock-module"><span class="nav-number">6.3.</span> <span class="nav-text">mock module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mock-implementations"><span class="nav-number">6.4.</span> <span class="nav-text">mock implementations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文源码"><span class="nav-number">8.</span> <span class="nav-text">本文源码</span></a></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>
