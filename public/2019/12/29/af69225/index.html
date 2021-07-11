@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在上一篇教程中，我们用熟悉的 React 和 Hooks 搞定了“奥特曼俱乐部”的雏形。在这一篇文章中，我们将用 Taro 自带的路由功能实现多页面跳转，并用 Taro UI 组件库升级之前略显简陋的界面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Taro 小程序开发大型实战（二）：多页面跳转和 Taro UI 组件库">
+<meta property="og:url" content="https://tuture.co/2019/12/29/af69225/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="在上一篇教程中，我们用熟悉的 React 和 Hooks 搞定了“奥特曼俱乐部”的雏形。在这一篇文章中，我们将用 Taro 自带的路由功能实现多页面跳转，并用 Taro UI 组件库升级之前略显简陋的界面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/34a473b/taro-cover-2.jpg">
+<meta property="article:published_time" content="2019-12-29T02:16:40.222Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:34.087Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Taro">
+<meta property="article:tag" content="Taro UI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/34a473b/taro-cover-2.jpg">
+  <link rel="canonical" href="https://tuture.co/2019/12/29/af69225/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Taro 小程序开发大型实战（二）：多页面跳转和 Taro UI 组件库 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2019/12/29/af69225/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">Taro 小程序开发大型实战（二）：多页面跳转和 Taro UI 组件库
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-29 10:16:40" itemprop="dateCreated datePublished" datetime="2019-12-29T10:16:40+08:00">2019-12-29</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:34" itemprop="dateModified" datetime="2021-07-11T15:16:34+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" itemprop="url" rel="index"><span itemprop="name">小程序</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/" itemprop="url" rel="index"><span itemprop="name">Taro</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>13k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>12 分钟</span>
+            </span>
+          
+            <div class="post-description">在上一篇教程中，我们用熟悉的 React 和 Hooks 搞定了“奥特曼俱乐部”的雏形。在这一篇文章中，我们将用 Taro 自带的路由功能实现多页面跳转，并用 Taro UI 组件库升级之前略显简陋的界面。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/34a473b/taro-cover-2.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yg==" title="https://github.com/tuture-dev/ultra-club"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="来一打页面"><a href="#来一打页面" class="headerlink" title="来一打页面"></a>来一打页面</h2><p>在<a href="https://tuture.co/2019/12/25/34a473b/">上一篇教程</a>中，我们用熟悉的 React 和 Hooks 搞定了“奥特曼俱乐部”的雏形。在这一篇文章中，我们将用 Taro 自带的路由功能实现多页面跳转，并用 Taro UI 组件库升级之前略显简陋的界面。这一篇完成后的 DEMO 如下：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/16f74b4eb57a242e.gif"></p>
+<p>如果你想直接从这一篇开始动手实践，那么请运行以下命令快速开始：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b second-part https://github.com/tuture-dev/ultra-club.git</span><br><span class="line"><span class="built_in">cd</span> ultra-club</span><br></pre></td></tr></table></figure>
+
+<p>现在让我们开始实现项目的其他页面吧，包括：</p>
+<ul>
+<li>帖子详情 <code>post</code>：进入单篇帖子的详情页面</li>
+<li>我的 <code>mine</code>：显示当前用户的个人信息（在后面的步骤中将实现登录注册哦）</li>
+</ul>
+<p>其中，帖子详情页面中将复用前面编写的 <code>PostCard</code> 组件。为了方便管理，我们需要引入一个新的 prop（<code>isList</code>），用于判断此组件是显示在首页列表中，还是在帖子详情页面中。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>项目中所需用到的图片可以从<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9yZWxlYXNlcy9kb3dubG9hZC92MC4wLjEvaW1hZ2VzLnppcA==" title="https://github.com/tuture-dev/ultra-club/releases/download/v0.0.1/images.zip">这个链接<i class="fa fa-external-link"></i></span>下载，下载后解压并将所有图片放到 <code>src/images</code> 目录下。</p>
+          </div>
+
+<h3 id="Taro-的路由功能"><a href="#Taro-的路由功能" class="headerlink" title="Taro 的路由功能"></a>Taro 的路由功能</h3><p>路由功能是实现多页面应用的核心，幸运的是 Taro 已经自带了。具体而言，在 Taro 中实现页面跳转只需两个步骤：</p>
+<ol>
+<li>在入口文件（<code>src/app.jsx</code>）中在 <code>App</code> 组件的 <code>config</code> 中配置之前提到的 <code>pages</code> 属性</li>
+<li>在任意组件中通过 <code>Taro.navigateTo</code> 或 <code>Taro.redirectTo</code> 即可实现页面的跳转或重定向</li>
+</ol>
+<p>感觉不够直观？OK，我们直接撸起袖子写起来。</p>
+<h3 id="配置全部页面"><a href="#配置全部页面" class="headerlink" title="配置全部页面"></a>配置全部页面</h3><p>首先在入口文件 <code>src/app.jsx</code> 中配置好所有页面：</p>
+<figure class="highlight jsx"><figcaption><span>src/app.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL2FwcC5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/app.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  config = &#123;</span><br><span class="line">[tuture-del]    pages: [<span class="string">'pages/index/index'</span>],</span><br><span class="line">[tuture-add]    pages: [<span class="string">'pages/index/index'</span>, <span class="string">'pages/mine/mine'</span>, <span class="string">'pages/post/post'</span>],</span><br><span class="line">    <span class="built_in">window</span>: &#123;</span><br><span class="line">      backgroundTextStyle: <span class="string">'light'</span>,</span><br><span class="line">      navigationBarBackgroundColor: <span class="string">'#fff'</span>,</span><br><span class="line">      navigationBarTitleText: <span class="string">'WeChat'</span>,</span><br><span class="line">      navigationBarTextStyle: <span class="string">'black'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">[tuture-add]    tabBar: &#123;</span><br><span class="line">[tuture-add]      list: [</span><br><span class="line">[tuture-add]        &#123;</span><br><span class="line">[tuture-add]          pagePath: <span class="string">'pages/index/index'</span>,</span><br><span class="line">[tuture-add]          text: <span class="string">'首页'</span>,</span><br><span class="line">[tuture-add]          iconPath: <span class="string">'./images/home.png'</span>,</span><br><span class="line">[tuture-add]          selectedIconPath: <span class="string">'./images/homeSelected.png'</span>,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]        &#123;</span><br><span class="line">[tuture-add]          pagePath: <span class="string">'pages/mine/mine'</span>,</span><br><span class="line">[tuture-add]          text: <span class="string">'我的'</span>,</span><br><span class="line">[tuture-add]          iconPath: <span class="string">'./images/mine.png'</span>,</span><br><span class="line">[tuture-add]          selectedIconPath: <span class="string">'./images/mineSelected.png'</span>,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      ],</span><br><span class="line">[tuture-add]    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 在 App 类中的 render() 函数没有实际作用</span></span><br><span class="line">  <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>注意到我们还在 <code>config</code> 中注册了导航栏 <code>tabBar</code>，用来在底部切换 <code>index</code> 页面和 <code>mine</code> 页面。</p>
+<h3 id="在-PostCard-中添加跳转逻辑"><a href="#在-PostCard-中添加跳转逻辑" class="headerlink" title="在 PostCard 中添加跳转逻辑"></a>在 PostCard 中添加跳转逻辑</h3><p>我们首先在 <code>PostCard</code> 组件中添加跳转逻辑，使得它被点击后将进入该帖子的详情页面。将 <code>src/components/PostCard/index.jsx</code> 按如下代码进行修改：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/PostCard/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL2NvbXBvbmVudHMvUG9zdENhcmQvaW5kZXguanN4" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/components/PostCard/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">PostCard</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]    <span class="comment">// 如果是列表，那么就响应点击事件，跳转到帖子详情</span></span><br><span class="line">[tuture-add]    <span class="keyword">if</span> (props.isList) &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">const</span> &#123; title, content &#125; = <span class="keyword">this</span>.props</span><br><span class="line">[tuture-add]      Taro.navigateTo(&#123;</span><br><span class="line">[tuture-add]        url: <span class="string">`/pages/post/post?title=<span class="subst">$&#123;title&#125;</span>&amp;content=<span class="subst">$&#123;content&#125;</span>`</span>,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add]</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">[tuture-del]    &lt;View className=<span class="string">"postcard"</span>&gt;</span><br><span class="line">[tuture-add]    &lt;View className=<span class="string">"postcard"</span> onClick=&#123;handleClick&#125;&gt;</span><br><span class="line">      &lt;View className=<span class="string">"post-title"</span>&gt;&#123;props.title&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;View className="post-content"&gt;&#123;props.content&#125;&lt;/</span>View&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们在 <code>PostCard</code> 中注册了 <code>handleClick</code> 用于响应点击事件。在 <code>handleClick</code> 函数中，我们通过新引入的 <code>isList</code> 属性判断这个组件是否展示在首页列表中。如果是的话，就通过 <code>Taro.navigateTo</code> 进行跳转。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>眼尖的你一定发现了我们在调用 <code>navigateTo</code> 时还加上了<strong>查询字符串</strong>用于传递参数。在接下来实现帖子详情页面时，我们就可以接收到传递进来的 <code>title</code> 和 <code>content</code> 的值啦。</p>
+          </div>
+
+<p>接着我们需要在首页模块中给 <code>PostCard</code> 组件加上 <code>isList</code>。修改 <code>src/pages/index/index.jsx</code>，代码如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/index/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL3BhZ2VzL2luZGV4L2luZGV4LmpzeA==" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/pages/index/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"index"</span>&gt;</span><br><span class="line">      &#123;posts.map(<span class="function">(<span class="params">post, index</span>) =&gt;</span> (</span><br><span class="line">[tuture-del]        &lt;PostCard key=&#123;index&#125; title=&#123;post.title&#125; content=&#123;post.content&#125; /&gt;</span><br><span class="line">[tuture-add]        &lt;PostCard</span><br><span class="line">[tuture-add]          key=&#123;index&#125;</span><br><span class="line">[tuture-add]          title=&#123;post.title&#125;</span><br><span class="line">[tuture-add]          content=&#123;post.content&#125;</span><br><span class="line">[tuture-add]          isList</span><br><span class="line">[tuture-add]        /&gt;</span><br><span class="line">      ))&#125;</span><br><span class="line">      &lt;PostForm</span><br><span class="line">        formTitle=&#123;formTitle&#125;</span><br><span class="line">        <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实现“帖子详情”页面"><a href="#实现“帖子详情”页面" class="headerlink" title="实现“帖子详情”页面"></a>实现“帖子详情”页面</h3><p>在 <code>src/pages</code> 中创建 <code>post</code> 目录，然后在其中创建 post.jsx 和 post.scss，分别为页面模块和样式文件。post.jsx 代码如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/post/post.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL3BhZ2VzL3Bvc3QvcG9zdC5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/pages/post/post.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useRouter &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostCard &#125; <span class="keyword">from</span> <span class="string">'../../components'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./post.scss'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Post</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> router = useRouter();</span><br><span class="line">  <span class="keyword">const</span> &#123; params &#125; = router;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"post"</span>&gt;</span><br><span class="line">      &lt;PostCard title=&#123;params.title&#125; content=&#123;params.content&#125; /&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">Post.config = &#123;</span></span><br><span class="line"><span class="regexp">  navigationBarTitleText: '帖子详情',</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意到我们用了 <code>useRouter</code> 这个 Hook（Taro 专有），它用来在函数组件中获取 <code>router</code>，等同于之前类组件中的 <code>this.$router</code>。有了 <code>router</code>，我们就可以获取到在刚才 <code>PostCard</code> 组件跳转时传进来的 <code>title</code> 和 <code>content</code> 参数了。</p>
+<p>post.scss 的代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/pages/post/post.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL3BhZ2VzL3Bvc3QvcG9zdC5zY3Nz" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/pages/post/post.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.mine</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">90vh</span>;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">40px</span>;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: column;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">  <span class="attribute">justify-content</span>: space-between;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-avatar</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-nickName</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">40</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-username</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#777</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-footer</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">28px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#777</span>;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现“我的”页面"><a href="#实现“我的”页面" class="headerlink" title="实现“我的”页面"></a>实现“我的”页面</h3><p>接着我们实现“我的”页面。创建 <code>src/pages/mine</code> 目录，在其中创建 mine.jsx 和 mine.scss。页面组件 mine.jsx 代码如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/mine/mine.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL3BhZ2VzL21pbmUvbWluZS5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/pages/mine/mine.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; View, Image &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./mine.scss'</span>;</span><br><span class="line"><span class="keyword">import</span> avatar <span class="keyword">from</span> <span class="string">'../../images/avatar.png'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Mine</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"mine"</span>&gt;</span><br><span class="line">      &lt;View&gt;</span><br><span class="line">        &lt;Image src=&#123;avatar&#125; className=<span class="string">"mine-avatar"</span> /&gt;</span><br><span class="line">        &lt;View className=<span class="string">"mine-nickName"</span>&gt;图雀酱&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">        &lt;View className="mine-username"&gt;tuture&lt;/</span>View&gt;</span><br><span class="line">      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;View className="mine-footer"&gt;From 图雀社区 with Love ❤&lt;/</span>View&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">Mine.config = &#123;</span></span><br><span class="line"><span class="regexp">  navigationBarTitleText: '我的',</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+
+<p>样式文件 mine.scss 代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/pages/mine/mine.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2Y2Yzc5YWIvc3JjL3BhZ2VzL21pbmUvbWluZS5zY3Nz" title="https://github.com/tuture-dev/ultra-club/blob/f6c79ab/src/pages/mine/mine.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.mine</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">90vh</span>;</span><br><span class="line">  <span class="attribute">padding-top</span>: <span class="number">40px</span>;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: column;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">  <span class="attribute">justify-content</span>: space-between;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-avatar</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-nickName</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">40</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-username</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#777</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.mine-footer</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">28px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#777</span>;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看效果"><a href="#查看效果" class="headerlink" title="查看效果"></a>查看效果</h3><p>又到了激动人心的验收环节。我们应该能看到下面所示的效果：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/16f74b4eb57a242e.gif"></p>
+<h2 id="加速开发，Taro-UI-帮帮忙"><a href="#加速开发，Taro-UI-帮帮忙" class="headerlink" title="加速开发，Taro UI 帮帮忙"></a>加速开发，Taro UI 帮帮忙</h2><p>在编写用户界面时，如果每次都要自己编写组件逻辑、调整组件样式，对于学习来说是完全可以的，但是对于实际开发任务就显得很麻烦了。在 React 社区，我们有诸如 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FudC1kZXNpZ24vYW50LWRlc2lnbg==" title="https://github.com/ant-design/ant-design">Ant Design<i class="fa fa-external-link"></i></span> 这样的组件库，能够让我们快速搭建一套专业美观的界面。而 Taro 也提供了 <span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jLw==" title="https://taro-ui.jd.com/#/">Taro UI<i class="fa fa-external-link"></i></span> 组件库，为我们提供了能够适应多端的成熟组件。在这一步中，我们将用 Taro UI 升级界面，让它看上去更像一个成熟的小程序。</p>
+<p>不过与之前不同，我们将先贴出完成这一步后的 demo 展示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/16f517cdcebe5f20.gif"></p>
+<p>可以看到我们做了三点改进：</p>
+<ul>
+<li>通过点击一个<span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jL2RvY3MvZmFi" title="https://taro-ui.jd.com/#/docs/fab">浮动按钮（Fab）<i class="fa fa-external-link"></i></span>来触发创建新文章的<span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jL2RvY3MvZmxvYXRsYXlvdXQ=" title="https://taro-ui.jd.com/#/docs/floatlayout">浮动弹层（FloatLayout）<i class="fa fa-external-link"></i></span></li>
+<li>发布成功后，会显示一条温馨的<span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jL2RvY3MvbWVzc2FnZQ==" title="https://taro-ui.jd.com/#/docs/message">消息提示（Message）<i class="fa fa-external-link"></i></span></li>
+<li>帖子详情页面中 PostCard 组件去掉了边框，让它看上去更像正文展示</li>
+</ul>
+<h3 id="配置-Taro-UI"><a href="#配置-Taro-UI" class="headerlink" title="配置 Taro UI"></a>配置 Taro UI</h3><p>首先安装 Taro UI 的 npm 包：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install taro-ui</span><br></pre></td></tr></table></figure>
+
+<p>为了后续能在 H5 中使用 taro-ui，我们需要在 <code>config/index.js</code> 中添加如下配置：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">h5: &#123;</span><br><span class="line">  esnextModules: [<span class="string">'taro-ui'</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="升级-PostForm"><a href="#升级-PostForm" class="headerlink" title="升级 PostForm"></a>升级 PostForm</h3><p>首先让我们升级 <code>PostForm</code> 组件。我们先尝鲜 Taro UI 的 <code>AtButton</code> 组件，替换掉之前 Taro 自带的 <code>Taro</code> 组件：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/PostForm/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2NvbXBvbmVudHMvUG9zdEZvcm0vaW5kZXguanN4" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/components/PostForm/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View, Form, Input, Textarea, Button &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; AtButton &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">PostForm</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"post-form"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;View&gt;添加新的帖子&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Form onSubmit=&#123;props.handleSubmit&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;View&gt;</span></span><br><span class="line"><span class="regexp">          &lt;View className="form-hint"&gt;标题&lt;/</span>View&gt;</span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">            value=&#123;props.formContent&#125;</span><br><span class="line">            onInput=&#123;props.handleContentInput&#125;</span><br><span class="line">          /&gt;</span><br><span class="line">[tuture-del]          &lt;Button className=<span class="string">"form-button"</span> formType=<span class="string">"submit"</span> type=<span class="string">"primary"</span>&gt;</span><br><span class="line">[tuture-add]          &lt;AtButton formType=<span class="string">"submit"</span> type=<span class="string">"primary"</span>&gt;</span><br><span class="line">            提交</span><br><span class="line">[tuture-del]          &lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]          &lt;/</span>AtButton&gt;</span><br><span class="line">        &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>Form&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  /</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>注意到我们还把之前 <code>&lt;View&gt;添加新的帖子&lt;/View&gt;</code> 去掉了，因为接下来我们会把表单放在浮动弹层 FloatLayout 里面，所以就不需要这行提示啦。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>你也许会好奇为啥 Taro UI 的组件都以 <code>At</code> 开头？一个是为了与普通的 Taro 组件区分，另一个则是因为开发 Taro 团队正是 <span class="exturl" data-url="aHR0cHM6Ly9hb3R1LmlvLw==" title="https://aotu.io/">Aotu.io 凹凸实验室<i class="fa fa-external-link"></i></span>。</p>
+          </div>
+
+<p>调整 <code>PostForm</code> 组件的样式，代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/components/PostForm/index.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2NvbXBvbmVudHMvUG9zdEZvcm0vaW5kZXguc2Nzcw==" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/components/PostForm/index.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.post-form</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">margin</span>: <span class="number">30px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">30px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: medium;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.input-content</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: medium;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">margin-bottom</span>: <span class="number">40px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.form-hint</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span></span><br><span class="line"><span class="selector-attr">[tuture-del]</span><span class="selector-class">.form-button</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">margin-top</span>: <span class="number">40px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如之前所说，我们打算把创建新帖子的表单放在浮动弹层 FloatLayout 中。在首页模块 <code>src/pages/index/index.jsx</code> 中导入相关组件，代码如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/index/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL3BhZ2VzL2luZGV4L2luZGV4LmpzeA==" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/pages/index/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; AtFab, AtFloatLayout, AtMessage &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="keyword">import</span> &#123; PostCard, PostForm &#125; <span class="keyword">from</span> <span class="string">'../../components'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">  ])</span><br><span class="line">  <span class="keyword">const</span> [formTitle, setFormTitle] = useState(<span class="string">''</span>)</span><br><span class="line">  <span class="keyword">const</span> [formContent, setFormContent] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [isOpened, setIsOpened] = useState(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    e.preventDefault()</span><br><span class="line"> <span class="comment">// ...</span></span><br><span class="line">    setPosts(newPosts)</span><br><span class="line">    setFormTitle(<span class="string">''</span>)</span><br><span class="line">    setFormContent(<span class="string">''</span>)</span><br><span class="line">[tuture-add]    setIsOpened(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]    Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]      message: <span class="string">'发表文章成功'</span>,</span><br><span class="line">[tuture-add]      type: <span class="string">'success'</span>,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"index"</span>&gt;</span><br><span class="line">[tuture-add]      &lt;AtMessage /&gt;</span><br><span class="line">      &#123;posts.map(<span class="function">(<span class="params">post, index</span>) =&gt;</span> (</span><br><span class="line">        &lt;PostCard</span><br><span class="line">          key=&#123;index&#125;</span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">          isList</span><br><span class="line">        /&gt;</span><br><span class="line">      ))&#125;</span><br><span class="line">[tuture-del]      &lt;PostForm</span><br><span class="line">[tuture-del]        formTitle=&#123;formTitle&#125;</span><br><span class="line">[tuture-del]        formContent=&#123;formContent&#125;</span><br><span class="line">[tuture-del]        handleSubmit=&#123;e =&gt; handleSubmit(e)&#125;</span><br><span class="line">[tuture-del]        handleTitleInput=&#123;e =&gt; setFormTitle(e.target.value)&#125;</span><br><span class="line">[tuture-del]        handleContentInput=&#123;e =&gt; setFormContent(e.target.value)&#125;</span><br><span class="line">[tuture-del]      /&gt;</span><br><span class="line">[tuture-add]      &lt;AtFloatLayout</span><br><span class="line">[tuture-add]        isOpened=&#123;isOpened&#125;</span><br><span class="line">[tuture-add]        title=<span class="string">"发表新文章"</span></span><br><span class="line">[tuture-add]        onClose=&#123;() =&gt; setIsOpened(<span class="literal">false</span>)&#125;</span><br><span class="line">[tuture-add]      &gt;</span><br><span class="line">[tuture-add]        &lt;PostForm</span><br><span class="line">[tuture-add]          formTitle=&#123;formTitle&#125;</span><br><span class="line">[tuture-add]          formContent=&#123;formContent&#125;</span><br><span class="line">[tuture-add]          handleSubmit=&#123;e =&gt; handleSubmit(e)&#125;</span><br><span class="line">[tuture-add]          handleTitleInput=&#123;e =&gt; setFormTitle(e.target.value)&#125;</span><br><span class="line">[tuture-add]          handleContentInput=&#123;e =&gt; setFormContent(e.target.value)&#125;</span><br><span class="line">[tuture-add]        /&gt;</span><br><span class="line">[tuture-add]      &lt;<span class="regexp">/AtFloatLayout&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]      &lt;View className="post-button"&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]        &lt;AtFab onClick=&#123;() =&gt; setIsOpened(true)&#125;&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]          &lt;Text className="at-fab__icon at-icon at-icon-edit"&gt;&lt;/</span>Text&gt;</span><br><span class="line">[tuture-add]        &lt;<span class="regexp">/AtFab&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]      &lt;/</span>View&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"> /</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>我们来逐一分析新添加的代码：</p>
+<ul>
+<li>首先从 <code>taro-ui</code> 导入所需的 <code>AtFab</code>、<code>AtFloatLayout</code> 和 <code>AtMessage</code> 组件</li>
+<li>使用 <code>useState</code> Hook 创建新的状态 <code>isOpened</code>（用于记录浮动弹层是否打开）和用于修改状态的 <code>setIsOpened</code></li>
+<li>在 <code>handleSubmit</code> 中，用 <code>setIsOpened(false)</code> 关闭浮动弹层，并用 <code>Taro.atMessage</code> 弹出提示消息</li>
+<li>在 <code>return</code> JSX 代码时，添加 <code>&lt;AtMessage /&gt;</code> 组件，并在之前的 <code>PostForm</code> 组件外层包裹 <code>AtFloatLayout</code> 组件，最后添加浮动按钮 <code>AtFab</code></li>
+</ul>
+<p>在首页样式文件 <code>src/pages/index/index.scss</code> 中添加样式如下：</p>
+<figure class="highlight scss"><figcaption><span>src/pages/index/index.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL3BhZ2VzL2luZGV4L2luZGV4LnNjc3M=" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/pages/index/index.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-attr">[tuture-add]</span><span class="selector-class">.post-button</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">position</span>: fixed;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">right</span>: <span class="number">60px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">bottom</span>: <span class="number">80px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="升级-PostCard"><a href="#升级-PostCard" class="headerlink" title="升级 PostCard"></a>升级 PostCard</h3><p>接着我们来调整 <code>PostCard</code> 在不同页面的样式。<span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2UvY2xhc3NuYW1lcw==" title="https://www.npmjs.com/package/classnames">classnames<i class="fa fa-external-link"></i></span> 是最常用的 CSS 类组合库，可以让你用 JavaScript 表达式灵活地进行 CSS 类的组合。例如我们有三个 CSS 类 <code>foo</code>、<code>bar</code> 和 <code>foo-bar</code>，可以通过 <code>classNames</code> 函数进行条件式组合：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> classNames <span class="keyword">from</span> <span class="string">'classnames`;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">classNames('</span>foo<span class="string">', '</span>bar<span class="string">'); // =&gt; '</span>foo bar<span class="string">'</span></span><br><span class="line"><span class="string">classNames('</span>foo<span class="string">', &#123; bar: true &#125;); // =&gt; '</span>foo bar<span class="string">'</span></span><br><span class="line"><span class="string">classNames(&#123; '</span>foo-bar<span class="string">': true &#125;); // =&gt; '</span>foo-bar<span class="string">'</span></span><br><span class="line"><span class="string">classNames(&#123; '</span>foo-bar<span class="string">': false &#125;); // =&gt; '</span><span class="string">'</span></span><br><span class="line"><span class="string">classNames(&#123; foo: true &#125;, &#123; bar: true &#125;); // =&gt; '</span>foo bar<span class="string">'</span></span><br><span class="line"><span class="string">classNames(&#123; foo: true, bar: true &#125;); // =&gt; '</span>foo bar<span class="string">'</span></span><br></pre></td></tr></table></figure>
+
+<p>我们也新增加一个 CSS 类 <code>postcard__isList</code>，用于表示在帖子列表中的样式。修改 <code>src/components/PostCard/index.jsx</code> 代码如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/PostCard/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2NvbXBvbmVudHMvUG9zdENhcmQvaW5kZXguanN4" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/components/PostCard/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> classNames <span class="keyword">from</span> <span class="string">'classnames'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">[tuture-del]    &lt;View className=<span class="string">"postcard"</span> onClick=&#123;handleClick&#125;&gt;</span><br><span class="line">[tuture-add]    &lt;View</span><br><span class="line">[tuture-add]      className=&#123;classNames(<span class="string">'postcard'</span>, &#123; <span class="attr">postcard__isList</span>: props.isList &#125;)&#125;</span><br><span class="line">[tuture-add]      onClick=&#123;handleClick&#125;</span><br><span class="line">[tuture-add]    &gt;</span><br><span class="line">      &lt;View className=<span class="string">"post-title"</span>&gt;&#123;props.title&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;View className="post-content"&gt;&#123;props.content&#125;&lt;/</span>View&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]</span></span><br><span class="line"><span class="regexp">[tuture-add]PostCard.defaultProps = &#123;</span></span><br><span class="line"><span class="regexp">[tuture-add]  isList: '',</span></span><br><span class="line"><span class="regexp">[tuture-add]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>PostCard</code> 组件的样式，代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/components/PostCard/index.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2NvbXBvbmVudHMvUG9zdENhcmQvaW5kZXguc2Nzcw==" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/components/PostCard/index.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.postcard</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>&#125;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span></span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="selector-class">.postcard__isList</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="定制主题颜色"><a href="#定制主题颜色" class="headerlink" title="定制主题颜色"></a>定制主题颜色</h3><p>Taro UI 支持一定程度的<span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jL2RvY3MvY3VzdG9taXpldGhlbWU=" title="https://taro-ui.jd.com/#/docs/customizetheme">主题定制<i class="fa fa-external-link"></i></span>，这里我们采用最简单却也十分有效的 <strong>SCSS 变量覆盖</strong>。我们创建 <code>src/custom-theme.scss</code>，代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/custom-theme.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2N1c3RvbS10aGVtZS5zY3Nz" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/custom-theme.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Custom Theme */</span></span><br><span class="line"><span class="variable">$color-brand</span>: <span class="number">#02b875</span>;</span><br><span class="line"><span class="variable">$color-brand-light</span>: <span class="number">#41ca98</span>;</span><br><span class="line"><span class="variable">$color-brand-dark</span>: <span class="number">#02935e</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们定义了三个 SCSS 变量 <code>$color-brand</code>、<code>$color-brand-light</code> 和 <code>$color-brand-dark</code>，覆盖了 Taro UI 的默认主题色。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>欲查看所有可以覆盖的 SCSS 变量，请参考 Taro UI 的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL05lcnZKUy90YXJvLXVpL2Jsb2IvZGV2L3NyYy9zdHlsZS92YXJpYWJsZXMvZGVmYXVsdC5zY3Nz" title="https://github.com/NervJS/taro-ui/blob/dev/src/style/variables/default.scss">默认样式文件<i class="fa fa-external-link"></i></span>。如果不熟悉 SCSS 变量，这份<span class="exturl" data-url="aHR0cHM6Ly93d3cuc2Fzcy5oay9ndWlkZS8=" title="https://www.sass.hk/guide/">指南<i class="fa fa-external-link"></i></span>是不错的资料。</p>
+          </div>
+
+<p>紧接着我们需要在项目的全局样式文件 <code>src/app.scss</code> 中导入自定义颜色主题文件，代码如下：</p>
+<figure class="highlight scss"><figcaption><span>src/app.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iLzYzMTMxYjYvc3JjL2FwcC5zY3Nz" title="https://github.com/tuture-dev/ultra-club/blob/63131b6/src/app.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'./custom-theme.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span></span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/button.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/fab.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/icon.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/float-layout.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/textarea.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/message.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/avatar.scss'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，除了导入了刚刚创建的 <code>custom-theme.scss</code>，我们还<strong>按需引入</strong>了 Taro UI 中所用到组件的样式，这样可以有效减少打包后应用体积的大小哦。</p>
+<p>完成这一步的代码后，记得在模拟器里面看看运行起来是不是跟开头的 GIF demo 效果完全一致哦！</p>
+<p>至此，《Taro 多端小程序开发大型实战》第二篇也就结束啦。欢迎继续阅读<a href="https://tuture.co/2019/12/25/5e10118/">第三篇</a>，我们将手把手带大家用实现如何在 Taro 框架下实现多端登录（微信小程序 + 支付宝小程序 + 普通登录）。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2019/12/29/af69225/" title="Taro 小程序开发大型实战（二）：多页面跳转和 Taro UI 组件库">https://tuture.co/2019/12/29/af69225/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Taro/" rel="tag"><i class="fa fa-tag"></i> Taro</a>
+            
+              <a href="/tags/Taro-UI/" rel="tag"><i class="fa fa-tag"></i> Taro UI</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/26/34a473b/" rel="next" title="Taro 小程序开发大型实战（一）：熟悉的 React，熟悉的 Hooks">
+                  <i class="fa fa-chevron-left"></i> Taro 小程序开发大型实战（一）：熟悉的 React，熟悉的 Hooks
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/01/01/442cc8d/" rel="prev" title="一杯茶的时间，上手 Docker">
+                  一杯茶的时间，上手 Docker <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#来一打页面"><span class="nav-number">1.</span> <span class="nav-text">来一打页面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Taro-的路由功能"><span class="nav-number">1.1.</span> <span class="nav-text">Taro 的路由功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置全部页面"><span class="nav-number">1.2.</span> <span class="nav-text">配置全部页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-PostCard-中添加跳转逻辑"><span class="nav-number">1.3.</span> <span class="nav-text">在 PostCard 中添加跳转逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现“帖子详情”页面"><span class="nav-number">1.4.</span> <span class="nav-text">实现“帖子详情”页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现“我的”页面"><span class="nav-number">1.5.</span> <span class="nav-text">实现“我的”页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看效果"><span class="nav-number">1.6.</span> <span class="nav-text">查看效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加速开发，Taro-UI-帮帮忙"><span class="nav-number">2.</span> <span class="nav-text">加速开发，Taro UI 帮帮忙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-Taro-UI"><span class="nav-number">2.1.</span> <span class="nav-text">配置 Taro UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级-PostForm"><span class="nav-number">2.2.</span> <span class="nav-text">升级 PostForm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级-PostCard"><span class="nav-number">2.3.</span> <span class="nav-text">升级 PostCard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定制主题颜色"><span class="nav-number">2.4.</span> <span class="nav-text">定制主题颜色</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

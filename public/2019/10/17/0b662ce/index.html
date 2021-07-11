@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Vue 是尤雨溪在2014年创建的一个前端框架，目前 Github Star 数高达150K，是 Star 数最高的前端项目，并且 Vue 有着极为活跃的社区生态以及专职团队进行维护以确保项目可以健康长久的发展。 目前中国很多互联网公司前端程序员的招聘要求都要求程序员掌握 Vue，像滴滴、美团、饿了么等大厂也在重度使用 Vue 进行开发，并且有着像 Element 、mpvue、iView 这样优">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（一）">
+<meta property="og:url" content="https://tuture.co/2019/10/17/0b662ce/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="Vue 是尤雨溪在2014年创建的一个前端框架，目前 Github Star 数高达150K，是 Star 数最高的前端项目，并且 Vue 有着极为活跃的社区生态以及专职团队进行维护以确保项目可以健康长久的发展。 目前中国很多互联网公司前端程序员的招聘要求都要求程序员掌握 Vue，像滴滴、美团、饿了么等大厂也在重度使用 Vue 进行开发，并且有着像 Element 、mpvue、iView 这样优">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/092faf4/cover-1.jpg">
+<meta property="article:published_time" content="2019-10-16T16:00:00.509Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:34.145Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/092faf4/cover-1.jpg">
+  <link rel="canonical" href="https://tuture.co/2019/10/17/0b662ce/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（一） | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2019/10/17/0b662ce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（一）
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-17 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-17T00:00:00+08:00">2019-10-17</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:34" itemprop="dateModified" datetime="2021-07-11T15:16:34+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>13k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>12 分钟</span>
+            </span>
+          
+            <div class="post-description">Vue 是尤雨溪在2014年创建的一个前端框架，目前 Github Star 数高达150K，是 Star 数最高的前端项目，并且 Vue 有着极为活跃的社区生态以及专职团队进行维护以确保项目可以健康长久的发展。 目前中国很多互联网公司前端程序员的招聘要求都要求程序员掌握 Vue，像滴滴、美团、饿了么等大厂也在重度使用 Vue 进行开发，并且有着像 Element 、mpvue、iView 这样优秀的基于 Vue 开源项目存在，所以学习 Vue 是一个不错的投资，当你学会 Vue，就可以快速开发项目，这样不仅可以接外包挣外快，而且当有了一定的项目经验，还可以在一线互联网大厂找到一份不错的工作。 看到这里你心动了嘛？心动不如行动！而最幸运的是，本教程将会一步一步带你以实战的方式实现一个 real-life （真实世界中的运行的）项目，并在实战的过程中，了解 Vue 的全貌，现在就打开电脑，跟随者我的脚步，这一次彻底掌握 Vue 开发！</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/092faf4/cover-1.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5k" title="https://github.com/tuture-dev/vue-online-shop-frontend"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a>快速入门</h2><p>Vue 是<span class="exturl" data-url="aHR0cHM6Ly9ldmFueW91Lm1lLw==" title="https://evanyou.me/">尤雨溪<i class="fa fa-external-link"></i></span>在 2014 年创建的一个前端框架，目前 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3Z1ZWpzL3Z1ZQ==" title="https://github.com/vuejs/vue">Github<i class="fa fa-external-link"></i></span> Star 数高达 150K，是 Star 数最高的前端项目，并且 Vue 有着极为活跃的社区生态以及专职团队进行维护以确保项目可以健康长久地发展。</p>
+<p>目前中国很多互联网公司前端程序员的招聘要求都要求程序员掌握 Vue，像滴滴、美团、饿了么等大厂也在重度使用 Vue 进行开发，并且有着像 <span class="exturl" data-url="aHR0cHM6Ly9lbGVtZW50LmVsZW1lLmNuLyMvemgtQ04=" title="https://element.eleme.cn/#/zh-CN">Element<i class="fa fa-external-link"></i></span> 、<span class="exturl" data-url="aHR0cDovL21wdnVlLmNvbS8=" title="http://mpvue.com/">mpvue<i class="fa fa-external-link"></i></span>、<span class="exturl" data-url="aHR0cDovL2l2aWV3LnRhbGtpbmdkYXRhLmNvbS8jLw==" title="http://iview.talkingdata.com/#/">iView<i class="fa fa-external-link"></i></span> 这样优秀的基于 Vue 开源项目存在，所以学习 Vue 是一个不错的投资，当你学会 Vue，就可以快速开发项目，这样不仅可以接外包挣外快，而且当有了一定的项目经验，还可以在一线互联网大厂找到一份不错的工作。</p>
+<p>看到这里你心动了嘛？心动不如行动！而最幸运的是，本教程将会一步一步带你以实战的方式实现一个迷你全栈电商网站。并在实战的过程中，了解 Vue 的全貌，现在就打开电脑，跟随我的脚步，彻底掌握 Vue 开发！</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>你可以在 Github 查看完整的源码：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3BmdG9tL3Z1ZS1vbmxpbmUtc2hvcC1mcm9udGVuZC90cmVlL2FjYTJiYjY0Y2JkYWViYjdlNGE2MmUyNTJiYzAwYTQzOWVlZGU5YTU=" title="https://github.com/pftom/vue-online-shop-frontend/tree/aca2bb64cbdaebb7e4a62e252bc00a439eede9a5">源码地址<i class="fa fa-external-link"></i></span>。</p>
+<h3 id="项目准备"><a href="#项目准备" class="headerlink" title="项目准备"></a>项目准备</h3><h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><p>安装 Node.js，你可以去 <span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2VuLw==" title="https://nodejs.org/en/">Node.js<i class="fa fa-external-link"></i></span> 官网下载安装包，通过安装包安装会同时安装 Node.js 包管理工具 Npm，用于便捷的管理项目依赖和下载第三方包。</p>
+<p>打开终端，输入如下命令测试是否安装成功：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v <span class="comment"># v10.16.0</span></span><br><span class="line">npm -v <span class="comment"># 6.9.0</span></span><br></pre></td></tr></table></figure>
+
+<p>如果在你的终端有如上输出，那么代表你安装成功。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>通过上面安装包安装，你会安装最新的 Node 稳定版本，这可能和我的机器上的 Node 版本不一致，但是不用担心，本教程使用到的代码语法适用于绝大多数新的或更老的 Node。</p>
+          </div>
+
+<p>安装 vue-cli，在绝大多数场景下，我们使用 vue-cli 来初始化我们的 vue 项目，本教程也不例外，在终端运行如下命令来安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g vue-cli</span><br></pre></td></tr></table></figure>
+
+<p>打开终端，输入如下命令测试是否安装成功：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vue --version <span class="comment"># 2.9.6</span></span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>虽然 Vue 3.x 已经正式推出，但是这篇教程用的是主流、稳定的 Vue 2.x 版本。由于 Vue 的整体思想基本没有改变，所以不影响我们的学习。在接下来的教程中，我们会迁移到 Vue 3.x，并通过讲解新老 Vue 版本的差异让你更好地理解 Vue 的演变。</p>
+          </div>
+
+<p>上面两个安装步骤已经足够完成我们的教程的学习，但是我想额外推荐你一款编辑器，VSCode，你可以通过访问 <span class="exturl" data-url="aHR0cHM6Ly9jb2RlLnZpc3VhbHN0dWRpby5jb20v" title="https://code.visualstudio.com/">VSCode<i class="fa fa-external-link"></i></span> 官网安装。</p>
+<p>在 VSCode 里面找到 Vue 插件，可以获得<span class="exturl" data-url="aHR0cHM6Ly9tYXJrZXRwbGFjZS52aXN1YWxzdHVkaW8uY29tL2l0ZW1zP2l0ZW1OYW1lPW9jdHJlZi52ZXR1cg==" title="https://marketplace.visualstudio.com/items?itemName=octref.vetur">代码语法高亮以及自动格式化<i class="fa fa-external-link"></i></span>非常便捷的功能，并且 VSCode 天然对 JavaScript 的支持，会大大提高我们的开发效率，本教程所涉及项目的开发都是使用 VSCode 完成的。</p>
+<h4 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h4><p>打开终端输入如下命令初始化我们的 Vue 项目：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vue init webpack vue-online-shop-frontend</span><br></pre></td></tr></table></figure>
+
+<p>命令行接着会显示一些列选项让你选择，具体我们的选择如下图：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f2652f23b7ebd0.png"></p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>其中 <code>Author</code> 字段你可以填自己的昵称，然后我们在选择了安装 <code>vue-router</code> 之后，其他的都选择了 <code>no</code>，因为本篇教程是面向初学者的实战教程，如果引入了过多和 Vue 核心无关的概念，就会引起很多困惑，所以这里我们不配置它们</p>
+          </div>
+
+<p>当项目初始化成功之后，接下来通过如下命令开启项目：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># code vue-online-shop-frontend # 如果你使用了 VSCode 编辑器，可以用这行命令打开项目</span></span><br><span class="line"><span class="built_in">cd</span> vue-online-shop-frontend &amp;&amp; npm start</span><br></pre></td></tr></table></figure>
+
+<p>接着打开浏览器，访问 <code>http://localhost:8080/</code> 查看我们初始好的项目效果。</p>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>如果你使用 VSCode 编辑器打开项目进行开发，在运行 <code>code project-name</code> 之前需要安装 <code>code</code> 脚本，具体我找了一篇教程：<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vWmhhbmdjc2MvcC8xMTM2Mjk4Ny5odG1s" title="https://www.cnblogs.com/Zhangcsc/p/11362987.html">戳我访问<i class="fa fa-external-link"></i></span>。</p>
+          </div>
+
+<h3 id="初探脚手架代码"><a href="#初探脚手架代码" class="headerlink" title="初探脚手架代码"></a>初探脚手架代码</h3><p>通过 vue-cli 初始化的脚手架代码中，我们在整个教程中需要了解的就是以下五个文件：</p>
+<ul>
+<li><code>src/main.js</code></li>
+<li><code>index.html</code></li>
+<li><code>src/App.vue</code></li>
+<li><code>src/router/index.js</code></li>
+<li><code>src/components/HelloWorld.vue</code></li>
+</ul>
+<h4 id="src-main-js"><a href="#src-main-js" class="headerlink" title="src/main.js"></a>src/main.js</h4><p>首先我们来看一下 <code>src/main.js</code>，这个是 Vue 应用的入口。我们通过导入 <code>Vue</code> 类、<code>App</code> 组件、<code>router</code> 路由，再加上 <code>el</code> ，将这些参数传给 <code>Vue</code> 类，生成一个 Vue 实例。</p>
+<figure class="highlight js"><figcaption><span>src/main.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMzY3OTZhZi9zcmMvbWFpbi5qcw==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/36796af/src/main.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// The Vue build version to load with the `import` command</span></span><br><span class="line"><span class="comment">// (runtime-only or standalone) has been set in webpack.base.conf with an alias.</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span>;</span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./router'</span>;</span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable no-new */</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router,</span><br><span class="line">  components: &#123; App &#125;,</span><br><span class="line">  template: <span class="string">'&lt;App/&gt;'</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="index-html"><a href="#index-html" class="headerlink" title="index.html"></a>index.html</h4><p>接着我们来看一下 <code>index.html</code> 文件，它的代码是这样的：</p>
+<figure class="highlight html"><figcaption><span>index.html</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMzY3OTZhZi9pbmRleC5odG1s" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/36796af/index.html">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width,initial-scale=1.0"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>vue-online-shop<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- built files will be auto injected --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当我们开启项目之后，Vue 所使用的构建工具 <span class="exturl" data-url="aHR0cHM6Ly93ZWJwYWNrLmRvY3NjaGluYS5vcmcv" title="https://webpack.docschina.org/">Webpack<i class="fa fa-external-link"></i></span> 将会：</p>
+<ul>
+<li>根据入口文件 <code>src/main.js</code> 里面声明的 <code>el</code> 属性（<code>#app</code>），找到 <code>index.html</code> 中 id 为<code>app</code> 的 DOM 节点</li>
+<li>把编译好的视图模板代码挂载到这个 DOM 节点下面</li>
+<li>将项目涉及的 JavaScript 和 CSS 代码以 <code>script</code> 和 <code>link</code> 的方式插入到 <code>index.html</code> 中</li>
+<li>开启开发服务器，打开浏览器，进而浏览器将 <code>index.html</code> 渲染，我们就可以看到写好的 Vue 页面效果。</li>
+</ul>
+<h4 id="src-App-vue"><a href="#src-App-vue" class="headerlink" title="src/App.vue"></a>src/App.vue</h4><p><code>src/App.vue</code> 就是 Vue 为我们提供的组件文件，使得我们可以以组件的形式来组织代码，并通过组件的组合来构建任意规模的项目，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/App.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMzY3OTZhZi9zcmMvQXBwLnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/36796af/src/App.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./assets/logo.png"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">router-view</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    name: <span class="string">'App'</span>,</span></span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">  <span class="selector-id">#app</span> &#123;</span></span><br><span class="line">    font-family: 'Avenir', Helvetica, Arial, sans-serif;</span><br><span class="line">    -webkit-font-smoothing: antialiased;</span><br><span class="line">    -moz-osx-font-smoothing: grayscale;</span><br><span class="line">    text-align: center;</span><br><span class="line"><span class="css">    <span class="selector-tag">color</span>: <span class="selector-id">#2c3e50</span>;</span></span><br><span class="line">    margin-top: 60px;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到， <code>App</code> 组件包含了三个部分的代码：</p>
+<ul>
+<li><code>template</code></li>
+<li><code>script</code></li>
+<li><code>style</code></li>
+</ul>
+<p>其实就是对应了传统 Web “三剑客”，<code>HTML</code>、<code>JavaScript</code>、<code>CSS</code>。</p>
+<p>这里在 <code>template</code> 部分展示了一张 Vue 的 logo 图片，然后显示此刻渲染的路由组件：<code>&lt;router-view /&gt;</code>。我们将在后面继续讲解路由，这里不懂也没有关系哦。<code>script</code> 部分，主要是导出了一个名为 <code>App</code> 的组件。<code>style</code> 部分就是我们熟悉的 CSS 代码了。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>上面所讲的是比较小的组件的写法，当组件中涉及的代码较多时，我们需要把 <code>script</code> 和 <code>style</code> 抽成独立的 <code>.js</code> 和 <code>.css</code> 文件。就像下面这样：</p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;!-- ./src/App.vue --&gt;</span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">    &lt;img src=<span class="string">"./assets/hello.png"</span>&gt;</span><br><span class="line">    &lt;router-view/&gt;</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line">&lt;script src=<span class="string">"./app.js"</span>&gt;&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;style src="./</span>app.css<span class="string">"&gt;&lt;/style&gt;</span></span><br></pre></td></tr></table></figure>
+          </div>
+
+<p>Vue 组件和模板语法是 Vue 的核心概念，我们在后面会以实战的形式重点讲解这些内容。</p>
+<h4 id="src-router-index-js"><a href="#src-router-index-js" class="headerlink" title="src/router/index.js"></a>src/router/index.js</h4><p><code>src/router/index.js</code> 文件是 Vue 为我们提供的路由文件，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/router/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMzY3OTZhZi9zcmMvcm91dGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/36796af/src/router/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">'vue-router'</span>;</span><br><span class="line"><span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">'@/components/HelloWorld'</span>;</span><br><span class="line"></span><br><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/'</span>,</span><br><span class="line">      name: <span class="string">'HelloWorld'</span>,</span><br><span class="line">      component: HelloWorld,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>首先我们导入了 Vue 类，以及 Router 类，以及我们的 <code>HelloWorld</code> 组件。</p>
+<p>接着我们使用 <code>Vue.use(Router)</code> 告诉 Vue，我们应用接入了路由。</p>
+<p>在导出的路由实例中，我们通过 <code>routes</code> 数组定义了项目所有的页面，每个页面是一个类似 <code>{ path, name, component }</code> 的对象。</p>
+<p>比如初始化时生成的 <code>HelloWorld.vue</code> 就是我们的网站首页 – 也就是打开浏览器访问到的第一个页面，因为它的路径（<code>path</code>）定义为 <code>/</code> 。此外一个页面定义还需要 <code>name</code>，它代表此页面在 <code>vue-router</code> 中的标识符，<code>component</code> 则代表此页面渲染时的所用到的组件。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>这里我们可以看到导出 <code>HelloWorld</code> 组件时，我们在路径最前面加上了 <code>&quot;@&quot;</code>，那是因为我们在 <code>webpack</code> 配置中将会 <code>&quot;@&quot;</code>映射成 <code>resolve(&#39;src&#39;)</code>，也就是我们项目目录下 <code>src</code> 文件夹的路径，最后我们的 <code>&#39;@/components/HelloWorld&#39;</code> 的实际上的效果相当于取到了项目目录 <code>src</code> 文件夹里面的 <code>components/HelloWorld</code> 组件。</p>
+          </div>
+
+<h4 id="src-components-HelloWorld-vue"><a href="#src-components-HelloWorld-vue" class="headerlink" title="src/components/HelloWorld.vue"></a>src/components/HelloWorld.vue</h4><p>最后是 <code>src/components/HelloWorld.vue</code> 文件，是脚手架代码为我们提供的一个实例组件，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/components/HelloWorld.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMzY3OTZhZi9zcmMvY29tcG9uZW50cy9IZWxsb1dvcmxkLnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/36796af/src/components/HelloWorld.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"hello"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; msg &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Essential Links<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://vuejs.org"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> Core Docs <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://forum.vuejs.org"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> Forum <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://chat.vuejs.org"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> Community Chat <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://twitter.com/vuejs"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> Twitter <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://vuejs-templates.github.io/webpack/"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span></span><br><span class="line">          Docs for This Template</span><br><span class="line">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Ecosystem<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://router.vuejs.org/"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> vue-router <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://vuex.vuejs.org/"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> vuex <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://vue-loader.vuejs.org/"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span> vue-loader <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://github.com/vuejs/awesome-vue"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span></span><br><span class="line">          awesome-vue</span><br><span class="line">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    name: <span class="string">'HelloWorld'</span>,</span></span><br><span class="line">    data() &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">        msg: <span class="string">'Welcome to Your Vue.js App'</span>,</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Add "scoped" attribute to limit CSS to this component only --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span></span><br><span class="line">  h1,</span><br><span class="line">  h2 &#123;</span><br><span class="line">    font-weight: normal;</span><br><span class="line">  &#125;</span><br><span class="line">  ul &#123;</span><br><span class="line">    list-style-type: none;</span><br><span class="line">    padding: 0;</span><br><span class="line">  &#125;</span><br><span class="line">  li &#123;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    margin: 0 10px;</span><br><span class="line">  &#125;</span><br><span class="line">  a &#123;</span><br><span class="line"><span class="css">    <span class="selector-tag">color</span>: <span class="selector-id">#42b983</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，其结构大致与 <code>App.vue</code> 类似。其中也有一些不同，比如 <code>script</code> 里面的 <code>data</code> 字段，还有 <code>template</code> 中的 <code>{{ }}</code> 语法。这个我们会在下一节进行讲解。</p>
+<p>当我们打开浏览器时，地址为：<code>http://localhost:8080/</code> 此时路径为 <code>/</code>，激活 <code>HelloWorld.vue</code> 组件，所以最后我们整个项目渲染 <code>App.vue</code> 的内容，显示的结构即为：</p>
+<ul>
+<li>一张 Vue logo 图</li>
+<li>我们的 <code>HelloWorld.vue</code> 组件的内容</li>
+</ul>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f2653b19ea8fe1.png"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>通过一窥 <code>vue-cli</code> 为我们初始化的项目代码，我们可以学到如下的知识：</p>
+<ul>
+<li>Vue 通过组件来组织项目，单个组件就是我们传统的 Web “三剑客”：HTML、JavaScript、CSS。</li>
+<li>Vue 通过路由来定义多个页面，并且进行页面之间的跳转。</li>
+<li>一个页面是一个组件，一个组件可以由很多组件组成，通过这种组合式的思想，我们可以编写任意复杂的项目。</li>
+</ul>
+<h2 id="编写你的第一个-Vue-页面"><a href="#编写你的第一个-Vue-页面" class="headerlink" title="编写你的第一个 Vue 页面"></a>编写你的第一个 Vue 页面</h2><p>下面我们来编写电商应用的首页。</p>
+<h3 id="编写页面组件"><a href="#编写页面组件" class="headerlink" title="编写页面组件"></a>编写页面组件</h3><p>在 <code>src/components</code> 下面创建 <code>Home.vue</code> 文件，然后编写如下代码：</p>
+<figure class="highlight html"><figcaption><span>src/components/Home.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMDU2ZDU1NS9zcmMvY29tcG9uZW50cy9Ib21lLnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/056d555/src/components/Home.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    name: <span class="string">'home'</span>,</span></span><br><span class="line">    data() &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">        msg: <span class="string">'Welcome to Your Vue.js App'</span>,</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面，我们创建了一个名为 <code>Home.vue</code> 的 Vue 组件，可以看到它和我们之前的 <code>HelloWorld.vue</code> 的内容大致相仿，但是也有一些不同的地方：</p>
+<ul>
+<li>首先，我们暂时没有写样式（没有 <code>style</code> 部分），而是先专注于基础知识的讲解。在后续教程中，我们会使用 <span class="exturl" data-url="aHR0cHM6Ly9lbGVtZW50LmVsZW1lLmNuLw==" title="https://element.eleme.cn/">Element UI<i class="fa fa-external-link"></i></span> 组件库让我们的界面变得专业美观。</li>
+<li>其次，我们在 <code>script</code> 中引入了 <code>data</code> ，在 <code>template</code> 引入了插值语法 <code>{{var}}</code>。其中 <code>data</code> 是声明此组件的初始化数据，而 <code>{{var}}</code> 插值语法是方便将数据渲染到视图模板中；这里我们将在 <code>script</code> 中定义的 <code>data</code> 中的 <code>msg</code> 插值到视图模板中，最终会渲染一个 <code>h1</code> 标签，标签内容就为 <code>msg</code> 的内容。</li>
+</ul>
+<h3 id="接入路由"><a href="#接入路由" class="headerlink" title="接入路由"></a>接入路由</h3><p>接着，我们在 <code>src/router/index.js</code> 路由中将主页路由 <code>/</code> 所绑定的组件从默认的 <code>HelloWorld</code> 修改为刚才写好的 <code>Home</code> 组件：</p>
+<figure class="highlight js"><figcaption><span>src/router/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMDU2ZDU1NS9zcmMvcm91dGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/056d555/src/router/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">'vue-router'</span>;</span><br><span class="line">[tuture-del]<span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">'@/components/HelloWorld'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'@/components/Home'</span>;</span><br><span class="line"></span><br><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">  routes: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/'</span>,</span><br><span class="line">[tuture-del]      name: <span class="string">'HelloWorld'</span>,</span><br><span class="line">[tuture-del]      component: HelloWorld,</span><br><span class="line">[tuture-add]      name: <span class="string">'Home'</span>,</span><br><span class="line">[tuture-add]      component: Home,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>现在我们保存代码，打开浏览器，就会显示刚才在 <code>Home.vue</code> 里面填写的那个标题：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f2657c42c648fb.png"></p>
+<h2 id="使用路由进行多页面跳转"><a href="#使用路由进行多页面跳转" class="headerlink" title="使用路由进行多页面跳转"></a>使用路由进行多页面跳转</h2><p>一个经典的电商应用通常包括如下部分：</p>
+<ul>
+<li>商品展示列表 （<code>Home.vue</code>）</li>
+<li>商品详情（<code>Detail.vue</code>）</li>
+<li>购物车（<code>Cart.vue</code>）</li>
+</ul>
+<p>这里因为我们追求简单，也将商品的后台管理页面 （<code>Admin.vue</code>）放入了项目中。</p>
+<p>现在我们先来实现商品展示列表、购物车和后台管理页面的模板内容。因为商品详情页后面将会使用组件进行复用，所以这里我们暂时先不创建。</p>
+<h3 id="添加首页导航"><a href="#添加首页导航" class="headerlink" title="添加首页导航"></a>添加首页导航</h3><p>首先修改 <code>App.vue</code> ，加入三个导航链接 <code>router-link</code>，方便让用户跳转到到自己想看的页面，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/App.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMTlhMzBlNy9zcmMvQXBwLnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/19a30e7/src/App.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    [tuture-del] <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./assets/logo.png"</span> /&gt;</span> [tuture-add]</span><br><span class="line">    <span class="tag">&lt;<span class="name">nav</span>&gt;</span></span><br><span class="line">      [tuture-add]</span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">        [tuture-add]</span><br><span class="line">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"nav__left"</span>&gt;</span></span><br><span class="line">          [tuture-add]</span><br><span class="line">          <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">            [tuture-add] <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/"</span>&gt;</span>Home<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span> [tuture-add]</span><br><span class="line">          <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">          [tuture-add]</span><br><span class="line">          <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">            [tuture-add]</span><br><span class="line">            <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/admin"</span>&gt;</span>Admin<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span> [tuture-add]</span><br><span class="line">          <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">          [tuture-add]</span><br><span class="line">          <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">            [tuture-add] <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/cart"</span>&gt;</span>Cart<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span> [tuture-add]</span><br><span class="line">          <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">          [tuture-add]</span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        [tuture-add]</span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      [tuture-add]</span><br><span class="line">    <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br><span class="line">    [tuture-add]</span><br><span class="line">    <span class="tag">&lt;<span class="name">router-view</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
+
+<p>这里我们在头部添加了三个 <code>router-link</code> 代表我们的头部导航。</p>
+<p><code>router-link</code> 和 <code>a</code> 标签类似，只不过 Vue 为它添加一些额外的优化逻辑。</p>
+<h3 id="创建后台管理页面"><a href="#创建后台管理页面" class="headerlink" title="创建后台管理页面"></a>创建后台管理页面</h3><p>接着我们编写 <code>Admin.vue</code> 组件，但这里稍微有点不同，即我们在 <code>src/pages</code> 下创建 <code>Admin.vue</code> 组件，因为对于页面级组件，我们倾向于将其放到一个特殊 <code>pages</code> 文件夹，这样方便组织项目。其代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/Admin.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMTlhMzBlNy9zcmMvcGFnZXMvQWRtaW4udnVl" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/19a30e7/src/pages/Admin.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    name: <span class="string">'home'</span>,</span></span><br><span class="line">    data() &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">        msg: <span class="string">'Welcome to the Admin Page'</span>,</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个页面内容和我们之前的 <code>Home.vue</code> 内容相似。</p>
+<h3 id="创建购物车页面"><a href="#创建购物车页面" class="headerlink" title="创建购物车页面"></a>创建购物车页面</h3><p>然后是我们的购物车页面 <code>Cart.vue</code>，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/Cart.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMTlhMzBlNy9zcmMvcGFnZXMvQ2FydC52dWU=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/19a30e7/src/pages/Cart.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">    name: <span class="string">'home'</span>,</span></span><br><span class="line">    data() &#123;</span><br><span class="line"><span class="actionscript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">        msg: <span class="string">'Welcome to the Cart Page'</span>,</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个页面内容和我们之前的 <code>Home.vue</code> 内容相似。</p>
+<h3 id="将新页面导入路由"><a href="#将新页面导入路由" class="headerlink" title="将新页面导入路由"></a>将新页面导入路由</h3><p>最后，我们把上一步中创建的 <code>Home.vue</code> 移到 <code>src/pages</code> 目录中，并在路由文件 <code>src/routes/index.js</code> 中导入这三个页面，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/router/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvMTlhMzBlNy9zcmMvcm91dGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/19a30e7/src/router/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">'vue-router'</span>;</span><br><span class="line">[tuture-del]<span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'@/components/Home'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'@/pages/Home'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Admin <span class="keyword">from</span> <span class="string">'@/pages/Admin'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Cart <span class="keyword">from</span> <span class="string">'@/pages/Cart'</span>;</span><br><span class="line"></span><br><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">      name: <span class="string">'Home'</span>,</span><br><span class="line">      component: Home,</span><br><span class="line">    &#125;,</span><br><span class="line">[tuture-add]    &#123;</span><br><span class="line">[tuture-add]      path: <span class="string">'/admin'</span>,</span><br><span class="line">[tuture-add]      name: <span class="string">'Admin'</span>,</span><br><span class="line">[tuture-add]      component: Admin,</span><br><span class="line">[tuture-add]    &#125;,</span><br><span class="line">[tuture-add]    &#123;</span><br><span class="line">[tuture-add]      path: <span class="string">'/cart'</span>,</span><br><span class="line">[tuture-add]      name: <span class="string">'Cart'</span>,</span><br><span class="line">[tuture-add]      component: Cart,</span><br><span class="line">[tuture-add]    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>保存代码，然后打开浏览器，我们可以看到下面的效果：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f265b24d1615d4.gif"></p>
+<p>你可以点击头部的三个导航链接，下面的标题内容会随着点击的链接变化。恭喜你，你已经成功地实现了一个基于 Vue 的多页面网站了！</p>
+<h2 id="使用嵌套路由和动态路由合理组织页面"><a href="#使用嵌套路由和动态路由合理组织页面" class="headerlink" title="使用嵌套路由和动态路由合理组织页面"></a>使用嵌套路由和动态路由合理组织页面</h2><p>随着页面的增多，如果我们把所有的页面都塞到一个 <code>routes</code> 数组里面会显得很乱，你无法确定哪些页面存在关系。还好 <code>vue-router</code> 提供了嵌套路由的功能，让我们能把相关联的页面组织在一起。</p>
+<h3 id="升级路由"><a href="#升级路由" class="headerlink" title="升级路由"></a>升级路由</h3><p>在我们的商城项目中，后台管理页 <code>Admin</code> 涉及到很多操作页面，比如：</p>
+<ul>
+<li><code>/create</code> 创建新的商品</li>
+<li><code>/edit</code> 编辑商品信息</li>
+</ul>
+<p>让我们通过<strong>嵌套路由</strong>的方式将它们组织在一起。首先在路由文件 <code>src/router/index.js</code> 中声明后台管理所有用到的页面组件（我们马上就会去实现它们）：</p>
+<figure class="highlight js"><figcaption><span>src/router/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNGJhZDgwZS9zcmMvcm91dGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/4bad80e/src/router/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">'vue-router'</span>;</span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'@/pages/Home'</span>;</span><br><span class="line">[tuture-del]<span class="keyword">import</span> Admin <span class="keyword">from</span> <span class="string">'@/pages/Admin'</span>;</span><br><span class="line"><span class="keyword">import</span> Cart <span class="keyword">from</span> <span class="string">'@/pages/Cart'</span>;</span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="comment">// Admin Components</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Index <span class="keyword">from</span> <span class="string">'@/pages/admin/Index'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> New <span class="keyword">from</span> <span class="string">'@/pages/admin/New'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Products <span class="keyword">from</span> <span class="string">'@/pages/admin/Products'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> Edit <span class="keyword">from</span> <span class="string">'@/pages/admin/Edit'</span>;</span><br><span class="line">[tuture-add]</span><br><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/admin'</span>,</span><br><span class="line">      name: <span class="string">'Admin'</span>,</span><br><span class="line">[tuture-del]      component: Admin,</span><br><span class="line">[tuture-add]      component: Index,</span><br><span class="line">[tuture-add]      children: [</span><br><span class="line">[tuture-add]        &#123;</span><br><span class="line">[tuture-add]          path: <span class="string">'new'</span>,</span><br><span class="line">[tuture-add]          name: <span class="string">'New'</span>,</span><br><span class="line">[tuture-add]          component: New,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]        &#123;</span><br><span class="line">[tuture-add]          path: <span class="string">''</span>,</span><br><span class="line">[tuture-add]          name: <span class="string">'Products'</span>,</span><br><span class="line">[tuture-add]          component: Products,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]        &#123;</span><br><span class="line">[tuture-add]          path: <span class="string">'edit/:id'</span>,</span><br><span class="line">[tuture-add]          name: <span class="string">'Edit'</span>,</span><br><span class="line">[tuture-add]          component: Edit,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/cart'</span>,</span><br><span class="line">      <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>嵌套路由的用法就是给需要归为一类的页面设置一个入口页面，然后把这一类页面都放到这个路由页面路由定义的 <code>children</code> 字段数组中。</p>
+<p>通过上面的代码我们可以看到，<code>Admin</code> 类别下有四个组件，<code>Index</code> 是我们 <code>Admin</code> 类别的入口组件，也是作为 <code>path = /admin</code> 的渲染组件，然后其他组件就放到 <code>path = /admin</code> 这个路由定义的 <code>children</code> 数组里，其定义和其他父级一致。</p>
+<p>这样的嵌套写法带来了两个好处：</p>
+<ul>
+<li>很清晰的组织了一类页面，方便阅读。</li>
+<li>在定义路由的 <code>path</code> 的时候，复用了父级的 <code>path</code>，即现在我们的 <code>New</code> 这个路由，它在浏览器中访问的路径为：<code>&#39;/admin&#39; + &#39;new&#39;</code>，如果我们统一放到 <code>routes</code> 数组的第一级定义，那么后面的 <code>Products</code> 和 <code>Edit</code> 的 <code>path</code> 都要带上诸如 <code>/admin</code> 和 <code>/admin/edit/:id</code> 这样长长的路径，显得特别复杂。</li>
+</ul>
+<p>这里还有一个改变就是，我们发现 <code>Edit</code> 这个路由的 <code>path</code> 有点不太一样，它有个特殊的标志 <code>edit/:id</code>，这种写法被称为<strong>动态路由</strong>，即 <code>:id</code> 会匹配任意字符串，所以用户访问 <code>/admin/edit/&lt;any-string&gt;</code> 都会激活 <code>Edit</code> 路由，从而渲染 <code>Edit.vue</code> 组件。</p>
+<h3 id="创建-Admin-的子页面"><a href="#创建-Admin-的子页面" class="headerlink" title="创建 Admin 的子页面"></a>创建 Admin 的子页面</h3><p>首先创建 <code>Index.vue</code> 入口组件，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/admin/Index.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNGJhZDgwZS9zcmMvcGFnZXMvYWRtaW4vSW5kZXgudnVl" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/4bad80e/src/pages/admin/Index.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"admin-new"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-lg-3 col-md-3 col-sm-12 col-xs-12"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"admin-menu"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/admin"</span>&gt;</span>View Products<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/admin/new"</span>&gt;</span>New Products<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">router-view</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，它作为嵌套路由的入口级组件，和我们之前在 <code>App.vue</code> 里面看到的样子类似，在其中会有 <code>router-link</code> 导向更深层级的路由.</p>
+<p><code>router-view</code> 用于渲染子路由组件，比如我们此时访问 <code>/admin/new</code> 页面，那么 <code>router-view</code> 部分会被替换成 <code>New.vue</code> 组件的内容，因为我们在之前的嵌套路由定义中 <code>path</code> 为 <code>new</code> 的渲染组件为 <code>New.vue</code>。</p>
+<p>创建 <code>src/pages/admin/Edit.vue</code> 组件，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/admin/Edit.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNGJhZDgwZS9zcmMvcGFnZXMvYWRtaW4vRWRpdC52dWU=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/4bad80e/src/pages/admin/Edit.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>This is Admin/Edit/&#123;&#123;$route.params.id&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，当用户访问 <code>/admin/edit/:id</code>，会激活渲染 <code>Edit.vue</code> 组件，我们可以通过 <code>$route.params.id</code> 的方式获取用户输入的路径 <code>:id</code> 部分。比如我们在浏览器中输入 <code>/admin/edit/52tuture</code>，那么浏览器将会以 <code>h1</code> 的形式打出 <code>&quot;This is Admin/Edit/52tuture&quot;</code>。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p><code>$route</code> 这个变量是 Vue 在运行时为我们自动插入到所有组件属性中的，所有我们不用手动去管理它。</p>
+          </div>
+
+<p>创建 <code>src/pages/admin/New.vue</code>，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/admin/New.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNGJhZDgwZS9zcmMvcGFnZXMvYWRtaW4vTmV3LnZ1ZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/4bad80e/src/pages/admin/New.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>This is Admin/New<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>src/pages/admin/Products.vue</code> ，代码如下：</p>
+<figure class="highlight html"><figcaption><span>src/pages/admin/Products.vue</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNGJhZDgwZS9zcmMvcGFnZXMvYWRtaW4vUHJvZHVjdHMudnVl" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/4bad80e/src/pages/admin/Products.vue">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>This is Admin<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>保存我们编写的内容，打开浏览器，我们可以看到如下内容：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/16f265b9cfeec55f.gif"></p>
+<p>至此，我们的迷你全栈电商应用的第一部分就完成了，在接下来的教程中，我们将用 Express 和 MongoDB 搭建这个电商应用的后端 API，不见不散哦~</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2019/10/17/0b662ce/" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（一）">https://tuture.co/2019/10/17/0b662ce/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/16/29f41c0/" rel="next" title="从零开始用 Express + MongoDB 搭建图片分享社区（二）">
+                  <i class="fa fa-chevron-left"></i> 从零开始用 Express + MongoDB 搭建图片分享社区（二）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/18/425a3a9/" rel="prev" title="Django + Nuxt 实现美食分享网站（二）">
+                  Django + Nuxt 实现美食分享网站（二） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速入门"><span class="nav-number">1.</span> <span class="nav-text">快速入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">1.1.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目准备"><span class="nav-number">1.2.</span> <span class="nav-text">项目准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装依赖"><span class="nav-number">1.2.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化项目"><span class="nav-number">1.2.2.</span> <span class="nav-text">初始化项目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初探脚手架代码"><span class="nav-number">1.3.</span> <span class="nav-text">初探脚手架代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#src-main-js"><span class="nav-number">1.3.1.</span> <span class="nav-text">src&#x2F;main.js</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#index-html"><span class="nav-number">1.3.2.</span> <span class="nav-text">index.html</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#src-App-vue"><span class="nav-number">1.3.3.</span> <span class="nav-text">src&#x2F;App.vue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#src-router-index-js"><span class="nav-number">1.3.4.</span> <span class="nav-text">src&#x2F;router&#x2F;index.js</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#src-components-HelloWorld-vue"><span class="nav-number">1.3.5.</span> <span class="nav-text">src&#x2F;components&#x2F;HelloWorld.vue</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写你的第一个-Vue-页面"><span class="nav-number">2.</span> <span class="nav-text">编写你的第一个 Vue 页面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编写页面组件"><span class="nav-number">2.1.</span> <span class="nav-text">编写页面组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接入路由"><span class="nav-number">2.2.</span> <span class="nav-text">接入路由</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用路由进行多页面跳转"><span class="nav-number">3.</span> <span class="nav-text">使用路由进行多页面跳转</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加首页导航"><span class="nav-number">3.1.</span> <span class="nav-text">添加首页导航</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建后台管理页面"><span class="nav-number">3.2.</span> <span class="nav-text">创建后台管理页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建购物车页面"><span class="nav-number">3.3.</span> <span class="nav-text">创建购物车页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将新页面导入路由"><span class="nav-number">3.4.</span> <span class="nav-text">将新页面导入路由</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用嵌套路由和动态路由合理组织页面"><span class="nav-number">4.</span> <span class="nav-text">使用嵌套路由和动态路由合理组织页面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#升级路由"><span class="nav-number">4.1.</span> <span class="nav-text">升级路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Admin-的子页面"><span class="nav-number">4.2.</span> <span class="nav-text">创建 Admin 的子页面</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

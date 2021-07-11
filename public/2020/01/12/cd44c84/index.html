@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在实际应用中，不同的服务之间是需要通信的，例如后端 API 和数据库；幸运的是，Docker 为我们提供了网络（Network）机制，能够轻松实现容器互联。这篇文章将带你轻松上手 Docker 网络，学会使用默认网络和自定义网络，成为一名能够连接多个“梦境”的筑梦师！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 筑梦师系列（一）：实现容器互联">
+<meta property="og:url" content="https://tuture.co/2020/01/12/cd44c84/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="在实际应用中，不同的服务之间是需要通信的，例如后端 API 和数据库；幸运的是，Docker 为我们提供了网络（Network）机制，能够轻松实现容器互联。这篇文章将带你轻松上手 Docker 网络，学会使用默认网络和自定义网络，成为一名能够连接多个“梦境”的筑梦师！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/442cc8d/cover-2.jpg">
+<meta property="article:published_time" content="2020-01-11T23:17:34.647Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:33.818Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/442cc8d/cover-2.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/01/12/cd44c84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Docker 筑梦师系列（一）：实现容器互联 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/01/12/cd44c84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">Docker 筑梦师系列（一）：实现容器互联
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-12 07:17:34" itemprop="dateCreated datePublished" datetime="2020-01-12T07:17:34+08:00">2020-01-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:33" itemprop="dateModified" datetime="2021-07-11T15:16:33+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B7%A5%E5%85%B7/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B7%A5%E5%85%B7/Docker/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>12k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>11 分钟</span>
+            </span>
+          
+            <div class="post-description">在实际应用中，不同的服务之间是需要通信的，例如后端 API 和数据库；幸运的是，Docker 为我们提供了网络（Network）机制，能够轻松实现容器互联。这篇文章将带你轻松上手 Docker 网络，学会使用默认网络和自定义网络，成为一名能够连接多个“梦境”的筑梦师！</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/442cc8d/cover-2.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZG9ja2VyLWRyZWFt" title="https://github.com/tuture-dev/docker-dream"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="连接容器-梦境亦相通"><a href="#连接容器-梦境亦相通" class="headerlink" title="连接容器: 梦境亦相通"></a>连接容器: 梦境亦相通</h2><p>在<a href="https://tuture.co/2020/01/01/442cc8d/">上一篇教程</a>中，我们带你了解了镜像和容器这两大关键的概念，熟悉了常用的 docker 命令，并成功地容器化了第一个应用。但是，那只是我们“筑梦之旅”的序章。接下来，我们将实现后端 API 服务器 + 数据库的容器化。</p>
+<p>我们为你准备好了应用程序代码，请运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果你看了上一篇教程，仓库已经克隆下来了</span></span><br><span class="line"><span class="built_in">cd</span> docker-dream</span><br><span class="line">git fetch origin network-start</span><br><span class="line">git checkout network-start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果你打算直接从这篇教程开始</span></span><br><span class="line">git <span class="built_in">clone</span> -b network-start https://github.com/tuture-dev/docker-dream.git</span><br><span class="line"><span class="built_in">cd</span> docker-dream</span><br></pre></td></tr></table></figure>
+
+<p>和之前容器化前端静态页面服务器相比，多了一个难点：服务器和数据库分别是两个独立的容器，但是服务器需要连接和访问数据库，怎么实现跨容器之间的通信？</p>
+<p>在《盗梦空间》中，不同的梦境之间是无法连接的，然而幸运的是在 Docker 中是可以的——借助 Docker Network。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>在早期，Docker 容器可以通过 docker run 命令的 <code>--link</code> 选项来连接容器，但是 Docker 官方宣布这种方式已经过时，并有可能被移除（<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLmRvY2tlci5jb20vbmV0d29yay9saW5rcy8=" title="https://docs.docker.com/network/links/">参考文档<i class="fa fa-external-link"></i></span>）。而本文将讲解 Docker 官方推荐的方式连接容器：<strong>自定义网络</strong>（User-defined Networks）。</p>
+          </div>
+
+<h3 id="Network-类型"><a href="#Network-类型" class="headerlink" title="Network 类型"></a>Network 类型</h3><p>Network，顾名思义就是“网络”，能够让不同的容器之间相互通信。首先有必要要列举一下 Docker Network 的五种驱动模式（driver）：</p>
+<ul>
+<li><code>bridge</code>：默认的驱动模式，即“网桥”，通常用于<strong>单机</strong>（更准确地说，是单个 Docker 守护进程）</li>
+<li><code>overlay</code>：Overlay 网络能够连接多个 Docker 守护进程，通常用于<strong>集群</strong>，后续讲 Docker Swarm 的文章会重点讲解</li>
+<li><code>host</code>：直接使用主机（也就是运行 Docker 的机器）网络，仅适用于 Docker 17.06+ 的集群服务</li>
+<li><code>macvlan</code>：Macvlan 网络通过为每个容器分配一个 MAC 地址，使其能够被显示为一台物理设备，适用于希望直连到物理网络的应用程序（例如嵌入式系统、物联网等等）</li>
+<li><code>none</code>：禁用此容器的所有网络</li>
+</ul>
+<p><strong>这篇文章将围绕默认的 Bridge 网络驱动展开</strong>。没错，就是连接不同梦境的那座“桥”。</p>
+<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><p>我们还是通过一些小实验来理解和感受 Bridge Network。与上一节不同的是，我们将使用 <span class="exturl" data-url="aHR0cHM6Ly93d3cuYWxwaW5lbGludXgub3JnLw==" title="https://www.alpinelinux.org/">Alpine Linux<i class="fa fa-external-link"></i></span> 镜像作为实验原材料，因为：</p>
+<ul>
+<li>非常轻量小巧（整个镜像仅 5MB 左右）</li>
+<li>功能丰富，比“瑞士军刀” <span class="exturl" data-url="aHR0cHM6Ly93d3cuYnVzeWJveC5uZXQv" title="https://www.busybox.net/">Busybox<i class="fa fa-external-link"></i></span> 还要完善</li>
+</ul>
+<p>网桥网络可分为两类：</p>
+<ol>
+<li>默认网络（Docker 运行时自带，不推荐用于生产环境）</li>
+<li>自定义网络（推荐使用）</li>
+</ol>
+<p>让我们分别实践一下吧。</p>
+<h4 id="默认网络"><a href="#默认网络" class="headerlink" title="默认网络"></a>默认网络</h4><p>这个小实验的内容如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99b98dfbae8e3.png"></p>
+<p>我们会在默认的 <code>bridge</code> 网络上连接两个容器 <code>alpine1</code> 和 <code>alpine2</code>。 运行以下命令，查看当前已有的网络：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network ls</span><br></pre></td></tr></table></figure>
+
+<p>应该会看到以下输出（注意你机器上的 ID 很有可能不一样）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">NETWORK ID          NAME                DRIVER              SCOPE</span><br><span class="line">cb33efa4d163        bridge              bridge              <span class="built_in">local</span></span><br><span class="line">010deedec029        host                host                <span class="built_in">local</span></span><br><span class="line">772a7a450223        none                null                <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+
+<p>这三个默认网络分别对应上面的 <code>bridge</code>、<code>host</code> 和 <code>none</code> 网络类型。接下来我们将创建两个容器，分别名为 <code>alpine1</code> 和 <code>alpine2</code>，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -dit --name alpine1 alpine</span><br><span class="line">docker run -dit --name alpine2 alpine</span><br></pre></td></tr></table></figure>
+
+<p><code>-dit</code> 是 <code>-d</code>（后台模式）、<code>-i</code>（交互模式）和 <code>-t</code>（虚拟终端）三个选项的合并。通过这个组合，我们可以让容器保持在后台运行而不会退出（没错，相当于是在“空转”）。</p>
+<p>用 <code>docker ps</code> 命令确定以上两个容器均在后台运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">501559d2fab7        alpine              <span class="string">"/bin/sh"</span>           2 seconds ago       Up 1 second                             alpine2</span><br><span class="line">18bed3178732        alpine              <span class="string">"/bin/sh"</span>           3 seconds ago       Up 2 seconds                            alpine1</span><br></pre></td></tr></table></figure>
+
+<p>通过以下命令查看默认的 <code>bridge</code> 网络的详情：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network inspect bridge</span><br></pre></td></tr></table></figure>
+
+<p>应该会输出 JSON 格式的网络详细数据：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">"Name"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">    <span class="attr">"Id"</span>: <span class="string">"cb33efa4d163adaa61d6b80c9425979650d27a0974e6d6b5cd89fd743d64a44c"</span>,</span><br><span class="line">    <span class="attr">"Created"</span>: <span class="string">"2020-01-08T07:29:11.102566065Z"</span>,</span><br><span class="line">    <span class="attr">"Scope"</span>: <span class="string">"local"</span>,</span><br><span class="line">    <span class="attr">"Driver"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">    <span class="attr">"EnableIPv6"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"IPAM"</span>: &#123;</span><br><span class="line">      <span class="attr">"Driver"</span>: <span class="string">"default"</span>,</span><br><span class="line">      <span class="attr">"Options"</span>: <span class="literal">null</span>,</span><br><span class="line">      <span class="attr">"Config"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">"Subnet"</span>: <span class="string">"172.17.0.0/16"</span>,</span><br><span class="line">          <span class="attr">"Gateway"</span>: <span class="string">"172.17.0.1"</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"Internal"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"Attachable"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"Ingress"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"ConfigFrom"</span>: &#123;</span><br><span class="line">      <span class="attr">"Network"</span>: <span class="string">""</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"ConfigOnly"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"Containers"</span>: &#123;</span><br><span class="line">      <span class="attr">"18bed3178732b5c7a37d7ad820c111fac72a6b0f47844401d60a18690bd37ee5"</span>: &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"alpine1"</span>,</span><br><span class="line">        <span class="attr">"EndpointID"</span>: <span class="string">"9c7d8ee9cbd017c6bbdfc023397b23a4ce112e4957a0cfa445fd7f19105cc5a6"</span>,</span><br><span class="line">        <span class="attr">"MacAddress"</span>: <span class="string">"02:42:ac:11:00:02"</span>,</span><br><span class="line">        <span class="attr">"IPv4Address"</span>: <span class="string">"172.17.0.2/16"</span>,</span><br><span class="line">        <span class="attr">"IPv6Address"</span>: <span class="string">""</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"501559d2fab736812c0cf181ed6a0b2ee43ce8116df9efbb747c8443bc665b03"</span>: &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"alpine2"</span>,</span><br><span class="line">        <span class="attr">"EndpointID"</span>: <span class="string">"da192d61e4b2df039023446830bf477cc5a9a026d32938cb4a350a82fea5b163"</span>,</span><br><span class="line">        <span class="attr">"MacAddress"</span>: <span class="string">"02:42:ac:11:00:03"</span>,</span><br><span class="line">        <span class="attr">"IPv4Address"</span>: <span class="string">"172.17.0.3/16"</span>,</span><br><span class="line">        <span class="attr">"IPv6Address"</span>: <span class="string">""</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"Options"</span>: &#123;</span><br><span class="line">      <span class="attr">"com.docker.network.bridge.default_bridge"</span>: <span class="string">"true"</span>,</span><br><span class="line">      <span class="attr">"com.docker.network.bridge.enable_icc"</span>: <span class="string">"true"</span>,</span><br><span class="line">      <span class="attr">"com.docker.network.bridge.enable_ip_masquerade"</span>: <span class="string">"true"</span>,</span><br><span class="line">      <span class="attr">"com.docker.network.bridge.host_binding_ipv4"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">      <span class="attr">"com.docker.network.bridge.name"</span>: <span class="string">"docker0"</span>,</span><br><span class="line">      <span class="attr">"com.docker.network.driver.mtu"</span>: <span class="string">"1500"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"Labels"</span>: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>我们重点要关注的是两个字段：</p>
+<ul>
+<li><code>IPAM</code>：IP 地址管理信息（IP Address Management），可以看到网关地址为 <code>172.17.0.1</code>（由于篇幅有限，想要了解<strong>网关</strong>的同学可自行查阅计算机网络以及 TCP/IP 协议方面的资料）</li>
+<li><code>Containers</code>：包括此网络上连接的所有容器，可以看到我们刚刚创建的 <code>alpine1</code> 和 <code>alpine2</code>，它们的 IP 地址分别为 <code>172.17.0.2</code> 和 <code>172.17.0.3</code>（后面的 <code>/16</code> 是子网掩码，暂时不用考虑）</li>
+</ul>
+<div class="note info">
+            <p><strong>提示</strong></p><p>如果你熟悉 Go 模板语法，可以通过 <code>-f</code>（<code>format</code>）参数过滤掉不需要的信息。例如我们只想查看 <code>bridge</code> 的网关地址：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker network inspect --format <span class="string">'&#123;&#123;json .IPAM.Config &#125;&#125;'</span> bridge</span><br><span class="line">[&#123;<span class="string">"Subnet"</span>:<span class="string">"172.17.0.0/16"</span>,<span class="string">"Gateway"</span>:<span class="string">"172.17.0.1"</span>&#125;]</span><br></pre></td></tr></table></figure>
+          </div>
+
+<p>让我们进入 <code>alpine1</code> 容器中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker attach alpine1</span><br></pre></td></tr></table></figure>
+
+<div class="note warning">
+            <p><strong>注意</strong></p><p><code>attach</code> 命令只能进入设置了交互式运行的容器（也就是在启动时加了 <code>-i</code> 参数）。</p>
+          </div>
+
+<p>如果你看到前面的命令提示符变成 <code>/ #</code>，说明我们已经身处容器之中了。我们通过 <code>ping</code> 命令测试一下网络连接情况，首先 ping 一波图雀社区的主站 tuture.co（<code>-c</code> 参数代表发送数据包的数量，这里我们设为 5）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F; # ping -c 5 tuture.co</span><br><span class="line">PING tuture.co (150.109.19.98): 56 data bytes</span><br><span class="line">64 bytes from 150.109.19.98: seq&#x3D;2 ttl&#x3D;37 time&#x3D;65.294 ms</span><br><span class="line">64 bytes from 150.109.19.98: seq&#x3D;3 ttl&#x3D;37 time&#x3D;65.425 ms</span><br><span class="line">64 bytes from 150.109.19.98: seq&#x3D;4 ttl&#x3D;37 time&#x3D;65.332 ms</span><br><span class="line"></span><br><span class="line">--- tuture.co ping statistics ---</span><br><span class="line">5 packets transmitted, 3 packets received, 40% packet loss</span><br><span class="line">round-trip min&#x2F;avg&#x2F;max &#x3D; 65.294&#x2F;65.350&#x2F;65.425 ms</span><br></pre></td></tr></table></figure>
+
+<p>OK，虽然丢了几个包，但是可以连上（取决于你的网络环境，全丢包也是正常的）。由此可见，<strong>容器内可以访问主机所连接的全部网络</strong>（包括 localhost）。</p>
+<p>接下来测试能否连接到 <code>alpine2</code>，在刚才 <code>docker network inspect</code> 命令的输出中找到 <code>alpine2</code> 的 IP 为 <code>172.17.0.3</code>，尝试能否 ping 通：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F; # ping -c 5 172.17.0.3</span><br><span class="line">PING 172.17.0.3 (172.17.0.3): 56 data bytes</span><br><span class="line">64 bytes from 172.17.0.3: seq&#x3D;0 ttl&#x3D;64 time&#x3D;0.147 ms</span><br><span class="line">64 bytes from 172.17.0.3: seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.103 ms</span><br><span class="line">64 bytes from 172.17.0.3: seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.102 ms</span><br><span class="line">64 bytes from 172.17.0.3: seq&#x3D;3 ttl&#x3D;64 time&#x3D;0.125 ms</span><br><span class="line">64 bytes from 172.17.0.3: seq&#x3D;4 ttl&#x3D;64 time&#x3D;0.125 ms</span><br><span class="line"></span><br><span class="line">--- 172.17.0.3 ping statistics ---</span><br><span class="line">5 packets transmitted, 5 packets received, 0% packet loss</span><br><span class="line">round-trip min&#x2F;avg&#x2F;max &#x3D; 0.102&#x2F;0.120&#x2F;0.147 ms</span><br></pre></td></tr></table></figure>
+
+<p>完美！我们能够从 <code>alpine1</code> 中访问 <code>alpine2</code> 容器。作为练习，你可以自己尝试一下能否从 <code>alpine2</code> 容器中 ping 通 <code>alpine1</code> 哦。</p>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>如果你不想让 <code>alpine1</code> 停下来，记得通过 Ctrl + P + Ctrl + Q（按住 Ctrl，然后依次按 P 和 Q 键）“脱离”（detach，也就是刚才 <code>attach</code> 命令的反义词）容器，而不是按 Ctrl + D 哦。</p>
+          </div>
+
+<h4 id="自定义网络"><a href="#自定义网络" class="headerlink" title="自定义网络"></a>自定义网络</h4><p>如果你跟着上面一路试下来，会发现默认的 bridge 网络存在一个很大的问题：<strong>只能通过 IP 地址相互访问</strong>。这毫无疑问是非常麻烦的，当容器数量很多的时候难以管理，而且每次的 IP 都可能发生变化。</p>
+<p>而自定义网络则很好地解决了这一问题。<strong>在同一个自定义网络中，每个容器能够通过彼此的名称相互通信</strong>，因为 Docker 为我们搞定了 DNS 解析工作，这种机制被称为<strong>服务发现</strong>（Service Discovery）。具体而言，我们将创建一个自定义网络 <code>my-net</code>，并创建 <code>alpine3</code> 和 <code>alpine4</code> 两个容器，连上 <code>my-net</code>，如下图所示。</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99ba566ff4a74.png"></p>
+<p>让我们开始动手吧。首先创建自定义网络 <code>my-net</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network create my-net</span><br><span class="line"><span class="comment"># 由于默认网络驱动为 bridge，因此相当于以下命令</span></span><br><span class="line"><span class="comment"># docker network create --driver bridge my-net</span></span><br></pre></td></tr></table></figure>
+
+<p>查看当前所有的网络：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network ls</span><br></pre></td></tr></table></figure>
+
+<p>可以看到刚刚创建的 <code>my-net</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NETWORK ID          NAME                DRIVER              SCOPE</span><br><span class="line">cb33efa4d163        bridge              bridge              local</span><br><span class="line">010deedec029        host                host                local</span><br><span class="line">feb13b480be6        my-net              bridge              local</span><br><span class="line">772a7a450223        none                null                local</span><br></pre></td></tr></table></figure>
+
+<p>创建两个新的容器 <code>alpine3</code> 和 <code>alpine4</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -dit --name alpine3 --network my-net alpine</span><br><span class="line">docker run -dit --name alpine4 --network my-net alpine</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们通过 <code>--network</code> 参数指定容器想要连接的网络（也就是刚才创建的 <code>my-net</code>）。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>如果在一开始创建并运行容器时忘记指定网络，那么下次再想指定网络时，可以通过 <code>docker network connect</code> 命令再次连上（第一个参数是网络名称 <code>my-net</code>，第二个是需要连接的容器 <code>alpine3</code>）：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network connect my-net alpine3</span><br></pre></td></tr></table></figure>
+          </div>
+
+<p>进入到 <code>alpine3</code> 中，测试能否 ping 通 <code>alpine4</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker attach alpine3</span><br><span class="line">&#x2F; # ping -c 5 alpine4</span><br><span class="line">PING alpine4 (172.19.0.3): 56 data bytes</span><br><span class="line">64 bytes from 172.19.0.3: seq&#x3D;0 ttl&#x3D;64 time&#x3D;0.247 ms</span><br><span class="line">64 bytes from 172.19.0.3: seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.176 ms</span><br><span class="line">64 bytes from 172.19.0.3: seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.180 ms</span><br><span class="line">64 bytes from 172.19.0.3: seq&#x3D;3 ttl&#x3D;64 time&#x3D;0.176 ms</span><br><span class="line">64 bytes from 172.19.0.3: seq&#x3D;4 ttl&#x3D;64 time&#x3D;0.161 ms</span><br><span class="line"></span><br><span class="line">--- alpine4 ping statistics ---</span><br><span class="line">5 packets transmitted, 5 packets received, 0% packet loss</span><br><span class="line">round-trip min&#x2F;avg&#x2F;max &#x3D; 0.161&#x2F;0.188&#x2F;0.247 ms</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 <code>alpine4</code> 被自动解析成了 <code>172.19.0.3</code>。我们可以通过 <code>docker network inspect</code> 来验证一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker network inspect --format <span class="string">'&#123;&#123;range .Containers&#125;&#125;&#123;&#123;.Name&#125;&#125;: &#123;&#123;.IPv4Address&#125;&#125; &#123;&#123;end&#125;&#125;'</span> my-net</span><br><span class="line">alpine4: 172.19.0.3/16 alpine3: 172.19.0.2/16</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 <code>alpine4</code> 的 IP 的确为 <code>172.19.0.3</code>，解析是正确的！</p>
+<h4 id="一些收尾工作"><a href="#一些收尾工作" class="headerlink" title="一些收尾工作"></a>一些收尾工作</h4><p>实验做完了，让我们把之前所有的容器全部销毁：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rm -f alpine1 alpine2 alpine3 alpine4</span><br></pre></td></tr></table></figure>
+
+<p>把创建的 <code>my-net</code> 也删除：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network rm my-net</span><br></pre></td></tr></table></figure>
+
+<h3 id="动手实践"><a href="#动手实践" class="headerlink" title="动手实践"></a>动手实践</h3><h4 id="容器化服务器"><a href="#容器化服务器" class="headerlink" title="容器化服务器"></a>容器化服务器</h4><p>我们首先对后端服务器也进行容器化。创建 <code>server/Dockerfile</code>，代码如下：</p>
+<figure class="highlight dockerfile"><figcaption><span>server/Dockerfile</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZG9ja2VyLWRyZWFtL2Jsb2IvNjA3ODZlOS9zZXJ2ZXIvRG9ja2VyZmlsZQ==" title="https://github.com/tuture-dev/docker-dream/blob/60786e9/server/Dockerfile">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定工作目录为 /usr/src/app，接下来的命令全部在这个目录下操作</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/src/app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 package.json 拷贝到工作目录</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> package.json .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 npm 依赖</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org &amp;&amp; npm install</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拷贝源代码</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境变量（服务器的主机 IP 和端口）</span></span><br><span class="line"><span class="keyword">ENV</span> MONGO_URI=mongodb://dream-db:<span class="number">27017</span>/todos</span><br><span class="line"><span class="keyword">ENV</span> HOST=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="keyword">ENV</span> PORT=<span class="number">4000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开放 4000 端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">4000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置镜像运行命令</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">"node"</span>, <span class="string">"index.js"</span> ]</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个 Dockerfile 比<a href="https://tuture.co/2020/01/01/442cc8d/">上一篇教程</a>中的要复杂不少。每一行的含义已经注释在代码中了，我们来看一看多了哪些新东西：</p>
+<ul>
+<li><code>RUN</code> 指令用于在容器中运行任何命令，这里我们通过 <code>npm install</code> 安装所有项目依赖（当然之前配置了一下 npm 镜像，可以安装得快一点）</li>
+<li><code>ENV</code> 指令用于向容器中注入环境变量，这里我们设置了 数据库的连接字符串 <code>MONGO_URI</code>（<strong>注意这里给数据库取名为 **</strong><code>dream-db</code>*<strong>*，后面就会创建这个容器</strong>），还配置了服务器的 <code>HOST</code> 和 <code>PORT</code></li>
+<li><code>EXPOSE</code> 指令用于开放端口 4000。之前在用 Nginx 容器化前端项目时没有指定，是因为 Nginx 基础镜像已经开放了 8080 端口，无需我们设置；而这里用的 Node 基础镜像则没有开放，需要我们自己去配置</li>
+<li><code>CMD</code> 指令用于指定此容器的启动命令（也就是 <code>docker ps</code> 查看时的 COMMAND 一列），对于服务器来说当然就是保持运行状态。在后面“回忆与升华”部分会详细展开。</li>
+</ul>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>初次尝试容器的朋友很容易犯的一个错误就是忘记将服务器的 <code>host</code> 从 <code>localhost</code>（<code>127.0.0.1</code>）改成 <code>0.0.0.0</code>，导致服务器无法在容器之外被访问到（_我自己学习的时候也浪费了很多时间_）。</p>
+          </div>
+
+<p>与之前前端容器化类似，创建 <code>server/.dockerignore</code> 文件，忽略服务器日志 <code>access.log</code> 和 <code>node_modules</code>，代码如下：</p>
+<figure class="highlight plain"><figcaption><span>server/.dockerignore</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZG9ja2VyLWRyZWFtL2Jsb2IvNjA3ODZlOS9zZXJ2ZXIvLmRvY2tlcmlnbm9yZQ==" title="https://github.com/tuture-dev/docker-dream/blob/60786e9/server/.dockerignore">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">node_modules</span><br><span class="line">access.log</span><br></pre></td></tr></table></figure>
+
+<p>在项目根目录下运行以下命令，构建服务器镜像，指定名称为 <code>dream-server</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t dream-server server</span><br></pre></td></tr></table></figure>
+
+<h4 id="连接服务器与数据库"><a href="#连接服务器与数据库" class="headerlink" title="连接服务器与数据库"></a>连接服务器与数据库</h4><p>根据之前的知识，我们为现在的“梦想清单”应用创建一个自定义网络 <code>dream-net</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker network create dream-net</span><br></pre></td></tr></table></figure>
+
+<p>我们使用官方的 <code>mongo</code> 镜像创建并运行 MongoDB 容器，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name dream-db --network dream-net -d mongo</span><br></pre></td></tr></table></figure>
+
+<p>我们指定容器名称为 <code>dream-db</code>（还记得这个名字吗），所连接的网络为 <code>dream-net</code>，并且在后台模式下运行（<code>-d</code>）。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>你也许会问，为什么这里开启容器的时候没有指定端口映射呢？因为<strong>在同一自定义网络中的所有容器会互相暴露所有端口</strong>，不同的应用之间可以更轻松地相互通信；同时，除非通过 <code>-p</code>（<code>--publish</code>）手动开放端口，<strong>网络之外无法访问网络中容器的其他端口</strong>，实现了良好的隔离性。<strong>网络之内的互操作性</strong>和<strong>网络内外的隔离性</strong>也是 Docker Network 的一大优势所在。</p>
+          </div>
+
+<div class="note danger">
+            <p><strong>危险</strong></p><p>这里我们在开启 MongoDB 数据库容器时没有设置任何鉴权措施（例如设置用户名和密码），所有连接数据库的请求都可以任意修改数据，在生产环境是极其危险的。后续文章中我们会讲解如何在容器中管理机密信息（例如密码）。</p>
+          </div>
+
+<p>然后运行服务器容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 4000:4000 --name dream-api --network dream-net -d dream-server</span><br></pre></td></tr></table></figure>
+
+<p>查看服务器容器的日志输出，确定 MongoDB 连接成功：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker logs dream-api</span><br><span class="line">Server is running on http://0.0.0.0:4000</span><br><span class="line">Mongoose connected.</span><br></pre></td></tr></table></figure>
+
+<p>接着你可以通过 Postman 或者 curl 来测试一波服务器 API （<code>localhost:4000</code> ），这里为了节约篇幅就省略了。当然你也可以直接跳过，因为马上我们就可以通过前端来操作数据了！</p>
+<h4 id="容器化前端页面"><a href="#容器化前端页面" class="headerlink" title="容器化前端页面"></a>容器化前端页面</h4><p>正如<a href="https://tuture.co/2020/01/01/442cc8d/">上一篇文章</a>所实现的那样，在项目根目录下，通过以下命令进行容器化：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t dream-client client</span><br></pre></td></tr></table></figure>
+
+<p>然后运行容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 8080:80 --name client -d dream-client</span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <code>docker ps</code> 命令检验三个容器是否全部正确开启：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99ba83e1645df.gif"></p>
+<p>最后，访问 <code>localhost:8080</code>：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99badac9ac443.jpeg"></p>
+<p>可以看到，我们在最后刷新了几次页面，数据记录也都还在，说明我们带有数据库的全栈应用跑起来了！让我们通过交互式执行的方式进入到数据库容器 <code>dream-db</code> 中，通过 Mongo Shell 简单地查询一波刚才的数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it dream-db mongo</span><br><span class="line">MongoDB shell version v3.4.10</span><br><span class="line">connecting to: mongodb://127.0.0.1:27017</span><br><span class="line">MongoDB server version: 3.4.10</span><br><span class="line">Welcome to the MongoDB shell.</span><br><span class="line">For interactive <span class="built_in">help</span>, <span class="built_in">type</span> <span class="string">"help"</span>.</span><br><span class="line">&gt; use todos</span><br><span class="line">switched to db todos</span><br><span class="line">&gt; db.getCollection(<span class="string">'todos'</span>).find()</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5e171fda820251a751aae6f5"</span>), <span class="string">"completed"</span> : <span class="literal">true</span>, <span class="string">"text"</span> : <span class="string">"了解 Docker Network"</span>, <span class="string">"timestamp"</span> : ISODate(<span class="string">"2020-01-09T12:43:06.865Z"</span>), <span class="string">"__v"</span> : 0 &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5e171fe08202517c11aae6f6"</span>), <span class="string">"completed"</span> : <span class="literal">true</span>, <span class="string">"text"</span> : <span class="string">"搭建默认网络"</span>, <span class="string">"timestamp"</span> : ISODate(<span class="string">"2020-01-09T12:43:12.205Z"</span>), <span class="string">"__v"</span> : 0 &#125;</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5e171fe3820251d1a4aae6f7"</span>), <span class="string">"completed"</span> : <span class="literal">false</span>, <span class="string">"text"</span> : <span class="string">"搭建自定义网络"</span>, <span class="string">"timestamp"</span> : ISODate(<span class="string">"2020-01-09T12:43:15.962Z"</span>), <span class="string">"__v"</span> : 0 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>完美！然后按 Ctrl + D 就可以退出来了。</p>
+<h3 id="回忆与升华"><a href="#回忆与升华" class="headerlink" title="回忆与升华"></a>回忆与升华</h3><h4 id="理解命令：梦境的主旋律"><a href="#理解命令：梦境的主旋律" class="headerlink" title="理解命令：梦境的主旋律"></a>理解命令：梦境的主旋律</h4><p>每个容器自从被创建之时，就注定要运行一道命令（Command），就好像在筑梦时要安排一个主旋律、一个基调那样。之前在运行 <code>docker ps</code> 的时候，你应该也注意到了 <code>COMMAND</code> 一栏，正是每个容器所运行的命令。那么我们怎么指定容器的命令呢？又能不能运行新的命令呢？</p>
+<p>首先，我们主要通过两种方式指定容器的命令：</p>
+<h5 id="通过-Dockerfile-提供默认命令"><a href="#通过-Dockerfile-提供默认命令" class="headerlink" title="通过 Dockerfile 提供默认命令"></a>通过 Dockerfile 提供默认命令</h5><p>在构建镜像时，我们可以在 <code>Dockerfile</code> 的最后通过 <code>CMD</code> 指令指定命令，例如在构建后端服务器时的 <code>[ &quot;node&quot;, &quot;server.js&quot; ]</code> 命令。在指定命令时，我们有三种写法：</p>
+<ul>
+<li><code>CMD [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;]</code>（exec 格式，<strong>推荐</strong>）</li>
+<li><code>CMD [&quot;param1&quot;,&quot;param2&quot;]</code>（需要结合 Entrypoint 使用）</li>
+<li><code>CMD command param1 param2</code>（shell 格式）</li>
+</ul>
+<p>其中 <code>executable</code> 代表可执行文件的路径，例如 <code>node</code>、<code>/bin/sh</code>；<code>param1</code>、<code>param2</code> 代表参数。_我们在后续讨论 Dockerfile 的高阶使用时会讨论 Entrypoint 的使用，这篇文章不会涉及_。</p>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>在使用第一种 exec 格式时，必须使用<strong>双引号</strong>，因为整个命令将以 JSON 格式被解析。</p>
+          </div>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>如果要执行变量替换等 Shell 操作，例如 <code>echo $HOME</code>，直接写成 <code>[&quot;echo&quot;, &quot;$HOME&quot;]</code> 是无效的，需要改写成 <code>[&quot;sh&quot;, &quot;-c&quot;, &quot;echo $HOME&quot;]</code>。</p>
+          </div>
+
+<h5 id="创建或运行容器时指定命令"><a href="#创建或运行容器时指定命令" class="headerlink" title="创建或运行容器时指定命令"></a>创建或运行容器时指定命令</h5><p>在创建或运行容器时，通过添加命令参数可以<strong>覆盖</strong>构建镜像时指定的命令，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run nginx <span class="built_in">echo</span> hello</span><br></pre></td></tr></table></figure>
+
+<p>通过指定 <code>echo hello</code> 命令参数，就会让这个容器输出一个 hello 然后退出，而不会运行默认的 <code>nginx -g &#39;daemon off;&#39;</code>。</p>
+<p>当然，正如<a href="https://tuture.co/2020/01/01/442cc8d/">第一篇文章</a>所实践的，我们还可以指定命令为 <code>bash</code>（或 <code>sh</code>、<code>mongo</code>、<code>node</code> 等其他交互式程序），然后结合 <code>-it</code> 选项，就可以进入容器中交互式运行了。</p>
+<h5 id="通过-exec-运行新的命令"><a href="#通过-exec-运行新的命令" class="headerlink" title="通过 exec 运行新的命令"></a>通过 exec 运行新的命令</h5><p>通过 <code>docker exec</code>，我们可以让已经运行中的容器执行新的命令。例如，对于我们之前的 <code>dream-db</code> 容器，我们通过 <code>mongodump</code> 命令来创建数据库备份：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> dream-db mongodump</span><br></pre></td></tr></table></figure>
+
+<p>然后可以进一步通过 <code>docker exec -it</code> 来进入 <code>dream-db</code> 中进行交互式运行，检查刚才导出的 <code>dump</code> 目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker exec -it dream-db bash</span><br><span class="line">root@c51d9355d8da:&#x2F;# ls dump&#x2F;</span><br><span class="line">admin  todos</span><br></pre></td></tr></table></figure>
+
+<p>同样地，按 Ctrl + D 退出就可以了。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>你也许会好奇，为什么在 <code>docker run</code> 交互式执行的时候按 Ctrl + D 就容器就直接停止了，而在 <code>docker exec</code> 的情况下退出却不会导致容器停止呢？因为 <code>docker exec -it</code> 相当于在现有的容器上运行了一个新的终端进程，而不会影响之前的主命令进程。只要主进程不结束，容器就不会停止。</p>
+          </div>
+
+<h4 id="小诀窍：如何轻松记住几十个-Docker-命令？"><a href="#小诀窍：如何轻松记住几十个-Docker-命令？" class="headerlink" title="小诀窍：如何轻松记住几十个 Docker 命令？"></a>小诀窍：如何轻松记住几十个 Docker 命令？</h4><p>在刚才的实战中，我们也接触了很多新的 Docker 命令，怎么记住那么多命令呢？其实 docker 大部分命令都符合以下格式：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker &lt;对象类型&gt; &lt;操作名称&gt; [其他选项和参数]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>对象类型</strong>：到目前，我们接触的 Docker 对象类型包括<strong>容器</strong><code>container</code>、<strong>镜像</strong> <code>image</code> 和<strong>网络</strong> <code>network</code></li>
+<li><strong>操作名称</strong>：操作可以分为两大类：1）适用于所有对象的操作，例如 <code>ls</code>、<code>rm</code>、<code>inspect</code> 和 <code>prune</code> 等等；2）对象专属操作，例如容器专有的 <code>run</code> 操作，镜像专有的 <code>build</code> 操作，以及网络专有的 <code>connect</code> 操作等等</li>
+<li><strong>其他选项和参数</strong>：可通过 <code>help</code> 命令或 <code>--help</code> 查阅每个命令具体的选项和参数</li>
+</ul>
+<p>由于部分命令很常用，Docker 还提供了方便的简写命令，例如显示当前所有容器 <code>docker container ls</code>，可以简写成 <code>docker ps</code>。</p>
+<p>我们首先复习一下容器（Container）对象上的命令吧（红色代表适用于所有对象的操作，蓝色代表此对象的专有操作）：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99bb00e7561c7.jpeg"></p>
+<p>再复习一下镜像（Image）对象上的命令：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/16f99bb1c83105f5.jpeg"></p>
+<p>最后复习一下网络（Network）对象上的命令：</p>
+<p><img alt data-src="https://static.powerformer.com/c/442cc8d/170b2dd894ad396d.png"></p>
+<p>至此，这篇教程也结束了。但是我们的筑梦之旅才刚刚开始——还有很多问题没有解决：1）现在前端应用还无法在除了本地以外的环境使用（因为访问的后端 API 是硬编码的 <code>localhost</code>）；2）还没有真正部署到远程机器；3）MongoDB 还处于“裸奔”的状态（没设置密码）。不要方，我们在接下里的教程中就会去解决哦。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/01/12/cd44c84/" title="Docker 筑梦师系列（一）：实现容器互联">https://tuture.co/2020/01/12/cd44c84/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/01/10/ae8a389/" rel="next" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（四）">
+                  <i class="fa fa-chevron-left"></i> 从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（四）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/01/15/5e100f7/" rel="prev" title="Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理">
+                  Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#连接容器-梦境亦相通"><span class="nav-number">1.</span> <span class="nav-text">连接容器: 梦境亦相通</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Network-类型"><span class="nav-number">1.1.</span> <span class="nav-text">Network 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小试牛刀"><span class="nav-number">1.2.</span> <span class="nav-text">小试牛刀</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#默认网络"><span class="nav-number">1.2.1.</span> <span class="nav-text">默认网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义网络"><span class="nav-number">1.2.2.</span> <span class="nav-text">自定义网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些收尾工作"><span class="nav-number">1.2.3.</span> <span class="nav-text">一些收尾工作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动手实践"><span class="nav-number">1.3.</span> <span class="nav-text">动手实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#容器化服务器"><span class="nav-number">1.3.1.</span> <span class="nav-text">容器化服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接服务器与数据库"><span class="nav-number">1.3.2.</span> <span class="nav-text">连接服务器与数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器化前端页面"><span class="nav-number">1.3.3.</span> <span class="nav-text">容器化前端页面</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回忆与升华"><span class="nav-number">1.4.</span> <span class="nav-text">回忆与升华</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#理解命令：梦境的主旋律"><span class="nav-number">1.4.1.</span> <span class="nav-text">理解命令：梦境的主旋律</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#通过-Dockerfile-提供默认命令"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">通过 Dockerfile 提供默认命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建或运行容器时指定命令"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">创建或运行容器时指定命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#通过-exec-运行新的命令"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">通过 exec 运行新的命令</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小诀窍：如何轻松记住几十个-Docker-命令？"><span class="nav-number">1.4.2.</span> <span class="nav-text">小诀窍：如何轻松记住几十个 Docker 命令？</span></a></li></ol></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

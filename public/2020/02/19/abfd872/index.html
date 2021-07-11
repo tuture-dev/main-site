@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在上两篇文章中，我们讲解了使用微信小程序云作为我们的小程序后台，然后我们跑通了我们的注册登录、创建帖子、获取帖子列表、获取帖子详情的全栈流程，如果只想了解微信小程序的全栈开发流程的话，之前的文章已经足够了，如果还想了解跨端开发全栈开发流程的话（当然用 Taro 的同学估计也比较期待跨端的全栈开发流程，手动滑稽）接下来这篇文章就是你的菜了😆">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Taro 小程序开发大型实战（六）：LeanCloud，一统江湖">
+<meta property="og:url" content="https://tuture.co/2020/02/19/abfd872/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="在上两篇文章中，我们讲解了使用微信小程序云作为我们的小程序后台，然后我们跑通了我们的注册登录、创建帖子、获取帖子列表、获取帖子详情的全栈流程，如果只想了解微信小程序的全栈开发流程的话，之前的文章已经足够了，如果还想了解跨端开发全栈开发流程的话（当然用 Taro 的同学估计也比较期待跨端的全栈开发流程，手动滑稽）接下来这篇文章就是你的菜了😆">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/34a473b/taro-cover-8.jpg">
+<meta property="article:published_time" content="2020-02-19T02:16:40.222Z">
+<meta property="article:modified_time" content="2021-07-11T07:16:33.818Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Taro">
+<meta property="article:tag" content="LeanCloud">
+<meta property="article:tag" content="Serverless">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/34a473b/taro-cover-8.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/02/19/abfd872/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Taro 小程序开发大型实战（六）：LeanCloud，一统江湖 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/02/19/abfd872/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">Taro 小程序开发大型实战（六）：LeanCloud，一统江湖
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-19 10:16:40" itemprop="dateCreated datePublished" datetime="2020-02-19T10:16:40+08:00">2020-02-19</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-11 15:16:33" itemprop="dateModified" datetime="2021-07-11T15:16:33+08:00">2021-07-11</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" itemprop="url" rel="index"><span itemprop="name">小程序</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/" itemprop="url" rel="index"><span itemprop="name">Taro</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">进阶</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>12k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>11 分钟</span>
+            </span>
+          
+            <div class="post-description">在上两篇文章中，我们讲解了使用微信小程序云作为我们的小程序后台，然后我们跑通了我们的注册登录、创建帖子、获取帖子列表、获取帖子详情的全栈流程，如果只想了解微信小程序的全栈开发流程的话，之前的文章已经足够了，如果还想了解跨端开发全栈开发流程的话（当然用 Taro 的同学估计也比较期待跨端的全栈开发流程，手动滑稽）接下来这篇文章就是你的菜了😆</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/34a473b/taro-cover-8.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yg==" title="https://github.com/tuture-dev/ultra-club"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="LeanCloud-一统江湖"><a href="#LeanCloud-一统江湖" class="headerlink" title="LeanCloud,一统江湖"></a>LeanCloud,一统江湖</h2><p>在上两篇文章中，我们讲解了使用微信小程序云作为我们的小程序后台，然后我们跑通了我们的注册登录、创建帖子、获取帖子列表、获取帖子详情的全栈流程，如果只想了解微信小程序的全栈开发流程的话，之前的文章已经足够了，如果还想了解跨端开发全栈开发流程的话（当然用 Taro 的同学估计也比较期待跨端的全栈开发流程，手动滑稽）接下来这篇文章就是你的菜了 😆</p>
+<p>首先我们先来看一下最终的运行效果：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4e9b0b79869.gif"></p>
+<p>在这一篇文章中，我们将接入 LeanCloud Serverless 服务，它类似微信小程序云，只不过它没有平台属性，所有的端都可以便捷访问，相信你已经迫不及待了，让我们马上开始吧 💪！</p>
+<h3 id="小程序接入外网的流程"><a href="#小程序接入外网的流程" class="headerlink" title="小程序接入外网的流程"></a>小程序接入外网的流程</h3><p>因为小程序是封装在一些巨型 App 应用里的沙盒环境之内，所以对于接入外站的服务需要一些特殊的流程，我们在这里总结一下：</p>
+<ul>
+<li>注册外站服务的账号</li>
+<li>找到对应的小程序开发接入指南</li>
+<li>获取对应的接入地址，将接入地址填入小程序后台的白名单列表</li>
+<li>在小程序实际接入，并进行测试</li>
+</ul>
+<p>在这篇文章中，我们的外站特指 LeanCloud Serverless 云服务，小程序特指微信小程序和支付宝小程序。</p>
+<p>好的，了解了流程之后，我们现在来走一遍流程来将我们的 LeanCloud 接入到微信/支付宝小程序。</p>
+<h4 id="注册外站服务的账号"><a href="#注册外站服务的账号" class="headerlink" title="注册外站服务的账号"></a>注册外站服务的账号</h4><p>访问 LeanCloud 网址：<span class="exturl" data-url="aHR0cHM6Ly93d3cubGVhbmNsb3VkLmNuLw==" title="https://www.leancloud.cn/">点我访问<i class="fa fa-external-link"></i></span>，完成注册登录流程。</p>
+<h4 id="找到对应的小程序开发接入指南"><a href="#找到对应的小程序开发接入指南" class="headerlink" title="找到对应的小程序开发接入指南"></a>找到对应的小程序开发接入指南</h4><p>这里我们找到 LeanCloud 微信/QQ 小程序接入指南：<span class="exturl" data-url="aHR0cHM6Ly9sZWFuY2xvdWQuY24vZG9jcy93ZWFwcC5odG1s" title="https://leancloud.cn/docs/weapp.html">点我访问<i class="fa fa-external-link"></i></span></p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>LeanCloud 没有提供支付宝的接入指南，但是小程序接入指南都基本类似，我们会一一讲解这一流程。</p>
+          </div>
+
+<h4 id="获取对应的接入地址"><a href="#获取对应的接入地址" class="headerlink" title="获取对应的接入地址"></a>获取对应的接入地址</h4><p>LeanCloud 已经有详细的链接提示如何接入：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b3d3c87988.jpeg"></p>
+<p>对于支付宝小程序的白名单配置地址如下：<span class="exturl" data-url="aHR0cHM6Ly9taW5pLm9wZW4uYWxpcGF5LmNvbS9jaGFubmVsL21pbmlJbmRleC5odG0=" title="https://mini.open.alipay.com/channel/miniIndex.htm">点我访问<i class="fa fa-external-link"></i></span>。</p>
+<h4 id="在小程序实际接入，并进行测试"><a href="#在小程序实际接入，并进行测试" class="headerlink" title="在小程序实际接入，并进行测试"></a>在小程序实际接入，并进行测试</h4><p>最后我们需要进行小程序的实际接入，因为 LeanCloud 并没有提供支付宝小程序的 SDK 包，这里对于支付宝小程序我们使用 LeanCloud 提供的 REST 接口进行访问，具体地址如下：<span class="exturl" data-url="aHR0cHM6Ly9sZWFuY2xvdWQuY24vZG9jcy9sZWFuZW5naW5lLXJlc3QtYXBpLmh0bWwjaGFzaDIwMDA1MjIw" title="https://leancloud.cn/docs/leanengine-rest-api.html#hash20005220">点我访问<i class="fa fa-external-link"></i></span>。</p>
+<h3 id="定义-LeanCloud-相关的辅助函数"><a href="#定义-LeanCloud-相关的辅助函数" class="headerlink" title="定义 LeanCloud 相关的辅助函数"></a>定义 LeanCloud 相关的辅助函数</h3><p>对于接入 LeanCloud，我们需要在应用中做一系列初始化环境的准备，在 <code>src/api/</code> 文件夹下创建 <code>utils.js</code> 文件，并在其中编写内容如下：</p>
+<figure class="highlight js"><figcaption><span>src/api/utils.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2FiZmQ4NzIvc3JjL2FwaS91dGlscy5qcw==" title="https://github.com/tuture-dev/ultra-club/blob/abfd872/src/api/utils.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> API_BASE_URL = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LOGIN_URL = <span class="string">`<span class="subst">$&#123;API_BASE_URL&#125;</span>/1.1/functions/login`</span>;</span><br><span class="line"><span class="keyword">const</span> CREATE_POST_URL = <span class="string">`<span class="subst">$&#123;API_BASE_URL&#125;</span>/1.1/functions/createPost`</span>;</span><br><span class="line"><span class="keyword">const</span> GET_POST_URL = <span class="string">`<span class="subst">$&#123;API_BASE_URL&#125;</span>/1.1/functions/getPost`</span>;</span><br><span class="line"><span class="keyword">const</span> GET_POSTS_URL = <span class="string">`<span class="subst">$&#123;API_BASE_URL&#125;</span>/1.1/functions/getPosts`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> HEADER = &#123;</span><br><span class="line">  <span class="string">'X-LC-Prod'</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="string">'X-LC-Id'</span>: <span class="string">''</span>,</span><br><span class="line">  <span class="string">'X-LC-Key'</span>: <span class="string">''</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> convertUserFormat = <span class="function">(<span class="params">user</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> _id = user.objectId;</span><br><span class="line">  <span class="keyword">delete</span> user.objectId;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; ...user, _id &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> convertPostFormat = <span class="function">(<span class="params">post</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> _id = post.objectId;</span><br><span class="line">  <span class="keyword">const</span> user = convertUserFormat(post.user);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">delete</span> post.objectId;</span><br><span class="line">  <span class="keyword">delete</span> post.user;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; ...post, _id, user &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> convertPostsFormat = <span class="function">(<span class="params">posts</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> convertedPosts = posts.map(<span class="function">(<span class="params">post</span>) =&gt;</span> convertPostFormat(post));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> convertedPosts;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">  LOGIN_URL,</span><br><span class="line">  HEADER,</span><br><span class="line">  CREATE_POST_URL,</span><br><span class="line">  GET_POST_URL,</span><br><span class="line">  GET_POSTS_URL,</span><br><span class="line">  convertPostsFormat,</span><br><span class="line">  convertPostFormat,</span><br><span class="line">  convertUserFormat,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的代码主要分为四个部分：</p>
+<ul>
+<li>定义云函数的 REST URL，LeanCloud 的云函数 REST URL 的格式类似这样：<code>https://API_BASE_URL/1.1/functions/functionName</code>，其中 <code>API_BASE_URL</code> 可以通过文档获取：<span class="exturl" data-url="aHR0cHM6Ly9sZWFuY2xvdWQuY24vZG9jcy9sZWFuZW5naW5lLXJlc3QtYXBpLmh0bWwjaGFzaC0xNzIyNjUwNTA5" title="https://leancloud.cn/docs/leanengine-rest-api.html#hash-1722650509">点我访问<i class="fa fa-external-link"></i></span>；而 <code>functionName</code> 即为我们需要调用的云函数名字。这里我们定义了 <code>API_BASE_URL</code> ，我们给了空字符串，读者可以根据 LeanCloud 给与的 <code>Base URL</code> 替代空字符串；同样我们定义了四个云函数，分别代表登录、创帖、查询帖子列表、查询单个帖子，具体的云端云函数我们将在后面定义。</li>
+<li>第二个部分即为向 LeanCloud 服务器发送 REST 请求时需要携带的请求头部，这个也可以在文档里给出：<span class="exturl" data-url="aHR0cHM6Ly9sZWFuY2xvdWQuY24vZG9jcy9sZWFuZW5naW5lLXJlc3QtYXBpLmh0bWwjaGFzaDIwMDA1MjIw" title="https://leancloud.cn/docs/leanengine-rest-api.html#hash20005220">点我访问<i class="fa fa-external-link"></i></span>；这里也需要用户用自己的内容来替换上面的空字符串。</li>
+<li>第三个部分则为两个辅助转换格式的函数，主要用于将 LeanCloud 数据库格式的数据与现有的微信小程序数据库格式的数据兼容。</li>
+<li>第四个部分为导出这些定义的内容，供其它模块使用。</li>
+</ul>
+<div class="note info">
+            <p><strong>提示</strong></p><p>上面的 <code>API_BASE_URL</code> 和 <code>HEADER</code> 都需要用户在登录的情况下访问给出的地址才能获取到。</p>
+          </div>
+
+<h3 id="在-LeanCloud-上面创建数据库表"><a href="#在-LeanCloud-上面创建数据库表" class="headerlink" title="在 LeanCloud 上面创建数据库表"></a>在 LeanCloud 上面创建数据库表</h3><p>登录 LeanCloud 控制台，在左边栏的 <strong>存储 &gt; 结构化数据</strong> 可以看到创建 Class 的按钮，我们可以通过创建一个 Class 来创建一张数据库表：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b3d457d461.jpeg"></p>
+<p>可以看到我们创建了两张表：<code>Post</code> 和 <code>MyUser</code>，一个存放和帖子相关的数据，一个存放和用户相关的数据。其中 <code>MyUser</code> 类似之前我们在微信小程序数据库表时的 <code>user</code> 表。</p>
+<h4 id="定义-MyUser-字段"><a href="#定义-MyUser-字段" class="headerlink" title="定义 MyUser 字段"></a>定义 MyUser 字段</h4><p>如图之前在微信小程序数据库表创建时一样，我们同样为 <code>MyUser</code> 定义如下的字段：</p>
+<ul>
+<li>avatar</li>
+<li>nickName</li>
+</ul>
+<p>至于读者看到的其它字段都是 LeanCloud 默认创建且自动更新的字段，用户不可以操作。</p>
+<h4 id="定义-Post-字段"><a href="#定义-Post-字段" class="headerlink" title="定义 Post 字段"></a>定义 Post 字段</h4><p>同样和之前在微信小程序里面创建 <code>post</code> 一样，我们给 Post 定义如下字段:</p>
+<ul>
+<li>content</li>
+<li>title</li>
+<li>user</li>
+</ul>
+<p>眼尖的同学可能注意到了，这里的 <code>user</code> 字段是一个 <code>Pointer</code> 类型，它是 LeanCloud 数据表独有的引用类型，类似关系数据库里面的外键，即存一个指针，之后获取数据的时候可以便捷的获取对应的 <code>user</code> 数据。</p>
+<h4 id="关于默认-Class-的解释"><a href="#关于默认-Class-的解释" class="headerlink" title="关于默认 Class 的解释"></a>关于默认 Class 的解释</h4><p>这里有些读者可能有疑问，为什么还有一些多余的表了？这些以下划线开头的 Class 其实是 LeanCloud 默认创建的，不允许删除，用于 LeanCloud SDK 封装一系列常用且复杂的应用功能，供用户快速搭建 App/网站/小程序原型，比如类似微信的朋友圈功能，LeanCloud 提供开箱即用的逻辑，你可以直接调用。</p>
+<p>并且，类似 <code>_User</code> 和 <code>User</code> Class 其实是引用自同一个 Class，所以不能创建和 LeanCloud 默认的类具有同名且不带前缀下划线的类，比如 <code>User</code> ，<code>File</code> 类就不能创建，所以这里我们创建了 <code>MyUser</code> 类，这样不用去考虑 <code>_User</code> 类本身存在的一些细节限制。</p>
+<h3 id="在-LeanCloud-上创建云函数"><a href="#在-LeanCloud-上创建云函数" class="headerlink" title="在 LeanCloud 上创建云函数"></a>在 LeanCloud 上创建云函数</h3><p>在上一步里面，我们在小程序代码里创建了和 LeanCloud 有关的逻辑代码，其中我们创建了四个云函数，现在我们要创建对应这四个云函数的实际云函数。</p>
+<p>注册并登陆 LeanCloud 之后，点击左边栏的 <strong>云引擎 &gt; 部署</strong> 可以看到类似下面的界面：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b3d8296a49.jpeg"></p>
+<p>LeanCloud 提供给我们在线创建和编写云函数的方便界面，使得我们不用自己创建本地服务器代码和配置部署和运维过程，大大加速了程序的开发过程。</p>
+<p>接下来，我们将遵循以下三步走的方式来进行 LeanCloud 云函数的开发：</p>
+<ul>
+<li>创建云函数</li>
+<li>部署</li>
+<li>在小程序端进行调试</li>
+</ul>
+<h3 id="创建-User-逻辑-云函数"><a href="#创建-User-逻辑-云函数" class="headerlink" title="创建 User 逻辑 云函数"></a>创建 User 逻辑 云函数</h3><p>点击界面里面的创建按钮，会看到如下的界面：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b3da0b73ca.jpeg"></p>
+<p>可以看到上图分为如下几个部分：</p>
+<ul>
+<li>选择我们要创建的函数类型，主要有三类，这里我们选择 <code>Function</code> ，这也是默认选择的类型，其余两类读者有兴趣可以自行探索，这里我们不展开讲。</li>
+<li>接着就是定义你的函数名，这里我们填入 <code>login</code>。</li>
+<li>接着就是编写函数体，它是一个 Node.js 函数，我们只需要编写对应的 Node.js 处理逻辑就可以了。</li>
+<li>最后我们可以对这个函数写一点注释，方便日后回顾，这里我们选择不填入。</li>
+</ul>
+<p>好的，了解了创建函数的弹出层之后，我们填入我们需要创建的 <code>login</code> 函数体如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; userInfo &#125; = request.params</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> query = <span class="keyword">new</span> AV.Query(<span class="string">'MyUser'</span>)</span><br><span class="line">query.equalTo(<span class="string">'nickName'</span>, userInfo.nickName)</span><br><span class="line"><span class="keyword">const</span> users = <span class="keyword">await</span> query.find()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (users.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> users[<span class="number">0</span>]</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> MyUser = AV.Object.extend(<span class="string">'MyUser'</span>)</span><br><span class="line">    <span class="keyword">const</span> myUser = <span class="keyword">new</span> MyUser()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> &#123; nickName, avatar &#125; = userInfo</span><br><span class="line">    myUser.set(<span class="string">'nickName'</span>, nickName)</span><br><span class="line">    myUser.set(<span class="string">'avatar'</span>, avatar)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> user = <span class="keyword">await</span> myUser.save()</span><br><span class="line">    <span class="keyword">return</span> user</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我们上面的内容主要改动有四处：</p>
+<ul>
+<li>从 <code>request.params</code> 取到对应的请求体数据 <code>userInfo</code>，这决定了我们之后在小程序端调用 LeanCloud 云函数时，要使用 <code>POST</code> 的方式。</li>
+<li>接着我们使用了 LeanCloud 的查询 SDK 操作</li>
+<li>接着通过 <code>equalTo</code> 进行条件过滤，这里我们查询 <code>nickName</code> 为 <code>userInfo.nickName</code> 的用户。</li>
+<li>通过 <code>query.find()</code> 来提交查询操作，注意到这里我们使用了 <code>await</code> 关键字，那是因为默认包裹云函数提的是一个 <code>async</code> 函数，允许我们方便的执行异步流程。</li>
+</ul>
+<p>接着我们对查询到的数据进行判断，如果 <code>users.length &gt; 0</code> 表示存在用户，那么我们返回查询到的第一个用户；如果不存在，我们执行创建用户操作，再返回创建的用户。</p>
+<p>创建用户的操作主要是如下几个步骤：</p>
+<p>实例化这个类获取一个对象</p>
+<p>设置这个对象的属性，这里通过 <code>set(key, value)</code> 的方式设置</p>
+<p>通过对象的 <code>save</code> 方法进行保存，保存到 LeanCloud 数据库</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>这里我们只用到了 LeanCloud 的一些简单操作，具体的详情可以查看官方文档，官方文档撰写了非常完备的操作指南：<span class="exturl" data-url="aHR0cHM6Ly9sZWFuY2xvdWQuY24vZG9jcy9sZWFuc3RvcmFnZV9ndWlkZS1qcy5odG1s" title="https://leancloud.cn/docs/leanstorage_guide-js.html">点我查看<i class="fa fa-external-link"></i></span>。</p>
+          </div>
+
+<h4 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h4><p>按照上面的步骤编写完 <code>login</code> 云函数之后，点击保存，此时我们的云函数就编写好了，但是我们目前在小程序端还无法调用它，因为我们还需要一个部署的操作。</p>
+<p>在 LeanCloud 上面进行云函数的部署也同样简单，只需要点击一个按钮：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b43e869c59.jpeg"></p>
+<p>点我之后，等待部署提示，过一会应该就会提示部署成功，这个时候我们就可以在小程序端通过 REST API 访问了。</p>
+<h4 id="在小程序端进行调试"><a href="#在小程序端进行调试" class="headerlink" title="在小程序端进行调试"></a>在小程序端进行调试</h4><p>我们这里使用 LeanCloud 主要是让支付宝小程序也可以成为全栈应用，对应我们之前提到的 H5，因为 Taro 目前对 H5 的支持还不完善，我们决定放弃对 H5 的讲解, 但是这并不代表 Taro 存在缺陷，只能说它是一个很有潜力的框架，成长还需要实践，并且跨端小程序是它诞生的重点，将精力放在主要的路径上是值得提倡的，Taro 在近期发布了 Taro Next，支持使用 Vue/React/Nerve 开发跨端小程序，笔者这里推荐读者可以尝试一波：<span class="exturl" data-url="aHR0cHM6Ly90YXJvLmpkLmNvbS8=" title="https://taro.jd.com/">点我跳转<i class="fa fa-external-link"></i></span>。</p>
+<p>因为我们首先创建了 <code>login</code> 的云函数，所以我们需要改进一下我们的支付宝登录的按钮逻辑，打开 <code>src/components/AlipayLoginButton/index.js</code> 对其中的内容作出如下的修改:</p>
+<figure class="highlight js"><figcaption><span>src/components/AlipayLoginButton/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2FiZmQ4NzIvc3JjL2NvbXBvbmVudHMvQWxpcGF5TG9naW5CdXR0b24vaW5kZXguanM=" title="https://github.com/tuture-dev/ultra-club/blob/abfd872/src/components/AlipayLoginButton/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> &#123; SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; LOGIN &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">AlipayLoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [isLogin, setIsLogin] = useState(<span class="literal">false</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">      userInfo = <span class="built_in">JSON</span>.parse(userInfo.response).response</span><br><span class="line">      <span class="keyword">const</span> &#123; avatar, nickName &#125; = userInfo</span><br><span class="line"></span><br><span class="line">[tuture-del]      <span class="keyword">await</span> Taro.setStorage(&#123;</span><br><span class="line">[tuture-del]        key: <span class="string">'userInfo'</span>,</span><br><span class="line">[tuture-del]        data: &#123; avatar, nickName &#125;,</span><br><span class="line">[tuture-del]      &#125;)</span><br><span class="line">[tuture-del]</span><br><span class="line">      dispatch(&#123;</span><br><span class="line">[tuture-del]        type: SET_LOGIN_INFO,</span><br><span class="line">[tuture-add]        type: LOGIN,</span><br><span class="line">        payload: &#123;</span><br><span class="line">[tuture-del]          avatar,</span><br><span class="line">[tuture-del]          nickName,</span><br><span class="line">[tuture-add]          userInfo: &#123;</span><br><span class="line">[tuture-add]            avatar,</span><br><span class="line">[tuture-add]            nickName,</span><br><span class="line">[tuture-add]          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的内容改动主要有三处：</p>
+<ul>
+<li>我们删掉了使用支付宝获取登录信息之后存缓存的逻辑</li>
+<li>接着，我们 dispatch 了一个 <code>action.type</code> 为 LOGIN 的异步 ACTION，并传递了 <code>userInfo</code> 数据</li>
+<li>最后我们导入了需要的 <code>LOGIN</code> 常量。</li>
+</ul>
+<p>除了支付宝登录按钮的逻辑改进之外，我们还要改进我们的 api 逻辑，加上对支付宝环境的判断和调用对应的 LeanCloud 云函数。</p>
+<p>打开 <code>src/api/user.js</code> 文件，对其中的内容作出对应的修改如下：</p>
+<figure class="highlight js"><figcaption><span>src/api/user.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2FiZmQ4NzIvc3JjL2FwaS91c2VyLmpz" title="https://github.com/tuture-dev/ultra-club/blob/abfd872/src/api/user.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; HEADER, LOGIN_URL, convertUserFormat &#125; <span class="keyword">from</span> <span class="string">'./utils'</span></span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params">userInfo</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> isWeapp = Taro.getEnv() === Taro.ENV_TYPE.WEAPP</span><br><span class="line">  <span class="keyword">const</span> isAlipay = Taro.getEnv() === Taro.ENV_TYPE.ALIPAY</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isH5 = Taro.getEnv() === Taro.ENV_TYPE.WEB</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 针对微信小程序使用小程序云函数，其他使用小程序 RESTful API</span></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> result.user</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlipay || isH5) &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.request(&#123;</span><br><span class="line">[tuture-add]        url: LOGIN_URL,</span><br><span class="line">[tuture-add]        method: <span class="string">'POST'</span>,</span><br><span class="line">[tuture-add]        header: &#123; ...HEADER &#125;,</span><br><span class="line">[tuture-add]        data: &#123;</span><br><span class="line">[tuture-add]          userInfo,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]      <span class="keyword">return</span> convertUserFormat(data.result)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'login ERR: '</span>, err)</span><br><span class="line">  <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到上面主要做了四处修改：</p>
+<ul>
+<li>首先我们导入了之前定义的和 LeanCloud 有个的 <code>utils</code> 函数。</li>
+<li>接着我们加入了对 H5 环境的判断。</li>
+<li>最后我们增加了一个 <code>else if</code> 流程，用于判断在支付宝小程序或者 H5 环境下需要执行发起 REST 请求的逻辑，这里我们使用了 <code>Taro.request</code> 进行网络请求，并传入了对应的 <code>url</code> 、<code>header</code>、<code>data</code>，以及将请求的类型设置为 <code>POST</code>，之前我们提到过，对 LeanCloud 云函数发起请求都需要使用 <code>POST</code> 方法。</li>
+<li>最后我们将从 LeanCloud 拿到的请求结果使用 <code>convertUserFormat</code> 做了一次格式的转换，以适应现有的微信小程序数据类型。</li>
+</ul>
+<p>好了，通过以上三步流程，我们就跑通了小程序类请求 LeanCloud 的流程，保存修改的代码，让我们马上打开支付宝小程序试一下吧！</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b43fe789ae.jpeg"></p>
+<h3 id="创建-Post-逻辑云函数"><a href="#创建-Post-逻辑云函数" class="headerlink" title="创建 Post 逻辑云函数"></a>创建 Post 逻辑云函数</h3><p>在上一节中，我们创建了 User 逻辑的 <code>login</code> 云函数，在这一节中，我们来收尾 Post 逻辑的三个云函数：</p>
+<ul>
+<li><code>createPost</code></li>
+<li><code>getPosts</code></li>
+<li><code>getPost</code></li>
+</ul>
+<p>因为创建的逻辑和方式和之前的 <code>login</code> 云函数类似，我们这里不再赘述，会简单的贴一下代码，但我们同样按照之前的三步流程来讲解。</p>
+<h4 id="创建云函数"><a href="#创建云函数" class="headerlink" title="创建云函数"></a>创建云函数</h4><p>首先创建我们的 <code>createPost</code> 云函数，其代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; postData, userId &#125; = request.params</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Post = AV.Object.extend(<span class="string">'Post'</span>)</span><br><span class="line"><span class="keyword">const</span> post = <span class="keyword">new</span> Post();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myUser = AV.Object.createWithoutData(<span class="string">'MyUser'</span>, userId)</span><br><span class="line"><span class="keyword">const</span> newPost = <span class="keyword">await</span> post.save(&#123;</span><br><span class="line">    ...postData,</span><br><span class="line">    user: myUser</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> query = <span class="keyword">new</span> AV.Query(<span class="string">'Post'</span>)</span><br><span class="line"><span class="keyword">const</span> postWithUser = <span class="keyword">await</span> query.equalTo(<span class="string">'objectId'</span>, newPost.get(<span class="string">'objectId'</span>)).include(<span class="string">'user'</span>).first()</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> postWithUser</span><br></pre></td></tr></table></figure>
+
+<p>接着来创建我们的获取帖子列表的云函数 <code>getPosts</code>，其代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> query = <span class="keyword">new</span> AV.Query(<span class="string">'Post'</span>)</span><br><span class="line"><span class="keyword">const</span> posts = <span class="keyword">await</span> query.include(<span class="string">'user'</span>).find()</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> posts</span><br></pre></td></tr></table></figure>
+
+<p>最后是我们的获取帖子详情的云函数 <code>getPost</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; postId &#125; = request.params</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> query = <span class="keyword">new</span> AV.Query(<span class="string">'Post'</span>)</span><br><span class="line"><span class="keyword">const</span> post = <span class="keyword">await</span> query.equalTo(<span class="string">'objectId'</span>, postId).include(<span class="string">'user'</span>).first()</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> post</span><br></pre></td></tr></table></figure>
+
+<h4 id="部署-1"><a href="#部署-1" class="headerlink" title="部署"></a>部署</h4><p>好的，三个和 Post 逻辑有关的云函数创建好了，我们马上点击部署按钮来将它们部署上线。</p>
+<h4 id="在小程序端测试"><a href="#在小程序端测试" class="headerlink" title="在小程序端测试"></a>在小程序端测试</h4><p>当创建好云函数，并部署好之后，我们就可以在小程序端编写对应的代码进行测试了，打开 <code>src/api/post.js</code> 文件，对其中的代码做出对应的修改如下：</p>
+<figure class="highlight js"><figcaption><span>src/api/post.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2FiZmQ4NzIvc3JjL2FwaS9wb3N0Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/abfd872/src/api/post.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123;</span><br><span class="line">[tuture-add]  HEADER,</span><br><span class="line">[tuture-add]  CREATE_POST_URL,</span><br><span class="line">[tuture-add]  GET_POSTS_URL,</span><br><span class="line">[tuture-add]  GET_POST_URL,</span><br><span class="line">[tuture-add]  convertPostFormat,</span><br><span class="line">[tuture-add]  convertPostsFormat,</span><br><span class="line">[tuture-add]&#125; <span class="keyword">from</span> <span class="string">'./utils'</span></span><br><span class="line">[tuture-add]</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">createPost</span>(<span class="params">postData, userId</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> isWeapp = Taro.getEnv() === Taro.ENV_TYPE.WEAPP</span><br><span class="line">  <span class="keyword">const</span> isAlipay = Taro.getEnv() === Taro.ENV_TYPE.ALIPAY</span><br><span class="line">[tuture-del]</span><br><span class="line">[tuture-del]  <span class="built_in">console</span>.log(<span class="string">'postData'</span>, postData, userId)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isH5 = Taro.getEnv() === Taro.ENV_TYPE.WEB</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 针对微信小程序使用小程序云函数，其他使用小程序 RESTful API</span></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> result.post</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlipay || isH5) &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.request(&#123;</span><br><span class="line">[tuture-add]        url: CREATE_POST_URL,</span><br><span class="line">[tuture-add]        method: <span class="string">'POST'</span>,</span><br><span class="line">[tuture-add]        header: &#123; ...HEADER &#125;,</span><br><span class="line">[tuture-add]        data: &#123;</span><br><span class="line">[tuture-add]          postData,</span><br><span class="line">[tuture-add]          userId,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]      <span class="keyword">return</span> convertPostFormat(data.result)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'createPost ERR: '</span>, err)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getPosts</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> isWeapp = Taro.getEnv() === Taro.ENV_TYPE.WEAPP</span><br><span class="line">  <span class="keyword">const</span> isAlipay = Taro.getEnv() === Taro.ENV_TYPE.ALIPAY</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isH5 = Taro.getEnv() === Taro.ENV_TYPE.WEB</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 针对微信小程序使用小程序云函数，其他使用小程序 RESTful API</span></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> result.posts</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlipay || isH5) &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.request(&#123;</span><br><span class="line">[tuture-add]        url: GET_POSTS_URL,</span><br><span class="line">[tuture-add]        method: <span class="string">'POST'</span>,</span><br><span class="line">[tuture-add]        header: &#123; ...HEADER &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]      <span class="keyword">return</span> convertPostsFormat(data.result)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'getPosts ERR: '</span>, err)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getPost</span>(<span class="params">postId</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> isWeapp = Taro.getEnv() === Taro.ENV_TYPE.WEAPP</span><br><span class="line">  <span class="keyword">const</span> isAlipay = Taro.getEnv() === Taro.ENV_TYPE.ALIPAY</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isH5 = Taro.getEnv() === Taro.ENV_TYPE.WEB</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 针对微信小程序使用小程序云函数，其他使用小程序 RESTful API</span></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> result.post</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isAlipay || isH5) &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.request(&#123;</span><br><span class="line">[tuture-add]        url: GET_POST_URL,</span><br><span class="line">[tuture-add]        method: <span class="string">'POST'</span>,</span><br><span class="line">[tuture-add]        header: &#123; ...HEADER &#125;,</span><br><span class="line">[tuture-add]        data: &#123;</span><br><span class="line">[tuture-add]          postId,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]</span><br><span class="line">[tuture-add]      <span class="keyword">return</span> convertPostFormat(data.result)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">'getPost ERR: '</span>, err)</span><br><span class="line">  <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到上面主要做了四处修改：</p>
+<ul>
+<li>首先我们导入了之前定义的和 LeanCloud 有关的 <code>utils</code> 函数。</li>
+<li>接着我们加入了对 H5 环境的判断。</li>
+<li>最后我们增加了一个 <code>else if</code> 流程，用于判断在支付宝小程序或者 H5 环境下需要执行发起 REST 请求的逻辑，这里我们使用了 <code>Taro.request</code> 进行网络请求，并传入了对应三个和 Post 逻辑有关的 <code>url</code> 、以及对应的 <code>header</code>、<code>data</code>，以及将请求的类型设置为 <code>POST</code>，之前我们提到过，对 LeanCloud 云函数发起请求都需要使用 <code>POST</code> 方法。</li>
+<li>最后我们将从 LeanCloud 拿到的请求结果使用 <code>convertPostFormat</code> 做了一次格式的转换，以适应现有的微信小程序数据类型。</li>
+</ul>
+<p>好了，通过以上三步流程，我们就跑通了小程序类请求 LeanCloud 的流程，保存修改的代码，让我们马上打开支付宝小程序试一下吧！</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b44d2d0cc8.jpeg"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>在这篇文章中，我们讲解了支付宝小程序接入 LeanCloud Serverless 云服务的过程，我们再来复习一下整个流程：</p>
+<ul>
+<li>首先我们讲解了微信小程序云的不足，然后引出了 LeanCloud 来实现跨端小程序开发</li>
+<li>接着我们介绍了 LeanCloud 服务的配置过程，具体包含 1）注册登录 LeanCloud 2）配置对应的小程序后台的白名单。且因为 LeanCloud 没有支付宝小程序的 SDK，所以我们采用 REST 请求的方式来获取和修改对应的数据</li>
+<li>接着我们讲解了如何在 LeanCloud 上面创建数据表。</li>
+<li>接着，我们介绍了如何在 LeanCloud 创建云函数。</li>
+<li>最后我们通过三步走流程：1）创建云函数 2）部署 3）在小程序端测试，创建了我们需要的四个云函数。</li>
+</ul>
+<p>我们再来看一下整体的接入效果：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4e9b0b79869.gif"></p>
+<p>到这里我们的 <strong>Taro 多端小程序开发大型实战</strong> 就基本告一段落了，整个教程内容想当长，涵盖的内容也相当多，这也是图雀社区最长的一个系列教程。最后希望 Taro 社区越来越好，也希望能帮到您！</p>
+<h3 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h3><p>我们在之前的教程中花了 8 篇文章的篇幅讲解了小程序从 0 到开发完成的过程，但是我们还没将如何将小程序上线，这里我们再额外花一点笔墨讲一下如何上线你的小程序，因为小程序的上线很容易，所以内容不会很长，有兴趣的读者可以继续读下去 ღ( ´･ᴗ･` )比心。</p>
+<h4 id="微信小程序上线"><a href="#微信小程序上线" class="headerlink" title="微信小程序上线"></a>微信小程序上线</h4><p>首先点击小程序开发者工具的右上角的上传按钮：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4c4db32af08.jpeg"></p>
+<p>接着去微信小程序网站后台：<span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3d4YW1wL2hvbWUvZ3VpZGU/bGFuZz16aF9DTiZ0b2tlbj0xNjA4NzM0ODY=" title="https://mp.weixin.qq.com/wxamp/home/guide?lang=zh_CN&token=160873486">点我前往<i class="fa fa-external-link"></i></span>。</p>
+<p>进行登录之后，在进来的第一个页面的第二步可以看见版本发布的信息，安装微信官方的流程进行即可。</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b456f9d5c4.jpeg"></p>
+<h4 id="支付宝小程序上线"><a href="#支付宝小程序上线" class="headerlink" title="支付宝小程序上线"></a>支付宝小程序上线</h4><p>首先点击支付宝小程序开发者工具的右上角上传按钮：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4b49d020734.jpeg"></p>
+<p>接着去支付宝小程序后台：<span class="exturl" data-url="aHR0cHM6Ly9taW5pLm9wZW4uYWxpcGF5LmNvbS9jaGFubmVsL21pbmlJbmRleC5odG0=" title="https://mini.open.alipay.com/channel/miniIndex.htm">点我前往<i class="fa fa-external-link"></i></span>。</p>
+<p>进行登录之后，点击顶部的 开发中心，选择小程序应用，选择你的小程序应用，然后同样可以看到类似发布上线的栏目，安装支付宝官方的流程进行发布就可以了。</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/1705b4c4e4d77b6d.jpeg"></p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>微信/支付宝小程序对于有社交、社区性质的小程序是需要企业认证的，所以有类似需求的需要做一下准备。</p>
+          </div>
+
+<p>好了，到这里我们的要说再见了 👋！希望你们学得开心！</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/02/19/abfd872/" title="Taro 小程序开发大型实战（六）：LeanCloud，一统江湖">https://tuture.co/2020/02/19/abfd872/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Taro/" rel="tag"><i class="fa fa-tag"></i> Taro</a>
+            
+              <a href="/tags/LeanCloud/" rel="tag"><i class="fa fa-tag"></i> LeanCloud</a>
+            
+              <a href="/tags/Serverless/" rel="tag"><i class="fa fa-tag"></i> Serverless</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/02/11/6f96d15/" rel="next" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（五）">
+                  <i class="fa fa-chevron-left"></i> 从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（五）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/03/-Oixkkq/" rel="prev" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（六）">
+                  从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（六） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LeanCloud-一统江湖"><span class="nav-number">1.</span> <span class="nav-text">LeanCloud,一统江湖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序接入外网的流程"><span class="nav-number">1.1.</span> <span class="nav-text">小程序接入外网的流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注册外站服务的账号"><span class="nav-number">1.1.1.</span> <span class="nav-text">注册外站服务的账号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#找到对应的小程序开发接入指南"><span class="nav-number">1.1.2.</span> <span class="nav-text">找到对应的小程序开发接入指南</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取对应的接入地址"><span class="nav-number">1.1.3.</span> <span class="nav-text">获取对应的接入地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在小程序实际接入，并进行测试"><span class="nav-number">1.1.4.</span> <span class="nav-text">在小程序实际接入，并进行测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-LeanCloud-相关的辅助函数"><span class="nav-number">1.2.</span> <span class="nav-text">定义 LeanCloud 相关的辅助函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-LeanCloud-上面创建数据库表"><span class="nav-number">1.3.</span> <span class="nav-text">在 LeanCloud 上面创建数据库表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义-MyUser-字段"><span class="nav-number">1.3.1.</span> <span class="nav-text">定义 MyUser 字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义-Post-字段"><span class="nav-number">1.3.2.</span> <span class="nav-text">定义 Post 字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于默认-Class-的解释"><span class="nav-number">1.3.3.</span> <span class="nav-text">关于默认 Class 的解释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-LeanCloud-上创建云函数"><span class="nav-number">1.4.</span> <span class="nav-text">在 LeanCloud 上创建云函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-User-逻辑-云函数"><span class="nav-number">1.5.</span> <span class="nav-text">创建 User 逻辑 云函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#部署"><span class="nav-number">1.5.1.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在小程序端进行调试"><span class="nav-number">1.5.2.</span> <span class="nav-text">在小程序端进行调试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Post-逻辑云函数"><span class="nav-number">1.6.</span> <span class="nav-text">创建 Post 逻辑云函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建云函数"><span class="nav-number">1.6.1.</span> <span class="nav-text">创建云函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署-1"><span class="nav-number">1.6.2.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在小程序端测试"><span class="nav-number">1.6.3.</span> <span class="nav-text">在小程序端测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.7.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-More-Thing"><span class="nav-number">1.8.</span> <span class="nav-text">One More Thing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#微信小程序上线"><span class="nav-number">1.8.1.</span> <span class="nav-text">微信小程序上线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#支付宝小程序上线"><span class="nav-number">1.8.2.</span> <span class="nav-text">支付宝小程序上线</span></a></li></ol></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">898k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>
