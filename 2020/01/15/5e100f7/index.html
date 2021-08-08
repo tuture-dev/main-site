@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="随着状态增多，状态提升的操作也随着增多，导致保存这些状态的父组件会臃肿不堪，而且每次状态的改变需要影响很多中间组件，带来极大的性能开销。在这篇长文中，我们将用 Hooks 版的 Redux 来解决状态管理的难题，而让 Taro 专注于渲染用户界面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理">
+<meta property="og:url" content="https://tuture.co/2020/01/15/5e100f7/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="随着状态增多，状态提升的操作也随着增多，导致保存这些状态的父组件会臃肿不堪，而且每次状态的改变需要影响很多中间组件，带来极大的性能开销。在这篇长文中，我们将用 Hooks 版的 Redux 来解决状态管理的难题，而让 Taro 专注于渲染用户界面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/34a473b/taro-cover-4.jpg">
+<meta property="article:published_time" content="2020-01-15T02:16:40.222Z">
+<meta property="article:modified_time" content="2021-08-08T15:06:45.311Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Redux">
+<meta property="article:tag" content="Taro">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/34a473b/taro-cover-4.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/01/15/5e100f7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/01/15/5e100f7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-15 10:16:40" itemprop="dateCreated datePublished" datetime="2020-01-15T10:16:40+08:00">2020-01-15</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 23:06:45" itemprop="dateModified" datetime="2021-08-08T23:06:45+08:00">2021-08-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" itemprop="url" rel="index"><span itemprop="name">小程序</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/" itemprop="url" rel="index"><span itemprop="name">Taro</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/Taro/%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">进阶</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>43k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>39 分钟</span>
+            </span>
+          
+            <div class="post-description">随着状态增多，状态提升的操作也随着增多，导致保存这些状态的父组件会臃肿不堪，而且每次状态的改变需要影响很多中间组件，带来极大的性能开销。在这篇长文中，我们将用 Hooks 版的 Redux 来解决状态管理的难题，而让 Taro 专注于渲染用户界面。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/34a473b/taro-cover-4.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yg==" title="https://github.com/tuture-dev/ultra-club"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="双剑合璧：Hooks-Redux"><a href="#双剑合璧：Hooks-Redux" class="headerlink" title="双剑合璧：Hooks + Redux"></a>双剑合璧：Hooks + Redux</h2><p>欢迎继续阅读《Taro 小程序开发大型实战》系列，前情回顾：</p>
+<ul>
+<li><a href="https://tuture.co/2019/12/25/34a473b/">熟悉的 React，熟悉的 Hooks</a>：我们用 React 和 Hooks 实现了一个非常简单的添加帖子的原型</li>
+<li><a href="https://tuture.co/2019/12/25/af69225/">多页面跳转和 Taro UI 组件库</a>：我们用 Taro 自带的路由功能实现了多页面跳转，并用 Taro UI 组件库升级了应用界面</li>
+<li><a href="https://tuture.co/2019/12/25/5e10118/">实现微信和支付宝多端登录</a>：实现了微信、支付宝以及普通登录和退出登录</li>
+</ul>
+<p>如果你跟着敲到了这里，你一定会发现现在的状态管理和数据流越来越臃肿，组件状态的更新非常复杂。在这一篇中，我们将开始用 Redux 重构。</p>
+<p>如果你不熟悉 Redux，推荐阅读我们的《Redux 包教包会》系列教程：</p>
+<ul>
+<li><a href="https://tuture.co/2019/11/28/1fe175a/">Redux 包教包会（一）：解救 React 状态危机</a></li>
+<li><a href="https://tuture.co/2019/11/28/d129c56/">Redux 包教包会（二）：趁热打铁，完全重构</a></li>
+<li><a href="https://tuture.co/2019/11/28/a3b94eb/">Redux 包教包会（三）：各司其职，重拾初心</a></li>
+</ul>
+<p>如果你希望直接从这一步开始，请运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b redux-start https://github.com/tuture-dev/ultra-club.git</span><br><span class="line"><span class="built_in">cd</span> ultra-club</span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>这一篇的内容很长，要敲的代码很多，建议先收藏，在有空的时候抽出一大块时间去实践哦。相信经过这一篇的洗礼，不仅能对 Redux 的理解更上一层楼，Taro 的开发功力也能大增！</p>
+          </div>
+
+<p>写到这一步，我们发现状态已经有点多了，而且 <code>src/pages/mine/mine.jsx</code> 文件是众多状态的顶层组件，比如我们的普通登录按钮 <code>src/components/LoginButton/index.jsx</code> 组件和我们的 <code>src/components/Footer/index.jsx</code> 组件，我们通过点击普通登录按钮打开登录弹窗的状态 <code>isOpened</code> 需要在 <code>LoginButton</code> 里面进行操作，然后进而影响到 <code>Footer</code> 组件内的 <code>FloatLayout</code> 弹窗组件，像这种涉及到多个子组件进行通信，我们将状态保存到公共父组件中的方式在 React 中叫做 ”状态提升“。</p>
+<p>但是随着状态增多，状态提升的状态也随着增多，导致保存这些状态的父组件会臃肿不堪，而且每次状态的改变需要影响很多中间组件，带来极大的性能开销，这种状态管理的难题我们一般交给专门的状态管理容器 Redux 来做，而让 React  专注于渲染用户界面。</p>
+<p>Redux 不仅可以保证状态的可预测性，还能保证状态的变化只和对应的组件相关，不影响到无关的组件，关于 Redux 的详细剖析的实战教程可以参考图雀社区的：<a href="https://tuture.co/2019/11/28/1fe175a/">Redux 包教包会系列文章</a>。</p>
+<p>在这一节中，我们将结合 React Hooks 和 Redux 来重构我们状态管理。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><p>首先我们先来安装使用 Redux 必要的依赖：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ yarn add redux @tarojs/redux @tarojs/redux-h5  redux-logger</span><br><span class="line"><span class="comment"># 或者使用 npm</span></span><br><span class="line">$ npm install --save redux @tarojs/redux @tarojs/redux-h5 redux-logger</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><figcaption><span>package.json</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvcGFja2FnZS5qc29u" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/package.json">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  "dependencies": &#123;</span><br><span class="line">    "@tarojs/components": "2.0.0-beta.10",</span><br><span class="line">    "@tarojs/components-qa": "2.0.0-beta.10",</span><br><span class="line">[tuture-add]    "@tarojs/redux": "^2.0.0-beta.12",</span><br><span class="line">[tuture-add]    "@tarojs/redux-h5": "^2.0.0-beta.12",</span><br><span class="line">    "@tarojs/router": "2.0.0-beta.10",</span><br><span class="line">    "@tarojs/taro": "2.0.0-beta.10",</span><br><span class="line">    "@tarojs/taro-alipay": "2.0.0-beta.10",</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    "nerv-devtools": "^1.5.5",</span><br><span class="line">    "nervjs": "^1.5.5",</span><br><span class="line">    "prop-types": "^15.7.2",</span><br><span class="line">[tuture-add]    "redux": "^4.0.5",</span><br><span class="line">[tuture-add]    "redux-logger": "^3.0.6",</span><br><span class="line">    "taro-ui": "^2.2.4"</span><br><span class="line">  &#125;,</span><br><span class="line">  "devDependencies": &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，除了我们熟悉的 <code>redux</code> 依赖，以及用来打印 Action 的中间件 <code>redux-logger</code> 外，还有两个额外的包，这是因为在 Taro 中，Redux 原绑定库 <code>react-redux</code> 被替换成了 <code>@tarojs/redux</code> 和 <code>@tarojs/redux-h5</code>，前者用在小程序中，后者用在 H5 页面中，Taro 对原 <code>react-redux</code> 进行了封装并提供了与 react-redux API 几乎一致的包来让开发人员获得更加良好的开发体验。</p>
+<h3 id="创建-Redux-Store"><a href="#创建-Redux-Store" class="headerlink" title="创建 Redux Store"></a>创建 Redux Store</h3><p>Redux 的三大核心概念为：Store，Action，Reducers：</p>
+<ul>
+<li>Store：保存着全局的状态，有着 ”数据的唯一真相来源之称“。</li>
+<li>Action：发起修改 Store 中保存状态的动作，是修改状态的唯一手段。</li>
+<li>Reducers：一个个的纯函数，用于响应 Action，对 Store 中的状态进行修改。</li>
+</ul>
+<p>好的，复习了一下 Redux 的概念之后，我们马上来创建 Store，Redux 的最佳实践推荐我们在将 Store 保存在 <code>store</code> 文件夹中，我们在 <code>src</code> 文件夹下面创建 <code>store</code> 文件夹，并在其中创建 <code>index.js</code> 来编写我们的 Store：</p>
+<figure class="highlight js"><figcaption><span>src/store/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3N0b3JlL2luZGV4Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/store/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; createLogger &#125; <span class="keyword">from</span> <span class="string">'redux-logger'</span></span><br><span class="line"><span class="keyword">import</span> rootReducer <span class="keyword">from</span> <span class="string">'../reducers'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> middlewares = [createLogger()]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">configStore</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> store = createStore(rootReducer, applyMiddleware(...middlewares))</span><br><span class="line">  <span class="keyword">return</span> store</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们导出了一个 <code>configureStore</code> 函数，并在其中创建并返回 Store，这里我们用到了 <code>redux-logger</code> 中间件，用于在发起 Action 时，在控制台打印 Action 及其前后 Store 中的保存的状态信息。</p>
+<p>这里我们的 <code>createstore</code> 接收两个参数：<code>rootReducer</code> 和 <code>applyMiddleware(...middlewares)</code> 。</p>
+<p><code>rootReducer</code> 是响应 <code>action</code> 的 <code>reducer</code>，这里我们导出了一个 <code>rootReducer</code>，代表组合了所有的 <code>reducer</code> ，我们将在后面 “组合 User 和 Post Reducer“ 中讲到它。</p>
+<p><code>createStore</code> 函数的第二个参数我们使用了 <code>redux</code> 为我们提供的工具函数 <code>applyMiddleware</code> 来在 Redux 中注入需要使用的中间件，因为它接收的参数是 <code>(args1, args2, args3, ..., argsn)</code> 的形式，所以这里我们用了数组展开运算符 <code>...</code> 来展开 <code>middlewares</code> 数组。</p>
+<h3 id="编写-User-Reducer"><a href="#编写-User-Reducer" class="headerlink" title="编写 User Reducer"></a>编写 User Reducer</h3><p>创建完 Store 之后，我们接在来编写 Reducer。回到我们的页面逻辑，我们在底部有两个 Tab 栏，一个为 “首页”，一个为 “我的”，在 ”首页“ 里面主要是展示一列文章和允许添加文章等，在 ”我的“ 里面主要是允许用户进行登录并展示登录信息，所以整体上我们的逻辑有两类，我们分别将其命名为 <code>post</code> 和 <code>user</code>，接下来我们将创建处理这两类逻辑的 reducers。</p>
+<p>Reducer 的逻辑形如 <code>(state, action) =&gt; newState</code>，即接收上一步 state 以及修改 state 的动作 action，然后返回修改后的新的 state，它是一个纯函数，意味着我们不能突变的修改  state。</p>
+<p>推荐：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">newState = &#123; ...state, <span class="attr">prop</span>: newValue &#125;</span><br></pre></td></tr></table></figure>
+
+<p>不推荐：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">state.prop = newValue</span><br></pre></td></tr></table></figure>
+
+<p>Redux 推荐的最佳实践是创建独立的 <code>reducers</code> 文件夹，在里面保存我们的一个个 reducer 文件。我们在 <code>src</code> 文件夹下创建 <code>reducers</code> 文件夹，在里面创建 <code>user.js</code> 文件，并加入我们的 User Reducer 相应的内容如下：</p>
+<figure class="highlight js"><figcaption><span>src/reducers/user.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3JlZHVjZXJzL3VzZXIuanM=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/reducers/user.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; SET_LOGIN_INFO, SET_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../constants/'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> INITIAL_STATE = &#123;</span><br><span class="line">  avatar: <span class="string">''</span>,</span><br><span class="line">  nickName: <span class="string">''</span>,</span><br><span class="line">  isOpened: <span class="literal">false</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">user</span>(<span class="params">state = INITIAL_STATE, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> SET_IS_OPENED: &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; isOpened &#125; = action.payload</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, isOpened &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> SET_LOGIN_INFO: &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; avatar, nickName &#125; = action.payload</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, nickName, avatar &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在 <code>user.js</code>  中申明了 User Reducer 的初始状态 <code>INITIAL_STATE</code>，并将它赋值给 <code>user</code> 函数 state 的默认值，它接收待响应的 action，在 <code>user</code> 函数内部就是一个 <code>switch</code> 语句根据 <code>action.type</code> 进行判断，然后执行相应的逻辑，这里我们主要有两个类型：<code>SET_IS_OPENED</code> 用于修改 <code>isOpened</code> 属性，<code>SET_LOGIN_INFO</code> 用于修改 <code>avatar</code> 和 <code>nickName</code> 属性，当 <code>switch</code> 语句中没有匹配到任何 <code>action.type</code> 值时，它返回原 state。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>根据 Redux 最近实践，这里的 <code>SET_IS_OPENED</code> 和 <code>SET_LOGIN_INFO</code> 常量一般保存到 <code>constants</code> 文件夹中，我们将马上创建它。这里使用常量而不是直接硬编码字符串的目的是为了代码的可维护性。</p>
+          </div>
+
+<p>接下来我们来创建 <code>src/reducer/user.js</code> 中会用到的常量，我们在 <code>src</code>  文件夹下创建 <code>constants</code> 文件夹，并在其中创建 <code>user.js</code> 文件，在其中添加内容如下：</p>
+<figure class="highlight js"><figcaption><span>src/constants/user.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbnN0YW50cy91c2VyLmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/constants/user.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> SET_IS_OPENED = <span class="string">'MODIFY_IS_OPENED'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> SET_LOGIN_INFO = <span class="string">'SET_LOGIN_INFO'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="编写-Post-Reducer"><a href="#编写-Post-Reducer" class="headerlink" title="编写 Post Reducer"></a>编写 Post Reducer</h3><p>为了响应 <code>post</code> 逻辑的状态修改，我们创建在 <code>src/reducers</code> 下创建 <code>post.js</code>，并在其中编写相应的内容如下：</p>
+<figure class="highlight js"><figcaption><span>src/reducers/post.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3JlZHVjZXJzL3Bvc3QuanM=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/reducers/post.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; SET_POSTS, SET_POST_FORM_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../constants/'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> avatar <span class="keyword">from</span> <span class="string">'../images/avatar.png'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> INITIAL_STATE = &#123;</span><br><span class="line">  posts: [</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">'泰罗奥特曼'</span>,</span><br><span class="line">      content: <span class="string">'泰罗是奥特之父和奥特之母唯一的亲生儿子'</span>,</span><br><span class="line">      user: &#123;</span><br><span class="line">        nickName: <span class="string">'图雀酱'</span>,</span><br><span class="line">        avatar,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">  isOpened: <span class="literal">false</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">post</span>(<span class="params">state = INITIAL_STATE, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> SET_POSTS: &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; post &#125; = action.payload</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">posts</span>: state.posts.concat(post) &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> SET_POST_FORM_IS_OPENED: &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; isOpened &#125; = action.payload</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, isOpened &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到， Post Reducer 的形式和 User Reducer 类似，我们将之前需要多组件中共享的状态 <code>posts</code> 和 <code>isOpened</code> 提取出来保存在 <code>post</code> 的状态里，这里的 <code>post</code> 函数主要响应 <code>SET_POSTS</code> 逻辑，用于添加新的 <code>post</code> 到 <code>posts</code> 状态种，以及 <code>SET_POST_FORM_IS_OPENED</code> 逻辑，用户设置 <code>isOpened</code> 状态。</p>
+<p>接下来我们来创建 <code>src/reducer/post.js</code> 中会用到的常量，我们在 <code>src/constants</code>  文件夹下创建 <code>user.js</code> 文件，在其中添加内容如下：</p>
+<figure class="highlight js"><figcaption><span>src/constants/post.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbnN0YW50cy9wb3N0Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/constants/post.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> SET_POSTS = <span class="string">'SET_POSTS'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> SET_POST_FORM_IS_OPENED = <span class="string">'SET_POST_FORM_IS_OPENED'</span></span><br></pre></td></tr></table></figure>
+
+<p>眼尖的同学可能注意到了，我们在 <code>src/reducers/user.js</code> 和 <code>src/reducers/post.js</code> 中导入需要使用的常量时都是从 <code>../constants</code>  的形式，那是因为我们在 <code>src/constants</code> 文件夹下创建了一个 <code>index.js</code> 文件，用于统一导出所有的常量，这也是代码可维护性的一种尝试。</p>
+<figure class="highlight js"><figcaption><span>src/constants/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbnN0YW50cy9pbmRleC5qcw==" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/constants/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">'./user'</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">'./post'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="组合-User-和-Post-Reducer"><a href="#组合-User-和-Post-Reducer" class="headerlink" title="组合 User 和 Post Reducer"></a>组合 User 和 Post Reducer</h3><p>我们在之前将整个全局的响应逻辑分别拆分到了 <code>src/reducers/user.js</code> 和 <code>src/reducers/post.js</code> 中，这使得我们可以把响应逻辑拆分到很多个很小的函数单元，极大增加了代码的可读性和可维护性。</p>
+<p>但最终我们还是要将这些拆分的逻辑组合成一个逻辑树，并将其作为参数传给 <code>createStore</code> 函数来使用。</p>
+<p>Redux 为我们提供了 <code>combineReducers</code> 来组合这些拆分的逻辑，我们在 <code>src/reducers</code> 文件夹下创建 <code>index.js</code> 文件，并在其中编写如下内容：</p>
+<figure class="highlight js"><figcaption><span>src/reducers/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3JlZHVjZXJzL2luZGV4Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/reducers/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> user <span class="keyword">from</span> <span class="string">'./user'</span></span><br><span class="line"><span class="keyword">import</span> post <span class="keyword">from</span> <span class="string">'./post'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> combineReducers(&#123;</span><br><span class="line">  user,</span><br><span class="line">  post,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们导入了 <code>user.js</code> 和 <code>post.js</code>，并使用对象简介写法传给 <code>combineReducers</code> 函数并导出，通过 <code>combineReducers</code> 将逻辑进行组合并导出为 <code>rootReducer</code> 作为参数在我们的 <code>src/store/index.js</code> 的 <code>createStore</code> 函数中使用。</p>
+<p>这里的 <code>combineReducers</code> 函数主要完成两件事：</p>
+<ul>
+<li>组合 user Reducer 和 post Reducer 中的状态，并将其合并成一颗形如 <code>{ user, post }</code> 的状态树，其中 <code>user</code> 属性保存这 user Reducer 的状态，<code>post</code> 属性保存着 post Reducer 的状态。</li>
+<li>分发 Action，当组件中 <code>dispatch</code>  一个 Action， <code>combineReducers</code> 会遍历 user Reducer 和 post Reducer，当匹配到任一 Reducer 的 <code>switch</code> 语句时，就会响应这个 Action。</li>
+</ul>
+<div class="note info">
+            <p><strong>提示</strong></p><p>我们将马上在之后讲解如何在组件中 <code>dispatch</code> Action。</p>
+          </div>
+
+<h3 id="整合-Redux-和-React"><a href="#整合-Redux-和-React" class="headerlink" title="整合 Redux 和 React"></a>整合 Redux 和 React</h3><p>当我们编写了 reducers 创建了 store 之后，下一步要考虑的就是如何将 Redux 整合进 React，我们打开 <code>src/app.js</code>，对其中的内容作出如下修改：</p>
+<figure class="highlight jsx"><figcaption><span>src/app.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2FwcC5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/app.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> Index <span class="keyword">from</span> <span class="string">'./pages/index'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">import</span> configStore <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Index <span class="keyword">from</span> <span class="string">'./pages/index'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./app.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果需要在 h5 环境中开启 React Devtools</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">//   require('nerv-devtools')</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">const</span> store = configStore()</span><br><span class="line">[tuture-add] </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  config = &#123;</span><br><span class="line">    pages: [<span class="string">'pages/index/index'</span>, <span class="string">'pages/mine/mine'</span>, <span class="string">'pages/post/post'</span>],</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 在 App 类中的 render() 函数没有实际作用</span></span><br><span class="line">  <span class="comment">// 请勿修改此函数</span></span><br><span class="line">  render() &#123;</span><br><span class="line">[tuture-del]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Index</span> /&gt;</span></span></span><br><span class="line">[tuture-add]    <span class="keyword">return</span> (</span><br><span class="line">[tuture-add]      &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">[tuture-add]        &lt;Index /&gt;</span><br><span class="line">[tuture-add]      &lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的内容主要修改了三部分：</p>
+<ul>
+<li>我们导入了 <code>configureStore</code>，并调用它获取 <code>store</code>。</li>
+<li>接着我们从 Redux 对应的 Taro 绑定库 <code>@tarojs/redux</code> 中导出 <code>Provider</code>，它架设起 Redux 和 React 交流的桥梁。</li>
+<li>最后我们用 <code>Provider</code> 包裹我们之前的根组件，并将 <code>store</code> 作为其属性传入，这样后续的组件就可以通过获取到 <code>store</code> 里面保存的状态。</li>
+</ul>
+<h3 id="Hooks-版的-Action-初尝鲜"><a href="#Hooks-版的-Action-初尝鲜" class="headerlink" title="Hooks 版的 Action 初尝鲜"></a>Hooks 版的 Action 初尝鲜</h3><p>准备好了 Store 和 Reducer，又整合了 Redux 和 React，是时候来体验一下 Redux 状态管理容器的先进性了，不过为了使用 Hooks 版本的 Action，这里我们先来讲一讲会用到的 Hooks。</p>
+<h4 id="useDispatch-Hooks"><a href="#useDispatch-Hooks" class="headerlink" title="useDispatch Hooks"></a>useDispatch Hooks</h4><p>这个 Hooks 返回 Redux store 的 <code>dispatch</code> 引用。你可以使用它来 dispatch actions。</p>
+<p>讲完  useDispatch Hooks，我们马上来实践一波，首先搞定我们 ”普通登录“ 的 Redux 化问题，让我们打开 <code>src/components/LoginButton/index.js</code>，对其中内容作出相应的修改如下：</p>
+<figure class="highlight js"><figcaption><span>src/components/LoginButton/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvTG9naW5CdXR0b24vaW5kZXguanM=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/LoginButton/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtButton &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">[tuture-del]    &lt;AtButton type=<span class="string">"primary"</span> onClick=&#123;props.handleClick&#125;&gt;</span><br><span class="line">[tuture-add]    &lt;AtButton</span><br><span class="line">[tuture-add]      type=<span class="string">"primary"</span></span><br><span class="line">[tuture-add]      onClick=&#123;() =&gt;</span><br><span class="line">[tuture-add]        dispatch(&#123; <span class="attr">type</span>: SET_IS_OPENED, <span class="attr">payload</span>: &#123; <span class="attr">isOpened</span>: <span class="literal">true</span> &#125; &#125;)</span><br><span class="line">[tuture-add]      &#125;</span><br><span class="line">[tuture-add]    &gt;</span><br><span class="line">      普通登录</span><br><span class="line">    &lt;<span class="regexp">/AtButton&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的内容主要有四块改动：</p>
+<ul>
+<li>首先我们从 <code>@tarojs/redux</code> 中导出 <code>useDispatch</code> API。</li>
+<li>接着我们从之前定义的常量文件中导出 <code>SET_IS_OPENED</code> 常量。</li>
+<li>然后，我们在 <code>LoginButton</code> 函数式组件中调用 <code>useDispatch</code> Hooks 来返回我们的 <code>dispatch</code> 函数，我们可以用它来 dispatch action 来修改 Redux store 的状态</li>
+<li>最后我们将 <code>AtButton</code> 的 <code>onClick</code> 接收的回调函数进行替换，当按钮点击时，我们发起一个 <code>type</code> 为 <code>SET_IS_OPENED</code> 的 action，并传递了一个 <code>payload</code> 参数，用于将 Redux store 里面对应的 <code>user</code> 属性中的 <code>isOpened</code> 修改为 <code>true</code>。</li>
+</ul>
+<p>搞定完 ”普通登录“，我们接着来收拾一下 ”微信登录“ 的逻辑，打开 <code>src/components/WeappLoginButton/index.js</code> 文件，对文件的内容作出如下修改：</p>
+<figure class="highlight js"><figcaption><span>src/components/WeappLoginButton/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvV2VhcHBMb2dpbkJ1dHRvbi9pbmRleC5qcw==" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/WeappLoginButton/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Button &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line">[tuture-del]<span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]<span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">WeappLoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [isLogin, setIsLogin] = useState(<span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">onGetUserInfo</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    setIsLogin(<span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> &#123; avatarUrl, nickName &#125; = e.detail.userInfo</span><br><span class="line">[tuture-del]    <span class="keyword">await</span> props.setLoginInfo(avatarUrl, nickName)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="keyword">await</span> Taro.setStorage(&#123;</span><br><span class="line">[tuture-add]      key: <span class="string">'userInfo'</span>,</span><br><span class="line">[tuture-add]      data: &#123; <span class="attr">avatar</span>: avatarUrl, nickName &#125;,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    dispatch(&#123;</span><br><span class="line">[tuture-add]      type: SET_LOGIN_INFO,</span><br><span class="line">[tuture-add]      payload: &#123;</span><br><span class="line">[tuture-add]        avatar: avatarUrl,</span><br><span class="line">[tuture-add]        nickName,</span><br><span class="line">[tuture-add]      &#125;,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line"></span><br><span class="line">    setIsLogin(<span class="literal">false</span>)</span><br><span class="line">  &#125;</span><br><span class="line"> <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的改动和之前在 ”普通登录“ 里面的改动类似：</p>
+<ul>
+<li>我们导出了 <code>useDispatch</code> 钩子</li>
+<li>导出了 <code>SET_LOGIN_INFO</code> 常量</li>
+<li>然后我们将之前调用父组件传下的 <code>setLoginInfo</code>  方法改成了 dispatch <code>type</code> 为 <code>SET_LOGIN_INFO</code> 的 action，因为我们的 <code>avatar</code> 和 <code>nickName</code> 状态已经在 <code>store</code> 中的 <code>user</code> 属性中定义了，所以我们修改也是需要通过 dispatch action 来修改，最后我们将之前定义在父组件中的 <code>Taro.setStorage</code> 设置缓存的方法移动到了子组件中，以保证相关信息的改动具有一致性。</li>
+</ul>
+<p>最后我们来搞定 ”支付宝登录“ 的 Redux 逻辑，打开 <code>src/components/AlipayLoginButton/index.js</code> 对文件内容作出对应的修改如下：</p>
+<figure class="highlight js"><figcaption><span>src/components/AlipayLoginButton/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvQWxpcGF5TG9naW5CdXR0b24vaW5kZXguanM=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/AlipayLoginButton/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Button &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line">[tuture-del]<span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]<span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">AlipayLoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [isLogin, setIsLogin] = useState(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">onGetAuthorize</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">    setIsLogin(<span class="literal">true</span>)</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">      userInfo = <span class="built_in">JSON</span>.parse(userInfo.response).response</span><br><span class="line">      <span class="keyword">const</span> &#123; avatar, nickName &#125; = userInfo</span><br><span class="line"></span><br><span class="line">[tuture-del]      <span class="keyword">await</span> props.setLoginInfo(avatar, nickName)</span><br><span class="line">[tuture-add]      <span class="keyword">await</span> Taro.setStorage(&#123;</span><br><span class="line">[tuture-add]        key: <span class="string">'userInfo'</span>,</span><br><span class="line">[tuture-add]        data: &#123; avatar, nickName &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]      dispatch(&#123;</span><br><span class="line">[tuture-add]        type: SET_LOGIN_INFO,</span><br><span class="line">[tuture-add]        payload: &#123;</span><br><span class="line">[tuture-add]          avatar,</span><br><span class="line">[tuture-add]          nickName,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'onGetAuthorize ERR: '</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的改动和之前在 ”微信登录“ 里面的改动几乎一样，所以这里我们就不在重复讲解啦 :)</p>
+<h3 id="useSelector-Hooks-来捧场"><a href="#useSelector-Hooks-来捧场" class="headerlink" title="useSelector Hooks 来捧场"></a>useSelector Hooks 来捧场</h3><p>一路跟下来的同学可能有点明白我们正在使用 Redux 我们之前的代码，而我们重构的思路也是先从 <code>src/pages/mine/mine.jsx</code> 中的 <code>src/components/Header/index.jsx</code> 开始，搞定完 <code>Header.jsx</code> 里面的所有登录按钮之后，接下来应该就轮到 <code>Header.jsx</code> 内的最后一个组件 <code>src/components/LoggedMine/index.jsx</code>  了。</p>
+<p>因为在 <code>LoggedMine</code> 组件中我们要用到 useSelector Hooks，所以这里我们先来讲一下这个 Hooks。</p>
+<h4 id="useSelector-Hooks"><a href="#useSelector-Hooks" class="headerlink" title="useSelector Hooks"></a>useSelector Hooks</h4><p><code>useSelector</code> 允许你使用 selector 函数从一个 Redux Store 中获取数据。</p>
+<p>Selector 函数大致相当于 <code>connect</code> 函数的 <code>mapStateToProps</code> 参数。Selector 会在组件每次渲染时调用。<code>useSelector</code> 同样会订阅 Redux store，在 Redux action 被 dispatch 时调用。</p>
+<p>但 <code>useSelector</code> 还是和 <code>mapStateToProps</code> 有一些不同：</p>
+<ul>
+<li>不像 <code>mapStateToProps</code> 只返回对象一样，Selector 可能会返回任何值。</li>
+<li>当一个 action dispatch 时，<code>useSelector</code> 会把 selector 的前后返回值做一次浅对比，如果不同，组件会强制更新。</li>
+<li>Selector 函数不接受 <code>ownProps</code> 参数。但 selector 可以通过闭包访问函数式组件传递下来的 props。</li>
+</ul>
+<p>好的，了解了 <code>useSelector</code> 的概念之后，我们马上来实操一下，打开 <code>src/components/LoggedMine/index.jsx</code> 文件，对其中的内容作出如下的修改：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/LoggedMine/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvTG9nZ2VkTWluZS9pbmRleC5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/LoggedMine/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View, Image &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> PropTypes <span class="keyword">from</span> <span class="string">'prop-types'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useSelector &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; AtAvatar &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> avatar <span class="keyword">from</span> <span class="string">'../../images/avatar.png'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoggedMine</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> &#123; userInfo = &#123;&#125; &#125; = props</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> nickName = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.nickName)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> avatar = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.avatar)</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">onImageClick</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    Taro.previewImage(&#123;</span><br><span class="line">[tuture-del]      urls: [userInfo.avatar],</span><br><span class="line">[tuture-add]      urls: [avatar],</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"logged-mine"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;Image</span><br><span class="line">[tuture-del]        src=&#123;userInfo.avatar ? userInfo.avatar : avatar&#125;</span><br><span class="line">[tuture-del]        className=<span class="string">"mine-avatar"</span></span><br><span class="line">[tuture-del]        onClick=&#123;onImageClick&#125;</span><br><span class="line">[tuture-del]      /&gt;</span><br><span class="line">[tuture-del]      &lt;View className=<span class="string">"mine-nickName"</span>&gt;</span><br><span class="line">[tuture-del]        &#123;userInfo.nickName ? userInfo.nickName : <span class="string">'图雀酱'</span>&#125;</span><br><span class="line">[tuture-del]      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-del]      &lt;View className="mine-username"&gt;&#123;userInfo.username&#125;&lt;/</span>View&gt;</span><br><span class="line">[tuture-add]      &#123;avatar ? (</span><br><span class="line">[tuture-add]        &lt;Image src=&#123;avatar&#125; className=<span class="string">"mine-avatar"</span> onClick=&#123;onImageClick&#125; /&gt;</span><br><span class="line">[tuture-add]      ) : (</span><br><span class="line">[tuture-add]        &lt;AtAvatar size=<span class="string">"large"</span> circle text=<span class="string">"雀"</span> /&gt;</span><br><span class="line">[tuture-add]      )&#125;</span><br><span class="line">[tuture-add]      &lt;View className=<span class="string">"mine-nickName"</span>&gt;&#123;nickName&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>View&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]LoggedMine.propTypes = &#123;</span><br><span class="line">[tuture-del]  avatar: PropTypes.string,</span><br><span class="line">[tuture-del]  nickName: PropTypes.string,</span><br><span class="line">[tuture-del]  username: PropTypes.string,</span><br><span class="line">[tuture-del]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们上面的代码主要有四处改动：</p>
+<ul>
+<li>首先我们从 <code>@tarojs/redux</code> 中导出了  <code>useSelector</code> Hooks。</li>
+<li>接着我们使用了两次 <code>useSelector</code> 分别从 Redux Store 里面获取了 <code>nickName</code> 和 <code>avatar</code>，它们位于 <code>state.user</code> 属性下。</li>
+<li>接着我们将之前从 <code>props</code> 里面获取到的 <code>nickName</code> 和 <code>avatar</code> 替换成我们从 Redux store 里面获取到状态，这里我们为了用户体验，从 <code>taro-ui</code> 中导出了一个 <code>AtAvatar</code> 组件用于展示在没有 <code>avatar</code> 时的默认头像。</li>
+<li>最后，在点击头像进行预览的 <code>onImageClick</code> 方法里面，我们使用从 Redux store 里面获取到的 <code>avatar</code>。</li>
+</ul>
+<p>是时候收割最后一波 ”韭菜“ 了，让我们彻底完成 <code>Header/index.js</code> 的 Redux 化，打开 <code>src/components/Header/index.js</code> ，对其中的内容做出相应的修改如下：</p>
+<figure class="highlight js"><figcaption><span>src/components/Header/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvSGVhZGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/Header/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtMessage &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useSelector &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LoggedMine <span class="keyword">from</span> <span class="string">'../LoggedMine'</span></span><br><span class="line"><span class="keyword">import</span> LoginButton <span class="keyword">from</span> <span class="string">'../LoginButton'</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Header</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> nickName = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.nickName)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="comment">// 双取反来构造字符串对应的布尔值，用于标志此时是否用户已经登录</span></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isLogged = !!nickName</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">const</span> isWeapp = Taro.getEnv() === Taro.ENV_TYPE.WEAPP</span><br><span class="line">  <span class="keyword">const</span> isAlipay = Taro.getEnv() === Taro.ENV_TYPE.ALIPAY</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"user-box"</span>&gt;</span><br><span class="line">      &lt;AtMessage /&gt;</span><br><span class="line">[tuture-del]      &lt;LoggedMine userInfo=&#123;props.userInfo&#125; /&gt;</span><br><span class="line">[tuture-del]      &#123;!props.isLogged &amp;&amp; (</span><br><span class="line">[tuture-add]      &lt;LoggedMine /&gt;</span><br><span class="line">[tuture-add]      &#123;!isLogged &amp;&amp; (</span><br><span class="line">        &lt;View className=<span class="string">"login-button-box"</span>&gt;</span><br><span class="line">[tuture-del]          &lt;LoginButton handleClick=&#123;props.handleClick&#125; /&gt;</span><br><span class="line">[tuture-del]          &#123;isWeapp &amp;&amp; <span class="xml"><span class="tag">&lt;<span class="name">WeappLoginButton</span> <span class="attr">setLoginInfo</span>=<span class="string">&#123;props.setLoginInfo&#125;</span> /&gt;</span></span>&#125;</span><br><span class="line">[tuture-del]          &#123;isAlipay &amp;&amp; <span class="xml"><span class="tag">&lt;<span class="name">AlipayLoginButton</span> <span class="attr">setLoginInfo</span>=<span class="string">&#123;props.setLoginInfo&#125;</span> /&gt;</span></span>&#125;</span><br><span class="line">[tuture-add]          &lt;LoginButton /&gt;</span><br><span class="line">[tuture-add]          &#123;isWeapp &amp;&amp; <span class="xml"><span class="tag">&lt;<span class="name">WeappLoginButton</span> /&gt;</span></span>&#125;</span><br><span class="line">[tuture-add]          &#123;isAlipay &amp;&amp; <span class="xml"><span class="tag">&lt;<span class="name">AlipayLoginButton</span> /&gt;</span></span>&#125;</span><br><span class="line">        &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      )&#125;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>View&gt;</span><br><span class="line">  <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的代码主要有五处主要的变动：</p>
+<ul>
+<li>首先我们导出了 <code>useSelector</code> Hooks。</li>
+<li>接着我们使用 <code>useSelector</code> 中取到我们需要的 <code>nickName</code> 属性，用于进行双取反转换成布尔值 <code>isLogged</code>，表示是否登录。</li>
+<li>接着我们将之前从父组件获取的 <code>props.isLogged</code> 属性替换成新的从 <code>isLogged</code> 值</li>
+<li>接着，我们去掉 ”普通登录” 按钮上不再需要的 <code>handleClick</code> 属性和 “微信登录”、“支付宝登录” 上面不再需要的 <code>setLoginInfo</code> 属性。</li>
+<li>最后，我们去掉 <code>LoggedMine</code> 组件上不再需要的 <code>userInfo</code> 属性，因为我们已经在组件内部从使用 <code>useSelector</code> Hooks 从组件内部获取了。</li>
+</ul>
+<h3 id="搞定-Footer-的-Redux-化"><a href="#搞定-Footer-的-Redux-化" class="headerlink" title="搞定 Footer 的 Redux 化"></a>搞定 Footer 的 Redux 化</h3><p>本来这个小标题我是不想起的，但是因为，是吧，大家上面在没有小标题的情况下看了这么久，可能已经废（累）了，所以我就贴心的加上一个小标题，帮助你定位接下来讲解的重心。</p>
+<p>是的接下来，我们要重构 “我的” tab 页面中的下半部分组件 <code>src/components/Footer/index.js</code> 我们遵循自顶向下的方式来重构，首先是 <code>src/components/Logout/index.js</code> 文件，我们打开这个文件，对其中内容作出如下修改：</p>
+<figure class="highlight js"><figcaption><span>src/components/Logout/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvTG9nb3V0L2luZGV4Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/Logout/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtButton &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoginButton</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [isLogout, setIsLogout] = useState(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleLogout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-add]    setIsLogout(<span class="literal">true</span>)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="keyword">try</span> &#123;</span><br><span class="line">[tuture-add]      <span class="keyword">await</span> Taro.removeStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span> &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]      dispatch(&#123;</span><br><span class="line">[tuture-add]        type: SET_LOGIN_INFO,</span><br><span class="line">[tuture-add]        payload: &#123;</span><br><span class="line">[tuture-add]          avatar: <span class="string">''</span>,</span><br><span class="line">[tuture-add]          nickName: <span class="string">''</span>,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">[tuture-add]      <span class="built_in">console</span>.log(<span class="string">'removeStorage ERR: '</span>, err)</span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    setIsLogout(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">[tuture-del]    &lt;AtButton</span><br><span class="line">[tuture-del]      type=<span class="string">"secondary"</span></span><br><span class="line">[tuture-del]      full</span><br><span class="line">[tuture-del]      loading=&#123;props.loading&#125;</span><br><span class="line">[tuture-del]      onClick=&#123;props.handleLogout&#125;</span><br><span class="line">[tuture-del]    &gt;</span><br><span class="line">[tuture-add]    &lt;AtButton type=<span class="string">"secondary"</span> full loading=&#123;isLogout&#125; onClick=&#123;handleLogout&#125;&gt;</span><br><span class="line">      退出登录</span><br><span class="line">    &lt;<span class="regexp">/AtButton&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>这一步可能是最能体现引入 Redux 进行状态管理带来好处的一步了 – 我们将之前至上而下的 React 状态管理逻辑压平，使得底层组件可以在自身中就解决响应的状态和逻辑问题。</p>
+<p>可以看到，我们上面的文件中主要有五处改动：</p>
+<ul>
+<li>首先我们从 <code>@tarojs/taro</code> 里面导出 <code>useState</code> Hooks。</li>
+<li>接着我们将之前在 <code>src/pages/mine/mine.js</code> 中定义的 <code>isLogout</code> 状态移动到组件 <code>Logout</code> 组件内部来，因为它只和此组件有关系。</li>
+<li>接着我们用 <code>isLogout</code> 替换在 <code>AtButton</code> 里面用到的 <code>props.loading</code> 属性。</li>
+<li>然后，我们考虑将之前按钮点击调用 <code>props.handleLogout</code> Redux 化，我们将这个点击之后的回调函数 <code>handleLogout</code> 在组件内部定义。</li>
+<li>最后，我们从 <code>@tarojs/redux</code> 中导入 <code>useDispatch</code> Hooks，并在组件中调用成我们需要的 <code>dispatch</code> 函数，接着我们在 <code>handleLogout</code> 函数中去 dispatch 一个 <code>SET_LOGIN_INFO</code> action 来重置 Store 中的 <code>nickName</code> 和 <code>avatar</code> 属性。</li>
+</ul>
+<div class="note info">
+            <p><strong>提示</strong></p><p>这里我们在组件内定义的 <code>handleLogout</code> 函数和我们之前在 <code>src/pages/mine/mine.js</code> 中定义的类似，只是使用  dispatch action 的方式替换了重置 <code>nickName</code> 和 <code>avatar</code> 的部分。</p>
+          </div>
+
+<p>搞定完 <code>Logout</code> 组件，接着就是 <code>LoginForm</code> 组件的重构了，让我们快马加鞭，让它也接受 Redux 光环的洗礼吧！</p>
+<p>打开 <code>src/components/LoginForm/index.jsx</code> ，对其中的内容作出相应的修改如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/LoginForm/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvTG9naW5Gb3JtL2luZGV4LmpzeA==" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/LoginForm/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View, Form &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtButton, AtImagePicker &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_LOGIN_INFO, SET_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">LoginForm</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="comment">// Login Form 登录数据</span></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [formNickName, setFormNickName] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [files, setFiles] = useState([])</span><br><span class="line">  <span class="keyword">const</span> [showAddBtn, setShowAddBtn] = useState(<span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">onChange</span>(<span class="params">files</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (files.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      setShowAddBtn(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">[tuture-add]      setShowAddBtn(<span class="literal">true</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">[tuture-del]    props.handleFilesSelect(files)</span><br><span class="line">[tuture-add]    setFiles(files)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">onImageClick</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">[tuture-add]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">[tuture-add]    e.preventDefault()</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 鉴权数据</span></span><br><span class="line">[tuture-add]    <span class="keyword">if</span> (!formNickName || !files.length) &#123;</span><br><span class="line">[tuture-add]      Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]        type: <span class="string">'error'</span>,</span><br><span class="line">[tuture-add]        message: <span class="string">'您还有内容没有填写！'</span>,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]      <span class="keyword">return</span></span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    setShowAddBtn(<span class="literal">true</span>)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 提示登录成功</span></span><br><span class="line">[tuture-add]    Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]      type: <span class="string">'success'</span>,</span><br><span class="line">[tuture-add]      message: <span class="string">'恭喜您，登录成功！'</span>,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 缓存在 storage 里面</span></span><br><span class="line">[tuture-add]    <span class="keyword">const</span> userInfo = &#123; <span class="attr">avatar</span>: files[<span class="number">0</span>].url, <span class="attr">nickName</span>: formNickName &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 清空表单状态</span></span><br><span class="line">[tuture-add]    setFiles([])</span><br><span class="line">[tuture-add]    setFormNickName(<span class="string">''</span>)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 缓存在 storage 里面</span></span><br><span class="line">[tuture-add]    <span class="keyword">await</span> Taro.setStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span>, <span class="attr">data</span>: userInfo &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    dispatch(&#123; <span class="attr">type</span>: SET_LOGIN_INFO, <span class="attr">payload</span>: userInfo &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="comment">// 关闭弹出层</span></span><br><span class="line">[tuture-add]    dispatch(&#123; <span class="attr">type</span>: SET_IS_OPENED, <span class="attr">payload</span>: &#123; <span class="attr">isOpened</span>: <span class="literal">false</span> &#125; &#125;)</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"post-form"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;Form onSubmit=&#123;props.handleSubmit&#125;&gt;</span><br><span class="line">[tuture-add]      &lt;Form onSubmit=&#123;handleSubmit&#125;&gt;</span><br><span class="line">        &lt;View className=<span class="string">"login-box"</span>&gt;</span><br><span class="line">          &lt;View className=<span class="string">"avatar-selector"</span>&gt;</span><br><span class="line">            &lt;AtImagePicker</span><br><span class="line">              length=&#123;<span class="number">1</span>&#125;</span><br><span class="line">              mode=<span class="string">"scaleToFill"</span></span><br><span class="line">              count=&#123;<span class="number">1</span>&#125;</span><br><span class="line">[tuture-del]              files=&#123;props.files&#125;</span><br><span class="line">[tuture-add]              files=&#123;files&#125;</span><br><span class="line">              showAddBtn=&#123;showAddBtn&#125;</span><br><span class="line">              onImageClick=&#123;onImageClick&#125;</span><br><span class="line">              onChange=&#123;onChange&#125;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">            className=<span class="string">"input-nickName"</span></span><br><span class="line">            type=<span class="string">"text"</span></span><br><span class="line">            placeholder=<span class="string">"点击输入昵称"</span></span><br><span class="line">[tuture-del]            value=&#123;props.formNickName&#125;</span><br><span class="line">[tuture-del]            onInput=&#123;props.handleNickNameInput&#125;</span><br><span class="line">[tuture-add]            value=&#123;formNickName&#125;</span><br><span class="line">[tuture-add]            onInput=&#123;e =&gt; setFormNickName(e.target.value)&#125;</span><br><span class="line">          /&gt;</span><br><span class="line">          &lt;AtButton formType=<span class="string">"submit"</span> type=<span class="string">"primary"</span>&gt;</span><br><span class="line">            登录</span><br><span class="line">          <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>这一步和上一步类似，可能也是最能体现引入 Redux 进行状态管理带来好处的一步了，我们同样将之前在顶层组件中提供的状态压平到了底层组件内部。</p>
+<p>可以看到，我们上面的文件中主要有四处改动：</p>
+<ul>
+<li>首先我们将 <code>formNickName</code> 和 <code>files</code> 等状态放置到 <code>LoginForm</code> 组件内部，并使用 <code>useState</code> Hooks 管理起来，因为它们只和此组件有关系。</li>
+<li>接着，我们将 <code>AtImagePicker</code> 里面的 <code>props.files</code> 替换成 <code>files</code>，将它的 <code>onChange</code> 回调函数内部的设置改变状态的 <code>props.handleFilesSelect(files)</code> 替换成 <code>setFiles(files)</code>。可以看到这里我们还对 <code>files.length = 0</code> 的形式做了一个判断，当没有选择图片时，要把我们选择图片的按钮显示出来。</li>
+<li>接着，我们将 <code>Input</code> 组件的 <code>props.formNickName</code> 替换成 <code>formNickName</code>，将之前 <code>onInput</code> 接收的回调函数换成了 <code>setFormNickName</code> 的形式来设置 <code>formNickName</code> 的变化。</li>
+<li>接着，我们将之前提交表单需要调用的父组件方法 <code>props.handleSubmit</code> 移动到组件内部来定义，可以看到，这个 <code>hanldeSubmit</code> 组合了之前在 <code>src/components/Footer/index.jsx</code> 和 <code>src/pages/mine/mine.js</code> 组件里的 <code>handleSubmit</code> 逻辑：</li>
+<li>接着进行数据验证，不合要求的数据就会被驳回并显示错误（其实这里应该显示警告 <code>warning</code>，当时写代码时石乐志😅）。</li>
+<li>接着因为 <code>LoginForm</code> 表单数据要被清除，所以我们将选中图片的按钮又设置为可显示状态。</li>
+<li>接着提示登录成功。</li>
+<li>清空表单状态。</li>
+<li>将登录数据缓存在 <code>storage</code> 里面，在 Taro 里面使用 <code>Taro.setStorage({ key, data })</code> 的形式来缓存，其中 <code>key</code> 是字符串，<code>data</code> 是字符串或者对象。</li>
+<li>最后我们导出了 <code>useDispatch</code> Hooks，使用 <code>useDispatch</code> Hooks 生成的 <code>dispatch</code> 函数的引用来发起更新 Redux store 的 action 来更新本地数据，<code>type</code> 为 <code>SET_LOGIN_INFO</code> 的 action 用来更新用户登录信息，<code>type</code> 为 <code>SET_IS_OPENED</code> 的 action 用来更新 <code>isOpened</code> 属性，它将关闭展示登录框的弹出层 <code>FloatLayout</code> 组件。</li>
+</ul>
+<p>讲到这里，我们的 <code>Footer</code> 部分的重构大业还剩下临门一脚了。让我们打开 <code>src/components/Footer/index.js</code> 文件，立马来重构它：</p>
+<figure class="highlight js"><figcaption><span>src/components/Footer/index.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvRm9vdGVyL2luZGV4Lmpz" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/Footer/index.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtFloatLayout &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useSelector, useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Logout <span class="keyword">from</span> <span class="string">'../Logout'</span></span><br><span class="line"><span class="keyword">import</span> LoginForm <span class="keyword">from</span> <span class="string">'../LoginForm'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Footer</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-del]  <span class="comment">// Login Form 登录数据</span></span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [formNickName, setFormNickName] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [files, setFiles] = useState([])</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> nickName = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.nickName)</span><br><span class="line"></span><br><span class="line">[tuture-del]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">[tuture-del]    e.preventDefault()</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line"></span><br><span class="line">[tuture-del]    <span class="comment">// 鉴权数据</span></span><br><span class="line">[tuture-del]    <span class="keyword">if</span> (!formNickName || !files.length) &#123;</span><br><span class="line">[tuture-del]      Taro.atMessage(&#123;</span><br><span class="line">[tuture-del]        type: <span class="string">'error'</span>,</span><br><span class="line">[tuture-del]        message: <span class="string">'您还有内容没有填写！'</span>,</span><br><span class="line">[tuture-del]      &#125;)</span><br><span class="line">[tuture-add]  <span class="comment">// 双取反来构造字符串对应的布尔值，用于标志此时是否用户已经登录</span></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isLogged = !!nickName</span><br><span class="line"></span><br><span class="line">[tuture-del]      <span class="keyword">return</span></span><br><span class="line">[tuture-del]    &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="comment">// 提示登录成功</span></span><br><span class="line">[tuture-del]    Taro.atMessage(&#123;</span><br><span class="line">[tuture-del]      type: <span class="string">'success'</span>,</span><br><span class="line">[tuture-del]      message: <span class="string">'恭喜您，登录成功！'</span>,</span><br><span class="line">[tuture-del]    &#125;)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="comment">// 缓存在 storage 里面</span></span><br><span class="line">[tuture-del]    <span class="keyword">const</span> userInfo = &#123; <span class="attr">avatar</span>: files[<span class="number">0</span>].url, <span class="attr">nickName</span>: formNickName &#125;</span><br><span class="line">[tuture-del]    <span class="keyword">await</span> props.handleSubmit(userInfo)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="comment">// 清空表单状态</span></span><br><span class="line">[tuture-del]    setFiles([])</span><br><span class="line">[tuture-del]    setFormNickName(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-add]  <span class="comment">// 使用 useSelector Hooks 获取 Redux Store 数据</span></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isOpened = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.isOpened)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"mine-footer"</span>&gt;</span><br><span class="line">[tuture-del]      &#123;props.isLogged &amp;&amp; (</span><br><span class="line">[tuture-del]        &lt;Logout loading=&#123;props.isLogout&#125; handleLogout=&#123;props.handleLogout&#125; /&gt;</span><br><span class="line">[tuture-del]      )&#125;</span><br><span class="line">[tuture-add]      &#123;isLogged &amp;&amp; <span class="xml"><span class="tag">&lt;<span class="name">Logout</span> /&gt;</span></span>&#125;</span><br><span class="line">      &lt;View className=<span class="string">"tuture-motto"</span>&gt;</span><br><span class="line">[tuture-del]        &#123;props.isLogged ? <span class="string">'From 图雀社区 with Love ❤'</span> : <span class="string">'您还未登录'</span>&#125;</span><br><span class="line">[tuture-add]        &#123;isLogged ? <span class="string">'From 图雀社区 with Love ❤'</span> : <span class="string">'您还未登录'</span>&#125;</span><br><span class="line">      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">      &lt;AtFloatLayout</span></span><br><span class="line"><span class="regexp">[tuture-del]        isOpened=&#123;props.isOpened&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]        isOpened=&#123;isOpened&#125;</span></span><br><span class="line"><span class="regexp">        title="登录"</span></span><br><span class="line"><span class="regexp">[tuture-del]        onClose=&#123;() =&gt; props.handleSetIsOpened(false)&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]        onClose=&#123;() =&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]          dispatch(&#123; type: SET_IS_OPENED, payload: &#123; isOpened: false &#125; &#125;)</span></span><br><span class="line"><span class="regexp">[tuture-add]        &#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">[tuture-del]        &lt;LoginForm</span></span><br><span class="line"><span class="regexp">[tuture-del]          formNickName=&#123;formNickName&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]          files=&#123;files&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]          handleSubmit=&#123;e =&gt; handleSubmit(e)&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]          handleNickNameInput=&#123;e =&gt; setFormNickName(e.target.value)&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]          handleFilesSelect=&#123;files =&gt; setFiles(files)&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]        /</span>&gt;</span><br><span class="line">[tuture-add]        &lt;LoginForm /&gt;</span><br><span class="line">      &lt;<span class="regexp">/AtFloatLayout&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>View&gt;</span><br><span class="line">  )</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到上面的代码主要有五处改动：</p>
+<ul>
+<li>首先我们已经将 <code>nickName</code> 抽取到 Redux store 保存的状态中，所以之前从父组件获取的 <code>props.isLogged</code> 判断是否登录的信息，我们移动到组件内部来，使用 <code>useSelector</code> Hooks 从 Redux store 从获取 <code>nickName</code> 属性，进行双取反操作成布尔值来表示是否已经登录的 <code>isLogged</code> 属性，并使用它来替换之前的 <code>props.isLogged</code> 属性。</li>
+<li>接着，就是取代之前从父组件获取的 <code>props.isOpened</code> 属性，我们使用 <code>useSelector</code> Hooks 从 Redux store 中获取对应的 <code>isOpened</code> 属性，然后替换之前的 <code>props.isOpened</code>，用户控制登录框窗口的弹出层 <code>AtFloatLayout</code> 的打开和关闭。</li>
+<li>接着，我们将之前 <code>AtFloatLayout</code> 关闭时（<code>onClose</code>）的回调函数替换成 dispatch 一个 <code>type</code> 为 <code>SET_IS_OPENED</code> 的 action 来设置 <code>isOpened</code> 属性将 <code>AtFloatLayout</code> 关闭。</li>
+<li>接着，我们开始移除 <code>Logout</code> 和 <code>LoginForm</code> 组件上不再需要传递的属性，因为在对应的组件中我们已经声明了对应的属性了。</li>
+<li>最后，我们删掉之前定义在 <code>Footer</code> 组件内的 <code>formNickName</code> 和 <code>files</code> 等状态，以及不再需要的 <code>handleSubmit</code> 函数，因为它已经在 <code>LoginForm</code> 里面定义了。</li>
+</ul>
+<h3 id="完成-“我的”-页面重构"><a href="#完成-“我的”-页面重构" class="headerlink" title="完成 “我的” 页面重构"></a>完成 “我的” 页面重构</h3><p>熟悉套路的同学可能都知道起这个标题的含义了吧 😏。</p>
+<p>我们一路打怪重构到这里，相比眼尖的人已经摸清楚 Redux 的套路了，结合 Redux 来写 React 代码，就好比 “千里之堤，始于垒土” 一般，我们先把所有细小的分支组件搞定，进而一步一步向顶层组件进发，以完成所有组件的编写。</p>
+<p>而这个 <code>src/pages/mine/mine.jsx</code> 组件就是 “我的” 这一 tab 页面的顶层组件了，也是我们在 “我的” 页面需要重构的最后一个页面了，是的，我们马上就要达到第一阶段性胜利了✌️。现在就打开这个文件，对其中的内容作出如下的修改：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/mine/mine.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3BhZ2VzL21pbmUvbWluZS5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/pages/mine/mine.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">import</span> Taro, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Taro, &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; Header, Footer &#125; <span class="keyword">from</span> <span class="string">'../../components'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./mine.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Mine</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [nickName, setNickName] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [avatar, setAvatar] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [isOpened, setIsOpened] = useState(<span class="literal">false</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [isLogout, setIsLogout] = useState(<span class="literal">false</span>)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]  <span class="comment">// 双取反来构造字符串对应的布尔值，用于标志此时是否用户已经登录</span></span><br><span class="line">[tuture-del]  <span class="keyword">const</span> isLogged = !!nickName</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getStorage</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.getStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span> &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> &#123; nickName, avatar &#125; = data</span><br><span class="line">[tuture-del]        setAvatar(avatar)</span><br><span class="line">[tuture-del]        setNickName(nickName)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]        <span class="comment">// 更新 Redux Store 数据</span></span><br><span class="line">[tuture-add]        dispatch(&#123; <span class="attr">type</span>: SET_LOGIN_INFO, <span class="attr">payload</span>: &#123; nickName, avatar &#125; &#125;)</span><br><span class="line">      &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'getStorage ERR: '</span>, err)</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    getStorage()</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">[tuture-del]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">setLoginInfo</span>(<span class="params">avatar, nickName</span>) </span>&#123;</span><br><span class="line">[tuture-del]    setAvatar(avatar)</span><br><span class="line">[tuture-del]    setNickName(nickName)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="keyword">try</span> &#123;</span><br><span class="line">[tuture-del]      <span class="keyword">await</span> Taro.setStorage(&#123;</span><br><span class="line">[tuture-del]        key: <span class="string">'userInfo'</span>,</span><br><span class="line">[tuture-del]        data: &#123; avatar, nickName &#125;,</span><br><span class="line">[tuture-del]      &#125;)</span><br><span class="line">[tuture-del]    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">[tuture-del]      <span class="built_in">console</span>.log(<span class="string">'setStorage ERR: '</span>, err)</span><br><span class="line">[tuture-del]    &#125;</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleLogout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-del]    setIsLogout(<span class="literal">true</span>)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="keyword">try</span> &#123;</span><br><span class="line">[tuture-del]      <span class="keyword">await</span> Taro.removeStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span> &#125;)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]      setAvatar(<span class="string">''</span>)</span><br><span class="line">[tuture-del]      setNickName(<span class="string">''</span>)</span><br><span class="line">[tuture-del]    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">[tuture-del]      <span class="built_in">console</span>.log(<span class="string">'removeStorage ERR: '</span>, err)</span><br><span class="line">[tuture-del]    &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    setIsLogout(<span class="literal">false</span>)</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]  <span class="function"><span class="keyword">function</span> <span class="title">handleSetIsOpened</span>(<span class="params">isOpened</span>) </span>&#123;</span><br><span class="line">[tuture-del]    setIsOpened(isOpened)</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]  <span class="function"><span class="keyword">function</span> <span class="title">handleClick</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-del]    handleSetIsOpened(<span class="literal">true</span>)</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">userInfo</span>) </span>&#123;</span><br><span class="line">[tuture-del]    <span class="comment">// 缓存在 storage 里面</span></span><br><span class="line">[tuture-del]    <span class="keyword">await</span> Taro.setStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span>, <span class="attr">data</span>: userInfo &#125;)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="comment">// 设置本地信息</span></span><br><span class="line">[tuture-del]    setAvatar(userInfo.avatar)</span><br><span class="line">[tuture-del]    setNickName(userInfo.nickName)</span><br><span class="line">[tuture-del] </span><br><span class="line">[tuture-del]    <span class="comment">// 关闭弹出层</span></span><br><span class="line">[tuture-del]    setIsOpened(<span class="literal">false</span>)</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"mine"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;Header</span><br><span class="line">[tuture-del]        isLogged=&#123;isLogged&#125;</span><br><span class="line">[tuture-del]        userInfo=&#123;&#123; avatar, nickName &#125;&#125;</span><br><span class="line">[tuture-del]        handleClick=&#123;handleClick&#125;</span><br><span class="line">[tuture-del]        setLoginInfo=&#123;setLoginInfo&#125;</span><br><span class="line">[tuture-del]      /&gt;</span><br><span class="line">[tuture-del]      &lt;Footer</span><br><span class="line">[tuture-del]        isLogged=&#123;isLogged&#125;</span><br><span class="line">[tuture-del]        isOpened=&#123;isOpened&#125;</span><br><span class="line">[tuture-del]        isLogout=&#123;isLogout&#125;</span><br><span class="line">[tuture-del]        handleLogout=&#123;handleLogout&#125;</span><br><span class="line">[tuture-del]        handleSetIsOpened=&#123;handleSetIsOpened&#125;</span><br><span class="line">[tuture-del]        handleSubmit=&#123;handleSubmit&#125;</span><br><span class="line">[tuture-del]      /&gt;</span><br><span class="line">[tuture-add]      &lt;Header /&gt;</span><br><span class="line">[tuture-add]      &lt;Footer /&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"> /</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的代码做了一下五处改动：</p>
+<ul>
+<li>我们导入了 <code>useDispatch</code> Hooks 和 <code>SET_LOGIN_INFO</code> 常量，并把之前在 <code>getStorage</code> 方法里面设置 <code>nickName</code> 和 <code>avatar</code> 的操作替换成了 dispatch 一个 <code>type</code> 为 <code>SET_LOGIN_INFO</code> 的 action。</li>
+<li>接着我们删除不再需要的 <code>formNickName</code>、<code>files</code>、<code>isLogout</code>、<code>isOpened</code> 状态，以及 <code>setLoginInfo</code>、<code>handleLogout</code>、<code>handleSetIsOpened</code>、<code>handleClick</code> 、<code>handleSubmit</code> 方法。</li>
+<li>最后我们删除 <code>Header</code> 和 <code>Footer</code> 组件上不再不需要的属性。</li>
+</ul>
+<p>大功告成🥈！这里给你颁发一个银牌，以奖励你能一直坚持阅读并跟到这里，我们这一篇教程很长很长，能跟下来的都不容易，希望你能在心里或用实际行动给自己鼓鼓掌👏。</p>
+<p>小憩一下，恢复精力，整装待发！很多同学可能很好奇了，为什么还只能拿一个银牌呢？那是因为我们的重构进程才走了一半呀✌️，但是不要担心，我们所有新的东西都已经讲完了，接下来就只是一些收尾工作了，当你能坚持到终点的时候，会有惊喜等着你哦！加油吧骚年💪。</p>
+<h3 id="开始重构-“首页”-之旅"><a href="#开始重构-“首页”-之旅" class="headerlink" title="开始重构 “首页” 之旅"></a>开始重构 “首页” 之旅</h3><p>我们依然按照之前的套路，从最底层的组件开始重构，首先是我们的登录框弹出层 <code>LoginForm</code> 组件，让我们打开 <code>src/components/PostForm/index.jsx</code> 文件，对其中的内容作出相应的修改如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/PostForm/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvUG9zdEZvcm0vaW5kZXguanN4" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/PostForm/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> &#123; View, Form, Input, Textarea, Button &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; View, Form, Input, Textarea &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtButton &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useDispatch, useSelector &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_POSTS, SET_POST_FORM_IS_OPENED &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">PostForm</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [formTitle, setFormTitle] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> [formContent, setFormContent] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="keyword">const</span> nickName = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.nickName)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> avatar = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.avatar)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">[tuture-add]    e.preventDefault()</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    <span class="keyword">if</span> (!formTitle || !formContent) &#123;</span><br><span class="line">[tuture-add]      Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]        message: <span class="string">'您还有内容没有填写完哦'</span>,</span><br><span class="line">[tuture-add]        type: <span class="string">'warning'</span>,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]      <span class="keyword">return</span></span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    dispatch(&#123;</span><br><span class="line">[tuture-add]      type: SET_POSTS,</span><br><span class="line">[tuture-add]      payload: &#123;</span><br><span class="line">[tuture-add]        post: &#123;</span><br><span class="line">[tuture-add]          title: formTitle,</span><br><span class="line">[tuture-add]          content: formContent,</span><br><span class="line">[tuture-add]          user: &#123; nickName, avatar &#125;,</span><br><span class="line">[tuture-add]        &#125;,</span><br><span class="line">[tuture-add]      &#125;,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    setFormTitle(<span class="string">''</span>)</span><br><span class="line">[tuture-add]    setFormContent(<span class="string">''</span>)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    dispatch(&#123;</span><br><span class="line">[tuture-add]      type: SET_POST_FORM_IS_OPENED,</span><br><span class="line">[tuture-add]      payload: &#123; <span class="attr">isOpened</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]      message: <span class="string">'发表文章成功'</span>,</span><br><span class="line">[tuture-add]      type: <span class="string">'success'</span>,</span><br><span class="line">[tuture-add]    &#125;)</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"post-form"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;Form onSubmit=&#123;props.handleSubmit&#125;&gt;</span><br><span class="line">[tuture-add]      &lt;Form onSubmit=&#123;handleSubmit&#125;&gt;</span><br><span class="line">        &lt;View&gt;</span><br><span class="line">          &lt;View className=<span class="string">"form-hint"</span>&gt;标题&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">          &lt;Input</span></span><br><span class="line"><span class="regexp">            className="input-title"</span></span><br><span class="line"><span class="regexp">            type="text"</span></span><br><span class="line"><span class="regexp">            placeholder="点击输入标题"</span></span><br><span class="line"><span class="regexp">[tuture-del]            value=&#123;props.formTitle&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]            onInput=&#123;props.handleTitleInput&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]            value=&#123;formTitle&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]            onInput=&#123;e =&gt; setFormTitle(e.target.value)&#125;</span></span><br><span class="line"><span class="regexp">          /</span>&gt;</span><br><span class="line">          &lt;View className=<span class="string">"form-hint"</span>&gt;正文&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">          &lt;Textarea</span></span><br><span class="line"><span class="regexp">            placeholder="点击输入正文"</span></span><br><span class="line"><span class="regexp">            className="input-content"</span></span><br><span class="line"><span class="regexp">[tuture-del]            value=&#123;props.formContent&#125;</span></span><br><span class="line"><span class="regexp">[tuture-del]            onInput=&#123;props.handleContentInput&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]            value=&#123;formContent&#125;</span></span><br><span class="line"><span class="regexp">[tuture-add]            onInput=&#123;e =&gt; setFormContent(e.target.value)&#125;</span></span><br><span class="line"><span class="regexp">          /</span>&gt;</span><br><span class="line">          &lt;AtButton formType=<span class="string">"submit"</span> type=<span class="string">"primary"</span>&gt;</span><br><span class="line">            提交</span><br><span class="line">          <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>这个文件的形式和我们之前的 <code>src/components/LoginForm/index.jsx</code> 文件类似，可以看到，我们上面的文件中主要有四处改动：</p>
+<ul>
+<li>首先我们将 <code>formTitle</code> 和 <code>formContent</code> 等状态放置到 <code>PostForm</code> 组件内部，并使用 <code>useState</code> Hooks 管理起来，因为它们只和此组件有关系。</li>
+<li>接着，我们将 <code>Input</code> 里面的 <code>props.formTitle</code> 替换成 <code>formTitle</code>，将它的 <code>onInput</code> 回调函数内部的设置改变状态的 <code>props. handleTitleInput</code> 替换成 <code>setFormTitle(e.target.value)</code> 的回调函数。</li>
+<li>接着，我们将 <code>Textarea</code> 组件的 <code>props. formContent</code> 替换成 <code>formContent</code>，将之前 <code>onInput</code> 接收的回调函数换成了 <code>setFormContent</code> 的形式来设置 <code>formContent</code> 的变化。</li>
+<li>最后，我们将之前提交表单需要调用的父组件方法 <code>props.handleSubmit</code> 移动到组件内部来定义，可以看到，这个 <code>hanldeSubmit</code> 和我们之前定义在 <code>src/pages/index/index.js</code> 组件里的 <code>handleSubmit</code> 逻辑类似：</li>
+<li>接着进行数据验证，不合要求的数据就会被驳回并显示警告（这里我们又显示对了😅）。</li>
+<li>接着 dispatch 一个 <code>type</code> 为 <code>SET_POSTS</code> 的 action，将新发表的 post 添加到 Redux store 对应的 <code>posts</code> 数组中。我们注意到这里我们使用 <code>useSelector</code> Hooks 从 Redux store 里面获取了 <code>nickName</code> 和 <code>avatar</code> 属性，并把它们组合到 <code>post.user</code> 属性里，随着 action 的 payload 一起被 dispatch，我们用这个 <code>user</code> 属性标志发帖的用户属性。</li>
+<li>清空表单状态。</li>
+<li>接着我们 dispatch 一个 <code>type</code> 为 <code>SET_POST_FORM_IS_OPENED</code> 的 action 用来更新 <code>isOpened</code> 属性，它将关闭展示发表帖子的表单弹出层 <code>FloatLayout</code> 组件。</li>
+<li>最后提示发帖成功。</li>
+</ul>
+<p>接着是我们 “首页” 页面组件另外一个底层子组件 <code>PostCard</code>，它主要用于展示一个帖子，让我们 <code>src/components/PostCard/index.jsx</code> 文件，对其中的内容作出对应的修改如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/components/PostCard/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvUG9zdENhcmQvaW5kZXguanN4" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/PostCard/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> classNames <span class="keyword">from</span> <span class="string">'classnames'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; AtAvatar &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">PostCard</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">[tuture-add]  <span class="comment">// 注意：</span></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> &#123; title = <span class="string">''</span>, content = <span class="string">''</span>, user &#125; = props.post</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> &#123; avatar, nickName &#125; = user || &#123;&#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">const</span> handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 如果是列表，那么就响应点击事件，跳转到帖子详情</span></span><br><span class="line">    <span class="keyword">if</span> (props.isList) &#123;</span><br><span class="line">[tuture-del]      <span class="keyword">const</span> &#123; title, content &#125; = <span class="keyword">this</span>.props</span><br><span class="line">      Taro.navigateTo(&#123;</span><br><span class="line">[tuture-del]        url: <span class="string">`/pages/post/post?title=<span class="subst">$&#123;title&#125;</span>&amp;content=<span class="subst">$&#123;content&#125;</span>`</span>,</span><br><span class="line">[tuture-add]        url: <span class="string">`/pages/post/post?postId=<span class="subst">$&#123;props.postId&#125;</span>`</span>,</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">[tuture-add]  <span class="keyword">const</span> slicedContent =</span><br><span class="line">[tuture-add]    props.isList &amp;&amp; content.length &gt; <span class="number">66</span></span><br><span class="line">[tuture-add]      ? <span class="string">`<span class="subst">$&#123;content.slice(<span class="number">0</span>, <span class="number">66</span>)&#125;</span> ...`</span></span><br><span class="line">[tuture-add]      : content</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View</span><br><span class="line">[tuture-del]      className=&#123;classNames(<span class="string">'postcard'</span>, &#123; <span class="attr">postcard__isList</span>: props.isList &#125;)&#125;</span><br><span class="line">[tuture-add]      className=&#123;classNames(<span class="string">'at-article'</span>, &#123; <span class="attr">postcard__isList</span>: props.isList &#125;)&#125;</span><br><span class="line">      onClick=&#123;handleClick&#125;</span><br><span class="line">    &gt;</span><br><span class="line">[tuture-del]      &lt;View className=<span class="string">"post-title"</span>&gt;&#123;props.title&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-del]      &lt;View className="post-content"&gt;&#123;props.content&#125;&lt;/</span>View&gt;</span><br><span class="line">[tuture-add]      &lt;View className=<span class="string">"post-header"</span>&gt;</span><br><span class="line">[tuture-add]        &lt;View className=<span class="string">"at-article__h1"</span>&gt;&#123;title&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]        &lt;View className="profile-box"&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]          &lt;AtAvatar circle size="small" image=&#123;avatar&#125; /</span>&gt;</span><br><span class="line">[tuture-add]          &lt;View className=<span class="string">"at-article__info post-nickName"</span>&gt;&#123;nickName&#125;&lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]        &lt;/</span>View&gt;</span><br><span class="line">[tuture-add]      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]      &lt;View className="at-article__content"&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]        &lt;View className="at-article__section"&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]          &lt;View className="at-article__p"&gt;&#123;slicedContent&#125;&lt;/</span>View&gt;</span><br><span class="line">[tuture-add]        &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]      &lt;/</span>View&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">PostCard.defaultProps = &#123;</span></span><br><span class="line"><span class="regexp">  isList: '',</span></span><br><span class="line"><span class="regexp">[tuture-add]  post: [],</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个组件基本不保有自己的状态，它接收来自父组件的状态，我们对它的修改主要有下面五个部分：</p>
+<ul>
+<li>将之前的直接获取 <code>props.title</code> 和 <code>props.content</code> 放到了 <code>props.post</code> 属性中，我们从 <code>props.post</code> 属性中导出我们需要展示的 <code>title</code> 和 <code>content</code>，还要一个额外的 <code>user</code> 属性，它应该是一个对象，保存着发帖人的用户属性，我们使用解构的方法获取 <code>user.avatar</code> 和 <code>user.nickName</code> 的值。</li>
+<li>接着我们看到 <code>return</code> 的组件结构发生了很大的变化，这里我们为了方便，使用了 <code>taro-ui</code> 提供给我们的 <code>Article</code> 文章样式组件，用于展示类似微信公众号文章页的一些样式，可供用户快速呈现文章内容，可以详情可以查看 <span class="exturl" data-url="aHR0cHM6Ly90YXJvLXVpLmpkLmNvbS8jL2RvY3MvYXJ0aWNsZQ==" title="https://taro-ui.jd.com/#/docs/article">taro-ui 链接<i class="fa fa-external-link"></i></span>，有了 <code>taro-ui</code> 加持，我们就额外的展示了发表此文章的用户头像（<code>avatar</code>）和昵称（<code>nickName</code>）。</li>
+<li>我们还可以看到，这里我们对原 <code>content</code> 做了一点修改，当 <code>PostCard</code> 组件在文章列表中被引用的时候，我们对内容长度进行截断，当超过 66 字符时，我们就截断它，并加上省略号 <code>...</code>。</li>
+<li>最后，我们改动了 <code>handleClick</code> 方法，之前是在跳转路由的页面路径里直接带上查询参数 <code>title</code> 和 <code>content</code> ，当我们要传递的内容多了，这个路径就会显得很臃肿，所以这里我们传递此文章对应的 <code>id</code>，这样可以通过此 <code>id</code> 取到完整的 <code>post</code> 数据，使路径保持简洁，这也是最佳实践的推荐做法。</li>
+</ul>
+<p>接着我们补充一下在 <code>PostCard</code> 组件里面会用到的样式，打开 <code>src/components/PostCard/index.scss</code> 文件，补充和改进对应的样式如下：</p>
+<figure class="highlight scss"><figcaption><span>src/components/PostCard/index.scss</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL2NvbXBvbmVudHMvUG9zdENhcmQvaW5kZXguc2Nzcw==" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/components/PostCard/index.scss">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-attr">[tuture-add]</span><span class="keyword">@import</span> <span class="string">'~taro-ui/dist/style/components/article.scss'</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span> </span><br><span class="line"><span class="selector-class">.postcard</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">30px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.postcard__isList</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">padding-bottom</span>: <span class="number">20px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>&#125;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span> </span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="selector-class">.post-header</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">display</span>: flex;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">flex-direction</span>: column;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-attr">[tuture-del]</span><span class="selector-class">.post-title</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">font-weight</span>: bolder;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="selector-class">.profile-box</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">display</span>: flex;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">flex-direction</span>: row;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-attr">[tuture-del]</span><span class="selector-class">.post-content</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">font-size</span>: medium;</span><br><span class="line"><span class="selector-attr">[tuture-del]</span>  <span class="attribute">color</span>: <span class="number">#666</span>;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span><span class="selector-class">.post-nickName</span> &#123;</span><br><span class="line"><span class="selector-attr">[tuture-add]</span>  <span class="attribute">color</span>: <span class="number">#777</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我们更新了一些样式，然后引入了 <code>taro-ui</code> 提供给我们的 <code>article</code> 文章样式。</p>
+<p>重构完 “首页” 页面组件的所有底层组件，我们开始完成最终的顶层组件，打开 <code>src/pages/index/index.jsx</code> 文件，对相应的内容修改如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/index/index.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3BhZ2VzL2luZGV4L2luZGV4LmpzeA==" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/pages/index/index.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">[tuture-del]<span class="keyword">import</span> Taro, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> Taro, &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; View, Text &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line"><span class="keyword">import</span> &#123; AtFab, AtFloatLayout, AtMessage &#125; <span class="keyword">from</span> <span class="string">'taro-ui'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useSelector, useDispatch &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; PostCard, PostForm &#125; <span class="keyword">from</span> <span class="string">'../../components'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.scss'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; SET_POST_FORM_IS_OPENED, SET_LOGIN_INFO &#125; <span class="keyword">from</span> <span class="string">'../../constants'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Index</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [posts, setPosts] = useState([</span><br><span class="line">[tuture-del]    &#123;</span><br><span class="line">[tuture-del]      title: <span class="string">'泰罗奥特曼'</span>,</span><br><span class="line">[tuture-del]      content: <span class="string">'泰罗是奥特之父和奥特之母唯一的亲生儿子。'</span>,</span><br><span class="line">[tuture-del]    &#125;,</span><br><span class="line">[tuture-del]  ])</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [formTitle, setFormTitle] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [formContent, setFormContent] = useState(<span class="string">''</span>)</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> [isOpened, setIsOpened] = useState(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> posts = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.post.posts) || []</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isOpened = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.post.isOpened)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> nickName = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.user.nickName)</span><br><span class="line"></span><br><span class="line">[tuture-del]  <span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">[tuture-del]    e.preventDefault()</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> isLogged = !!nickName</span><br><span class="line"></span><br><span class="line">[tuture-del]    <span class="keyword">const</span> newPosts = posts.concat(&#123; <span class="attr">title</span>: formTitle, <span class="attr">content</span>: formContent &#125;)</span><br><span class="line">[tuture-del]    setPosts(newPosts)</span><br><span class="line">[tuture-del]    setFormTitle(<span class="string">''</span>)</span><br><span class="line">[tuture-del]    setFormContent(<span class="string">''</span>)</span><br><span class="line">[tuture-del]    setIsOpened(<span class="literal">false</span>)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> dispatch = useDispatch()</span><br><span class="line"></span><br><span class="line">[tuture-del]    Taro.atMessage(&#123;</span><br><span class="line">[tuture-del]      message: <span class="string">'发表文章成功'</span>,</span><br><span class="line">[tuture-del]      type: <span class="string">'success'</span>,</span><br><span class="line">[tuture-del]    &#125;)</span><br><span class="line">[tuture-add]  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">[tuture-add]    <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getStorage</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-add]      <span class="keyword">try</span> &#123;</span><br><span class="line">[tuture-add]        <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> Taro.getStorage(&#123; <span class="attr">key</span>: <span class="string">'userInfo'</span> &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]        <span class="keyword">const</span> &#123; nickName, avatar &#125; = data</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]        <span class="comment">// 更新 Redux Store 数据</span></span><br><span class="line">[tuture-add]        dispatch(&#123; <span class="attr">type</span>: SET_LOGIN_INFO, <span class="attr">payload</span>: &#123; nickName, avatar &#125; &#125;)</span><br><span class="line">[tuture-add]      &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">[tuture-add]        <span class="built_in">console</span>.log(<span class="string">'getStorage ERR: '</span>, err)</span><br><span class="line">[tuture-add]      &#125;</span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]    getStorage()</span><br><span class="line">[tuture-add]  &#125;)</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="function"><span class="keyword">function</span> <span class="title">setIsOpened</span>(<span class="params">isOpened</span>) </span>&#123;</span><br><span class="line">[tuture-add]    dispatch(&#123; <span class="attr">type</span>: SET_POST_FORM_IS_OPENED, <span class="attr">payload</span>: &#123; isOpened &#125; &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">[tuture-add]  <span class="function"><span class="keyword">function</span> <span class="title">handleClickEdit</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">[tuture-add]    <span class="keyword">if</span> (!isLogged) &#123;</span><br><span class="line">[tuture-add]      Taro.atMessage(&#123;</span><br><span class="line">[tuture-add]        type: <span class="string">'warning'</span>,</span><br><span class="line">[tuture-add]        message: <span class="string">'您还未登录哦！'</span>,</span><br><span class="line">[tuture-add]      &#125;)</span><br><span class="line">[tuture-add]    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">[tuture-add]      setIsOpened(<span class="literal">true</span>)</span><br><span class="line">[tuture-add]    &#125;</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="built_in">console</span>.log(<span class="string">'posts'</span>, posts)</span><br><span class="line">[tuture-add] </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"index"</span>&gt;</span><br><span class="line">      &lt;AtMessage /&gt;</span><br><span class="line">      &#123;posts.map(<span class="function">(<span class="params">post, index</span>) =&gt;</span> (</span><br><span class="line">[tuture-del]        &lt;PostCard</span><br><span class="line">[tuture-del]          key=&#123;index&#125;</span><br><span class="line">[tuture-del]          title=&#123;post.title&#125;</span><br><span class="line">[tuture-del]          content=&#123;post.content&#125;</span><br><span class="line">[tuture-del]          isList</span><br><span class="line">[tuture-del]        /&gt;</span><br><span class="line">[tuture-add]        &lt;PostCard key=&#123;index&#125; postId=&#123;index&#125; post=&#123;post&#125; isList /&gt;</span><br><span class="line">      ))&#125;</span><br><span class="line">      &lt;AtFloatLayout</span><br><span class="line">        isOpened=&#123;isOpened&#125;</span><br><span class="line">        title=<span class="string">"发表新文章"</span></span><br><span class="line">        onClose=&#123;() =&gt; setIsOpened(<span class="literal">false</span>)&#125;</span><br><span class="line">      &gt;</span><br><span class="line">[tuture-del]        &lt;PostForm</span><br><span class="line">[tuture-del]          formTitle=&#123;formTitle&#125;</span><br><span class="line">[tuture-del]          formContent=&#123;formContent&#125;</span><br><span class="line">[tuture-del]          handleSubmit=&#123;e =&gt; handleSubmit(e)&#125;</span><br><span class="line">[tuture-del]          handleTitleInput=&#123;e =&gt; setFormTitle(e.target.value)&#125;</span><br><span class="line">[tuture-del]          handleContentInput=&#123;e =&gt; setFormContent(e.target.value)&#125;</span><br><span class="line">[tuture-del]        /&gt;</span><br><span class="line">[tuture-add]        &lt;PostForm /&gt;</span><br><span class="line">      &lt;<span class="regexp">/AtFloatLayout&gt;</span></span><br><span class="line"><span class="regexp">      &lt;View className="post-button"&gt;</span></span><br><span class="line"><span class="regexp">[tuture-del]        &lt;AtFab onClick=&#123;() =&gt; setIsOpened(true)&#125;&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]        &lt;AtFab onClick=&#123;handleClickEdit&#125;&gt;</span></span><br><span class="line"><span class="regexp">          &lt;Text className="at-fab__icon at-icon at-icon-edit"&gt;&lt;/</span>Text&gt;</span><br><span class="line">        &lt;<span class="regexp">/AtFab&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>View&gt;</span><br><span class="line">    <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到我们上面的内容有以下五处改动：</p>
+<ul>
+<li>首先我们导出了 <code>useSelector</code> 钩子，然后从 Redux store 中获取了 <code>posts</code> 、<code>isOpened</code> 和 <code>nickName</code> 等属性。</li>
+<li>接着，我们将之前定义在 <code>PostCard</code> 组件上的属性进行了一次换血，之前是直接传递 <code>title</code> 和 <code>content</code> 属性，现在我们传递整个 <code>post</code> 属性，并且额外传递了一个 <code>postId</code> 属性，用于在 <code>PostCard</code> 里面点击跳转路由时进行标注。</li>
+<li>接着，我们去掉 <code>PostForm</code> 组件上面的所有属性，因为我们已经在组件内部定义了它们。</li>
+<li>接着，我们使用 <code>useEffect</code> Hooks，在里面定义并调用了 <code>getStorage</code> 方法，获取了我们保存在 <code>storage</code> 里面的用户登录信息，如果用户登录了，我们 dispatch 一个 <code>type</code> 为 <code>SET_LOGIN_INFO</code> 的 action，将这份登录信息保存在 Redux store 里面以供后续使用。</li>
+<li>最后，我们将 <code>AtFab</code> 的 <code>onClick</code> 回调函数替换成 <code>handleClickEdit</code>，在其中对用户点击进行判断，如果用户未登录，那么弹出警告，告知用户，如果用户已经登录，那么就 dispatch 一个 <code>type</code> 为 <code>SET_POST_FORM_IS_OPENED</code> 的 action 去设置 <code>isOpened</code> 属性，打开发帖的弹出层，允许用户进行发帖操作。</li>
+</ul>
+<h3 id="以重构-“文章详情”-页结束"><a href="#以重构-“文章详情”-页结束" class="headerlink" title="以重构 “文章详情” 页结束"></a>以重构 “文章详情” 页结束</h3><p>最后，让我们坚持一下，跑赢重构工作的最后一公里💪！完成 “文章详情” 页的重构。</p>
+<p>让我们打开 <code>src/pages/post/post.jsx</code> 文件，对其中的内容作出相应的修改如下：</p>
+<figure class="highlight jsx"><figcaption><span>src/pages/post/post.jsx</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdWx0cmEtY2x1Yi9ibG9iL2EzY2Y3MTUvc3JjL3BhZ2VzL3Bvc3QvcG9zdC5qc3g=" title="https://github.com/tuture-dev/ultra-club/blob/a3cf715/src/pages/post/post.jsx">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Taro, &#123; useRouter &#125; <span class="keyword">from</span> <span class="string">'@tarojs/taro'</span></span><br><span class="line"><span class="keyword">import</span> &#123; View &#125; <span class="keyword">from</span> <span class="string">'@tarojs/components'</span></span><br><span class="line">[tuture-del]<span class="keyword">import</span> &#123; PostCard &#125; <span class="keyword">from</span> <span class="string">'../../components'</span></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; useSelector &#125; <span class="keyword">from</span> <span class="string">'@tarojs/redux'</span></span><br><span class="line"></span><br><span class="line">[tuture-add]<span class="keyword">import</span> &#123; PostCard &#125; <span class="keyword">from</span> <span class="string">'../../components'</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./post.scss'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Post</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> router = useRouter()</span><br><span class="line">[tuture-del]  <span class="keyword">const</span> &#123; params &#125; = router</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> &#123; postId &#125; = router.params</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="keyword">const</span> posts = useSelector(<span class="function"><span class="params">state</span> =&gt;</span> state.post.posts)</span><br><span class="line">[tuture-add]  <span class="keyword">const</span> post = posts[postId]</span><br><span class="line">[tuture-add] </span><br><span class="line">[tuture-add]  <span class="built_in">console</span>.log(<span class="string">'posts'</span>, posts, postId)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;View className=<span class="string">"post"</span>&gt;</span><br><span class="line">[tuture-del]      &lt;PostCard title=&#123;params.title&#125; content=&#123;params.content&#125; /&gt;</span><br><span class="line">[tuture-add]      &lt;PostCard post=&#123;post&#125; /&gt;</span><br><span class="line">    &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">  )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"> /</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，上面的文件做了以下四处修改：</p>
+<ul>
+<li>我们从 <code>router.params</code> 中导出了 <code>postId</code>，因为之前我们在 <code>PostCard</code> 里面点击跳转的路径参数使用了 <code>postId</code>。</li>
+<li>接着我们导入并使用 <code>useSelector</code> Hooks 获取了保存在 Redux store 中的 <code>posts</code> 属性，然后使用上一步获取到的 <code>postId</code>，来获取我们最终要渲染的 <code>post</code> 属性。</li>
+<li>最后，我们将传给 <code>PostCard</code> 的属性改成上一步获取到的 <code>post</code> 。</li>
+</ul>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>这里的 <code>console.log</code> 是调试时使用的，生产环境中建议删掉。</p>
+          </div>
+
+<h3 id="查看效果"><a href="#查看效果" class="headerlink" title="查看效果"></a>查看效果</h3><p>可以看到，在未登录状态下，会提示请登录：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/16f5496be4b20794.gif"></p>
+<p>在已登录的情况下，发帖子会显示当前登录用户的头像和昵称：</p>
+<p><img alt data-src="https://static.powerformer.com/c/34a473b/16f5494e116f47f6.gif"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>有幸！到这里，我们 Redux 重构之旅的万里长征就跑完了！让我们来回顾一下我们在这一小节中学到了那些东西。</p>
+<ul>
+<li>首先我们讲解了使用 Redux 的初衷，接着我们安装了相关依赖，然后引出了 Redux 三大核心概念：Store、Action、Reducers，接着我们创建了应用需要的两个 Reducer：<code>post</code> 和 <code>user</code>；接着我们将将 Redux 和 React 整合起来；因为 Action 是从组件中 dispatch 出来了，所以我们接下来就开始了组件的重构之旅。</li>
+<li>在重构 “我的” 页面组件时，我们按照 Redux 的思想，从它的底层组件三个登录按钮重构开始，接着重构了 <code>LoggedMine</code> 组件，再往上就是 <code>Header</code> 组件；重构完 <code>Header</code> 组件之后，我们接着从 <code>Footer</code> 组件的底层组件 <code>Logout</code> 组件开始重构，然后重构了 <code>LoginForm</code> 组件，最后是 <code>Footer</code> 组件，重构完 <code>Header</code> 和 <code>Footer</code> 组件，我们开始重构其上层组件 <code>mine</code> 页面组件，自此我们就完成了 “我的” 页面的重构。</li>
+<li>在重构 “首页” 页面组件时，我们同样按照 Redux 的思想，从它的底层组件 <code>PostForm</code> 组件开始，接着是 <code>PostCard</code> 组件，最后再回到顶层组件 <code>index</code> 首页页面组件。</li>
+</ul>
+<p>在重构 “帖子详情” 页面组件时，因为其底层组件 <code>PostCard</code> 已经重构过了，所以我们就直接重构了 <code>post</code> 帖子详情页面组件。</p>
+<p>能跟着这么长的文章坚持到这里，我想给你鼓个掌，也希望你能给自己鼓个掌，我想，我可以非常肯定且自豪的颁布给你第一名的奖章了🥇。</p>
+<p>终于，这漫长的第四篇结束了。在接下来的文章中，我们将接触小程序云后台开发，并在前端接入后台数据。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/01/15/5e100f7/" title="Taro 小程序开发大型实战（四）：使用 Hooks 版的 Redux 实现应用状态管理">https://tuture.co/2020/01/15/5e100f7/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Redux/" rel="tag"><i class="fa fa-tag"></i> Redux</a>
+            
+              <a href="/tags/Taro/" rel="tag"><i class="fa fa-tag"></i> Taro</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/01/12/cd44c84/" rel="next" title="Docker 筑梦师系列（一）：实现容器互联">
+                  <i class="fa fa-chevron-left"></i> Docker 筑梦师系列（一）：实现容器互联
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/01/17/b32362b/" rel="prev" title="Taro 小程序开发大型实战（五）：尝鲜微信小程序云">
+                  Taro 小程序开发大型实战（五）：尝鲜微信小程序云 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#双剑合璧：Hooks-Redux"><span class="nav-number">1.</span> <span class="nav-text">双剑合璧：Hooks + Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">1.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Redux-Store"><span class="nav-number">1.2.</span> <span class="nav-text">创建 Redux Store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-User-Reducer"><span class="nav-number">1.3.</span> <span class="nav-text">编写 User Reducer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-Post-Reducer"><span class="nav-number">1.4.</span> <span class="nav-text">编写 Post Reducer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合-User-和-Post-Reducer"><span class="nav-number">1.5.</span> <span class="nav-text">组合 User 和 Post Reducer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合-Redux-和-React"><span class="nav-number">1.6.</span> <span class="nav-text">整合 Redux 和 React</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooks-版的-Action-初尝鲜"><span class="nav-number">1.7.</span> <span class="nav-text">Hooks 版的 Action 初尝鲜</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#useDispatch-Hooks"><span class="nav-number">1.7.1.</span> <span class="nav-text">useDispatch Hooks</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useSelector-Hooks-来捧场"><span class="nav-number">1.8.</span> <span class="nav-text">useSelector Hooks 来捧场</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#useSelector-Hooks"><span class="nav-number">1.8.1.</span> <span class="nav-text">useSelector Hooks</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搞定-Footer-的-Redux-化"><span class="nav-number">1.9.</span> <span class="nav-text">搞定 Footer 的 Redux 化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完成-“我的”-页面重构"><span class="nav-number">1.10.</span> <span class="nav-text">完成 “我的” 页面重构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始重构-“首页”-之旅"><span class="nav-number">1.11.</span> <span class="nav-text">开始重构 “首页” 之旅</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以重构-“文章详情”-页结束"><span class="nav-number">1.12.</span> <span class="nav-text">以重构 “文章详情” 页结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看效果"><span class="nav-number">1.13.</span> <span class="nav-text">查看效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.14.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">891k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:30</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '6310753ce4e95163d2b0',
+      clientSecret: '4fd6839b697f9d50e01eebbb9566d8bdf3bd75b4',
+      repo: 'comments',
+      owner: 'tuture-dev',
+      admin: 'pftom,mRcfps,tuture-dev'.split(','),
+      id: '8c4e6d37ca5154db90888e27bacda820',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

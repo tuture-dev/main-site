@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本篇教程通过构建一个井字棋游戏来讲解 React 的基础知识，是非常经典的 Learn by doing 的教授&#x2F;学习技术的方式。通过学习本篇教程你不仅可以学习到如何使用脚手架初始化项目，学习 React 的基础知识如 props，state，组件等，还可以学习一些编写代码的最佳实践，最后完成一个带有 “时间旅行” 的井字棋游戏。相信你在学习完本篇教程之后，会成为这场游戏里面的最大胜者！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 React 实现一个井字棋游戏（一)">
+<meta property="og:url" content="https://tuture.co/2019/11/13/175b717/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="本篇教程通过构建一个井字棋游戏来讲解 React 的基础知识，是非常经典的 Learn by doing 的教授&#x2F;学习技术的方式。通过学习本篇教程你不仅可以学习到如何使用脚手架初始化项目，学习 React 的基础知识如 props，state，组件等，还可以学习一些编写代码的最佳实践，最后完成一个带有 “时间旅行” 的井字棋游戏。相信你在学习完本篇教程之后，会成为这场游戏里面的最大胜者！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tuture.co/images/avatars/pftom.jpg">
+<meta property="og:image" content="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/tictac-empty-1566a4f8490d6b4b1ed36cd2c11fe4b6-a9336.png">
+<meta property="og:image" content="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png">
+<meta property="og:image" content="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/devtools-878d91461c78d8f238e116477dfe0b46-6ca3b.png">
+<meta property="article:published_time" content="2019-11-12T19:11:19.855Z">
+<meta property="article:modified_time" content="2021-08-08T15:06:28.155Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tuture.co/images/avatars/pftom.jpg">
+  <link rel="canonical" href="https://tuture.co/2019/11/13/175b717/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>用 React 实现一个井字棋游戏（一) | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2019/11/13/175b717/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">用 React 实现一个井字棋游戏（一)
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-13 03:11:19" itemprop="dateCreated datePublished" datetime="2019-11-13T03:11:19+08:00">2019-11-13</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 23:06:28" itemprop="dateModified" datetime="2021-08-08T23:06:28+08:00">2021-08-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/React/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>14k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>13 分钟</span>
+            </span>
+          
+            <div class="post-description">本篇教程通过构建一个井字棋游戏来讲解 React 的基础知识，是非常经典的 Learn by doing 的教授/学习技术的方式。通过学习本篇教程你不仅可以学习到如何使用脚手架初始化项目，学习 React 的基础知识如 props，state，组件等，还可以学习一些编写代码的最佳实践，最后完成一个带有 “时间旅行” 的井字棋游戏。相信你在学习完本篇教程之后，会成为这场游戏里面的最大胜者！</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="profileBox">
+  <div class="avatarBox">
+    <a href="https://github.com/pftom" target="_blank" rel="external nofollow noopener noreferrer"><img src="/images/avatars/pftom.jpg" alt class="avatar"></a>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <a href="https://github.com/pftom" target="_blank" rel="external nofollow noopener noreferrer"><p class="nickName">@pftom</p></a>
+  </div>
+  <div class="codeBox">
+    <a href="https://github.com/pftom/react101" target="_blank" rel="external nofollow noopener noreferrer"><span class="codeText">查看代码</span></a>
+  </div>
+  </div>
+</div>
+
+<h2 id="代码准备"><a href="#代码准备" class="headerlink" title="代码准备"></a>代码准备</h2><p>我们将在这篇教程中学习制作一个小游戏。你可能不想看这个教程，因为你不是做游戏的 – 但是试着给它一个机会。在这篇教程中你学到的技术是构建一个 React 应用的基础，熟练掌握这些技术会让你更加深入的理解 React。</p>
+<p>这篇教程被分为如下几个部分：</p>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%87%86%E5%A4%87">代码准备</a> 将会给你学习这篇教程需要的初始代码框架。</li>
+<li><a href="#%E9%80%9A%E8%BF%87-props-%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">通过 Prop 传递数据</a>、<a href="#%E7%BC%96%E5%86%99%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%BB%84%E4%BB%B6">编写交互式组件</a> 将会教给你 React 的基础：components，props，state。</li>
+<li><a href="#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87">状态提升</a>、<a href="#%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">使用函数式组件</a>、<a href="#%E5%BC%80%E5%A7%8B%E7%BF%BB%E8%BD%AC">开始翻转</a>、<a href="#%E6%98%BE%E7%A4%BA%E8%8E%B7%E8%83%9C%E8%80%85">显示获胜者</a>会教给你在 React 开发将用到的绝大部分技术。</li>
+<li><a href="#%E5%86%8D%E6%AC%A1%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87">再次状态提升</a>，<a href="#%E5%B1%95%E7%A4%BA%E7%A7%BB%E5%8A%A8%E5%8E%86%E5%8F%B2">展示移动历史</a>、<a href="#%E5%8A%A0%E4%B8%8A-key">加上 key</a>、<a href="#%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%97%B4%E6%97%85%E8%A1%8C">实现时间旅行</a> 将会带你深入了解 React 的独特长项。</li>
+</ul>
+<p>你不需要一口气学完整篇教程，但是只要你学习了其中的 1-2 个部分就可以收获很多价值，所以如果有时间和精力，你应该尝试着多学几个部分。</p>
+<h3 id="我们将要做什么"><a href="#我们将要做什么" class="headerlink" title="我们将要做什么"></a>我们将要做什么</h3><p>在这篇教程中，我们将为你展示用 React 构建一个交互式的 “井字棋”  游戏。</p>
+<p>你可以在这里看到我们的构建成果：<a href="https://codepen.io/pftom/pen/xxxaJam?editors=0010" target="_blank" rel="external nofollow noopener noreferrer">最终结果</a>。如果你现在对代码还不是很理解，如果说你还不熟悉代码语法，别担心！这篇教程的目的就是帮助你理解 React 和它的语法。</p>
+<p>我们推荐你在继续阅读教程之前先检查一下这个 “井字棋” 游戏是怎么运作的。你能看到的其中一个特点就是在游戏棋盘右边有一个有序列表。这个列表向你展示了发生在这个游戏上的移动历史，随着游戏继续，这个历史列表也会变动。</p>
+<p>当你对这个 “井字棋” 游戏的运作有一定了解了之后，你就可以关闭它了。在这篇教程中，我们将会以一个简单的代码模板开始。我们的下一步是教会你构建这个游戏。</p>
+<h3 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h3><p>我们假定你对 HTML 和 JavaScript 有一定了解，但即使你是从其他语言转过来的，你也可以跟着学习。我们也假定你对编程概念如 functions，objects，arrays 有一定了解，最好还知道一点关于 classes 的知识。</p>
+<p>如果你想回顾一下 JavaScript 的知识，我们推荐你阅读<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/A_re-introduction_to_JavaScript" target="_blank" rel="external nofollow noopener noreferrer">这篇指南</a>。请注意，我们会使用一些 ES6 的语法 – JavaScript 最近的一个版本。在这篇教程，我们会使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="external nofollow noopener noreferrer">arrow functions</a>，<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="external nofollow noopener noreferrer">classes</a>，<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/let" target="_blank" rel="external nofollow noopener noreferrer">let</a>，和 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/const" target="_blank" rel="external nofollow noopener noreferrer">const</a>。你可以使用 <a href="https://www.babeljs.cn/repl#?babili=false&browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=MYewdgzgLgBApgGzgWzmWBeGAeAFgRgD4AJRBEAGhgHcQAnBAEwEJsB6AwgbgChRJY_KAEMAlmDh0YWRiGABXVOgB0AczhQAokiVQAQgE8AkowAUAcjogQUcwEpeAJTjDgUACIB5ALLK6aRklTRBQ0KCohMQk6Bx4gA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=react&prettier=false&targets=&version=7.7.3" target="_blank" rel="external nofollow noopener noreferrer">Babel REPL</a> 来检查 ES6 代码编译之后的结果。</p>
+<h3 id="开发环境准备"><a href="#开发环境准备" class="headerlink" title="开发环境准备"></a>开发环境准备</h3><p>1.确保在你的机器上安装了 <a href="https://nodejs.org/en/" target="_blank" rel="external nofollow noopener noreferrer">Node.js</a> 。</p>
+<p>2.使用 Create React App 来创建一个新项目。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx create-react-app my-app</span><br><span class="line"><span class="built_in">cd</span> my-app</span><br><span class="line">npm start</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>第一行的 <code>npx</code> 不是拼写错误 – 它是 <a href="http://www.ruanyifeng.com/blog/2019/02/npx.html" target="_blank" rel="external nofollow noopener noreferrer">npm 5.2+ 附带的 package 运行工具</a>。</p>
+</blockquote>
+<p><a href="https://github.com/facebook/create-react-app" target="_blank" rel="external nofollow noopener noreferrer">Create React App</a> 是一个学习 React 的舒适环境，而且是使用 React 构建一个新的单页应用的最佳方式。</p>
+<p>Create React App 不会处理后端逻辑或操纵数据库；它只是创建一个前端构建流水线（build pipeline），所以你可以使用它来配合任何你想使用的后端。它在内部使用 <a href="https://www.babeljs.cn/" target="_blank" rel="external nofollow noopener noreferrer">Babel</a> 和 <a href="https://webpack.docschina.org/" target="_blank" rel="external nofollow noopener noreferrer">Webpack</a>，但你无需了解它们的任何细节。</p>
+<p>当你准备好部署到生产环境时，执行 <code>npm run build</code> 会在 build 文件夹内生成你应用的优化版本。你能从它的 <a href="https://github.com/facebook/create-react-app#create-react-app--" target="_blank" rel="external nofollow noopener noreferrer">README</a> 和用户指南了解 <a href="https://create-react-app.dev/" target="_blank" rel="external nofollow noopener noreferrer">Create React App</a> 的更多信息。</p>
+<blockquote>
+<p>单页面应用(single-page application)，是一个应用程序，它可以加载单个 HTML 页面，以及运行应用程序所需的所有必要资源（例如 JavaScript 和 CSS）。与页面或后续页面的任何交互，都不再需要再访问服务器加载资源，即页面不会重新加载。</p>
+<p>你可以使用 React 来构建单页应用程序，但不是必须如此。React 还可用于增强现有网站的小部分，使其增加额外交互。用 React 编写的代码，可以与服务器端渲染的标记（例如 PHP）或其他客户端库同时使用。实际上，这也正是 Facebook 内部使用 React 的方式。</p>
+</blockquote>
+<p>3.删除刚刚创建的 <code>my-app</code> 项目 <code>src/</code> 目录下的所有文件。</p>
+<blockquote>
+<p><strong>注意：**</strong>不要删除整个 <code>src</code> 文件夹，只需要删除它里面的所有源文件。**我们将在接下来的步骤中在 <code>src</code> 中创建我们所需要构建的游戏初始模板代码文件。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> my-app</span><br><span class="line"><span class="built_in">cd</span> src</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果你在使用 Mac 或者 Linux：</span></span><br><span class="line">rm -f *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者，你在使用 Windows：</span></span><br><span class="line">del *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后，切回到项目目录文件夹下</span></span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
+
+<p>4.在 <code>src/</code> 文件夹下创建一个名为 <code>index.css</code> 的文件，然后在里面加入下面的 CSS 代码并保存。</p>
+<figure class="highlight css"><figcaption><span>src/index.css</span><a href="https://github.com/pftom/react101/blob/fd83d85/src/index.css" target="_blank" rel="external nofollow noopener noreferrer">查看完整代码</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">font</span>: <span class="number">14px</span> <span class="string">"Century Gothic"</span>, Futura, sans-serif;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">ol</span>,</span><br><span class="line"><span class="selector-tag">ul</span> &#123;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">30px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.board-row</span><span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">""</span>;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.status</span> &#123;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.square</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#999</span>;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">24px</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">34px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">34px</span>;</span><br><span class="line">  <span class="attribute">margin-right</span>: -<span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: -<span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">34px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.square</span><span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">  <span class="attribute">outline</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.kbd-navigation</span> <span class="selector-class">.square</span><span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#ddd</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.game</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: row;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.game-info</span> &#123;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.在 <code>src/</code> 文件夹下创建一个名为 <code>index.js</code> 的文件，然后在里面加入如下的 JS 代码并保存。</p>
+<figure class="highlight js"><figcaption><span>src/index.js</span><a href="https://github.com/pftom/react101/blob/fd83d85/src/index.js" target="_blank" rel="external nofollow noopener noreferrer">查看完整代码</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">"./index.css"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">"square"</span>&gt;</span>&#123;/* TODO */&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Board</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> status = <span class="string">"Next player: X"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;div className=<span class="string">"status"</span>&gt;&#123;status&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="board-row"&gt;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(0)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(1)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(2)&#125;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">        &lt;div className=<span class="string">"board-row"</span>&gt;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">3</span>)&#125;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">4</span>)&#125;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">5</span>)&#125;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="board-row"&gt;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(6)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(7)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(8)&#125;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">class Game extends React.Component &#123;</span></span><br><span class="line"><span class="regexp">  render() &#123;</span></span><br><span class="line"><span class="regexp">    return (</span></span><br><span class="line"><span class="regexp">      &lt;div className="game"&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="game-board"&gt;</span></span><br><span class="line"><span class="regexp">          &lt;Board /</span>&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="game-info"&gt;</span></span><br><span class="line"><span class="regexp">          &lt;div&gt;&#123;/</span>* status *<span class="regexp">/&#125;&lt;/</span>div&gt;</span><br><span class="line">          &lt;ol&gt;&#123;<span class="comment">/* TODO */</span>&#125;&lt;<span class="regexp">/ol&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ ========================================</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">ReactDOM.render(&lt;Game /</span>&gt;, <span class="built_in">document</span>.getElementById(<span class="string">"root"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>6.在 <code>src/</code> 文件下的 <code>index.js</code>  文件内容的顶部加上下面三行代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./index.css'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>现在，如果你在项目文件夹下面运行 <code>npm start</code> 然后再在浏览器中打开 <code>http://localhost:3000</code> ，你应该能看到一个空的 “井字棋” 游戏区域。</p>
+<p>我们推荐你根据<a href="https://www.babeljs.cn/docs/editors" target="_blank" rel="external nofollow noopener noreferrer">这些指导</a>来配置你编辑器的语法高亮。</p>
+<h3 id="帮帮忙，我遇到了问题！"><a href="#帮帮忙，我遇到了问题！" class="headerlink" title="帮帮忙，我遇到了问题！"></a>帮帮忙，我遇到了问题！</h3><p>如果你遇到了问题，可以访问我们的<a href="https://tuture.co/about/">社区支持</a>网站。<a href="https://gitter.im/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Gitter</a> 是一个很棒的反馈平台，你可以较快的在这上面得到帮助。如果你的问题一直没有得到解答，请给我们提交 <a href="https://github.com/tuture-dev/hub" target="_blank" rel="external nofollow noopener noreferrer">Issue</a>，我们将会帮助你解决。</p>
+<h2 id="通过-Props-传递数据"><a href="#通过-Props-传递数据" class="headerlink" title="通过 Props 传递数据"></a>通过 Props 传递数据</h2><h3 id="什么是-React？"><a href="#什么是-React？" class="headerlink" title="什么是 React？"></a>什么是 React？</h3><p>React 是一个用于构建用户界面的声明式的，高效的且灵活的 JavaScript 库。它允许你通过组合一些小且独立的 “组件” 来构建复杂的 用户界面。</p>
+<p>React 有几种不同的类型的组件，但是他们都继承自 <code>React.Component</code> 类：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShoppingList</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"shopping-list"</span>&gt;</span><br><span class="line">        &lt;h1&gt;Shopping List <span class="keyword">for</span> &#123;<span class="keyword">this</span>.props.name&#125;&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">        &lt;ul&gt;</span></span><br><span class="line"><span class="regexp">          &lt;li&gt;Instagram&lt;/</span>li&gt;</span><br><span class="line">          &lt;li&gt;WhatsApp&lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">          &lt;li&gt;Oculus&lt;/</span>li&gt;</span><br><span class="line">        &lt;<span class="regexp">/ul&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Example usage: &lt;ShoppingList name="Mark" /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们马上就会了解到上面这些有趣的 类XML 的标签意思。我们使用组件（Components）来告诉 React 我们想在屏幕上看到什么。当我们的数据改变时，React 将会高效的更新并重新渲染我们的组件。</p>
+<p>在上面的代码中，ShoppingList 是一个 <strong>React 组件类</strong>，或者说是 <strong>React 组件类型</strong>。组件接受 <code>props</code> 作为参数，然后通过 <code>render</code> 方法来展示它所返回的视图层级结构。</p>
+<p><code>render</code> 方法返回一个你希望在屏幕上看到内容的描述。React 处理这些描述，并展示其结果。实际上，<code>render</code> 返回一个 <strong>React element</strong> ，这是对将要渲染内容的一个轻量级描述。大多数的 React 开发者使用被称之为 “JSX” 的特殊语法来编写这些视图层级结构，因为它让编写更简单。<code>&lt;div /&gt;</code> 语法在编译时被转换为 <code>React.createElement(&#39;div&#39;)</code>。上面的代码例子和下面是等价的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">return</span> React.createElement(<span class="string">'div'</span>, &#123;<span class="attr">className</span>: <span class="string">'shopping-list'</span>&#125;,</span><br><span class="line">  React.createElement(<span class="string">'h1'</span>, <span class="comment">/* ... h1 children ... */</span>),</span><br><span class="line">  React.createElement(<span class="string">'ul'</span>, <span class="comment">/* ... ul children ... */</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.babeljs.cn/repl#?babili=false&browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=DwEwlgbgBAxgNgQwM5IHIILYFMC8AiJACwHsAHUsAOwHMBaOMJAFzwD4AoKL7r4QgRlYBlEuSrUoAGUZMoAM2IAnKAG8mhRgDpSiskk2VMWAL7AA9AI48ewAK5wr1mw1YBJSswTVFmcy85O3MAuAOqECExIAILkfmCOgVDB8QDyMPa2SHEJ1ub2Obxm4BCsQA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=react&prettier=false&targets=&version=7.7.3" target="_blank" rel="external nofollow noopener noreferrer">查看完整的编译代码。</a></p>
+<p>如果你对这感到很好奇，<code>createElement</code> 在 React 的 <a href="https://zh-hans.reactjs.org/docs/react-api.html#createelement" target="_blank" rel="external nofollow noopener noreferrer">API 文档</a>里面有更加详细的描述。</p>
+<p>JSX 能使用 JavaScript 的全部功能。你能在 JSX 的大括号里面放入任何 JavaScript 表达式。每个 React element 也是一个 JavaScript 对象，你可以将它保存在一个变量中，也可以在程序中传递它。</p>
+<p>上面的 <code>ShoppingList</code> 组件只渲染了一些内建的 DOM 组件，像 <code>&lt;div /&gt;</code> 和 <code>&lt;li /&gt;</code> 等。但是你也能组合和渲染自定义组件。比如，我们我们现在可以通过 <code>&lt;ShoppingList /&gt;</code> 来引用整个购物列表。每个 React 组件都是被封装好的，可以独立的运行；这使得你能使用简单的组件来构建复杂的用户界面。</p>
+<h3 id="了解初始代码"><a href="#了解初始代码" class="headerlink" title="了解初始代码"></a>了解初始代码</h3><p>现在打开项目文件夹里面 <code>src/index.js</code> 代码。这份初始代码是我们将要构建的内容骨架。我们已经添加了 CSS 样式，所以你只需要关注学习 React 以及如何用它编写 “井字棋” 游戏。</p>
+<p>通过查看代码，我们可以注意到这份代码里面有三个组件：</p>
+<ul>
+<li>Square</li>
+<li>Board</li>
+<li>Game</li>
+</ul>
+<p>Square 组件渲染了单一的一个 <code>&lt;button&gt;</code> ，Board 组件渲染了 9 个 Square 组件。Game 组件渲染了一个 Board 和一些被注释的占位值，在后续的讲解中，我们将会修改这些占位值。目前这份代码中还没有交互式的组件。</p>
+<p>让我们来尝试修改一些代码，从 Board 组件向 Square 组件传递一些数据。</p>
+<p>我们强烈推荐你在学习这篇教程的时候跟着动手敲一遍代码，而不是简单的复制/粘贴。这会帮助你形成肌肉记忆并且会有更深层次的理解。</p>
+<p>修改 Board 的 <code>renderSquare</code> 方法中的代码，传递 <code>value</code> 属性给 Square：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Board</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> <span class="attr">value</span>=<span class="string">&#123;i&#125;</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改 Square 的 <code>render</code> 方法来展示传进来的 <code>value</code> ，将 <code>{/* TODO */}</code> 替换成 <code>{this.props.value}</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;button className=<span class="string">"square"</span>&gt;</span><br><span class="line">        &#123;<span class="keyword">this</span>.props.value&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当修改完保存之后，如果你的程序运行着，那么你应该能看到如下的变化。</p>
+<p>改之前是这样的：</p>
+<p><img src="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/tictac-empty-1566a4f8490d6b4b1ed36cd2c11fe4b6-a9336.png" alt></p>
+<p>修改之后你将会看到每个 Square 都渲染展示了一个数字：</p>
+<p><img src="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png" alt></p>
+<p>最终 <code>src/index.js</code> 的代码为下面的样子：</p>
+<figure class="highlight js"><figcaption><span>src/index.js</span><a href="https://github.com/pftom/react101/blob/3cf4f5f/src/index.js" target="_blank" rel="external nofollow noopener noreferrer">查看完整代码</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">[tuture-del]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">"square"</span>&gt;</span>&#123;/* TODO */&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">[tuture-add]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">"square"</span>&gt;</span>&#123;this.props.value&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Board</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  renderSquare(i) &#123;</span><br><span class="line">[tuture-del]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> /&gt;</span></span>;</span><br><span class="line">[tuture-add]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> <span class="attr">value</span>=<span class="string">&#123;i&#125;</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/pftom/react101/tree/3cf4f5f9b1537ae55cbf676cad574d00986b4b24/src" target="_blank" rel="external nofollow noopener noreferrer">查看此时的整个项目代码</a></p>
+<p>恭喜你！你刚刚从父组件 Board 传递了 props 给子组件 Sqaure。在 React 中，父组件通过传递 props 给子组件来完成数据的流动。</p>
+<h2 id="编写交互式组件"><a href="#编写交互式组件" class="headerlink" title="编写交互式组件"></a>编写交互式组件</h2><p>让我们在点击 Square 组件时给它填充 “X”。首先，将 Square 组件中的 <code>render()</code> 函数的中返回的 button 标签修改成下面这样：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;button className=<span class="string">"square"</span> onClick=&#123;<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; alert(<span class="string">'click'</span>); &#125;&#125;&gt;</span><br><span class="line">        &#123;<span class="keyword">this</span>.props.value&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你现在点击 Square，你应该能在浏览器中看到弹出框。</p>
+<blockquote>
+<p><strong>注意</strong>为了减少打字量和避免 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this" target="_blank" rel="external nofollow noopener noreferrer">this 的混淆行为</a>，在下面和之后的代码中我们将使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="external nofollow noopener noreferrer">箭头函数</a>作为事件处理函数：</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">     &lt;button className=<span class="string">"square"</span> onClick=&#123;() =&gt; alert(<span class="string">'click'</span>)&#125;&gt;</span><br><span class="line">        &#123;<span class="keyword">this</span>.props.value&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意到我们使用了 <code>onClick={() => alert('click')}</code>，我们给 <code>onClick</code> 属性传递了一个函数。只有到 button 被点击时，React 才会调用这个函数。忘记 <code>() =&gt;</code> 而只写了 <code>onClick={alert('click')}</code>是一个很容易犯的错误，这会导致每次组件重新渲染时都会调用 alert 函数。</p>
+</blockquote>
+<p>在下一步中，我们希望 Square 能 ”记住“ 自己被点击了，同时能填充一个 “X” 标记。为了 “记住” 事情，组件需要 <strong>state</strong>。</p>
+<p>React 组件通过在 <code>constructor</code> 里面设置 <code>this.state</code> 的来获得 state。当在组件中定义 <code>this.state</code> 时，它应该被认为是这个组件的私有属性。让我们在 <code>this.state</code> 中保存 Square 的当前值，然后在 Square 被点击时修改它。</p>
+<p>我们修改代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/index.js</span><a href="https://github.com/pftom/react101/blob/dc9cb48/src/index.js" target="_blank" rel="external nofollow noopener noreferrer">查看完整代码</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">"./index.css"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">[tuture-add]  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">[tuture-add]    <span class="keyword">super</span>(props);</span><br><span class="line">[tuture-add]    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">[tuture-add]      value: <span class="literal">null</span></span><br><span class="line">[tuture-add]    &#125;;</span><br><span class="line">[tuture-add]  &#125;</span><br><span class="line">[tuture-add] </span><br><span class="line">  render() &#123;</span><br><span class="line">[tuture-del]    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">"square"</span>&gt;</span>&#123;this.props.value&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">[tuture-add]    <span class="keyword">return</span> (</span><br><span class="line">[tuture-add]      &lt;button className=<span class="string">"square"</span> onClick=&#123;() =&gt; <span class="keyword">this</span>.setState(&#123; <span class="attr">value</span>: <span class="string">"X"</span> &#125;)&#125;&gt;</span><br><span class="line">[tuture-add]        &#123;<span class="keyword">this</span>.state.value&#125;</span><br><span class="line">[tuture-add]      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">[tuture-add]    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ ...</span></span><br></pre></td></tr></table></figure>
+
+<p>让我们来看一看上面的代码做了什么事。</p>
+<p>首先，我们在 Square 类中加入了一个 constructor 来初始化 state。</p>
+<blockquote>
+<p><strong>注意</strong>在 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="external nofollow noopener noreferrer">JavaScript 类</a>中，当在子类中定义 constructor 时，你总是需要调用 <code>super</code> 函数。所有有 constructor 的 React 组件类应该在其中首先调用 <code>super(props)</code> 函数。</p>
+</blockquote>
+<p>然后我们修改了 Square 的 <code>render</code> 方法来展示被点击时的当前的 state 值：</p>
+<ul>
+<li>在 <code>&lt;button&gt;</code> 标签里面使用 <code>{this.state.value}</code> 来替换 <code>{this.props.value}</code> 。</li>
+<li>使用 <code>onClick={() => this.setState({value: 'X'})</code> 来替换 <code>onClick={...}</code> 事件处理函数。</li>
+</ul>
+<p>在 Square 的 <code>render</code> 方法中，通过在 <code>onClick</code> 处理函数中调用 <code>this.setState</code> 方法，我们告诉 React ，每当 <code>&lt;button&gt;</code> 被点击时就重新渲染 Square 组件。在更新之后，Square 的 <code>this.state.value</code> 将会变成 <code>&#39;X&#39;</code> ，所以我们能在游戏板上看到 <code>X</code>。点击任何 Square，都会出现 <code>X</code>。</p>
+<p>当你在组件中调用 <code>this.setState</code> 时，React 将会自动更新这个组件中的所有子组件。</p>
+<p><a href="https://github.com/pftom/react101/tree/dc9cb48160fb9ec8894ff0f6c74524f4c2722780" target="_blank" rel="external nofollow noopener noreferrer">查看此时的所有项目代码</a></p>
+<h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><p><a href="https://github-production-release-asset-2e65be.s3.amazonaws.com/221361523/7e14ee00-0961-11ea-8eeb-8b3fab0c9ac0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20191117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20191117T094150Z&X-Amz-Expires=300&X-Amz-Signature=8b9e5dbd0063fa57281f85a54802e45ccb8176607042d5ae06bb55d322bddecf&X-Amz-SignedHeaders=host&actor_id=26423749&response-content-disposition=attachment%3B%20filename%3D4.2.0_0.zip&response-content-type=application%2Foctet-stream" target="_blank" rel="external nofollow noopener noreferrer">Chrome</a> 和 <a href="https://addons.mozilla.org/en-US/firefox/addon/react-devtools/" target="_blank" rel="external nofollow noopener noreferrer">Firefox</a> 的 React Devtools 扩展插件能让你在开发者工具中查看 React 组件树。</p>
+<p><img src="https://static.powerformer.com/c/5c8fdb60a9cbfbc27aae247a4a4b7376/devtools-878d91461c78d8f238e116477dfe0b46-6ca3b.png" alt></p>
+<p>React DevTools 能让你查看 React 组件的 props 和 state。</p>
+<p>当安装完 React DevTools 之后，你使用鼠标右键点击页面上的任意元素，然后在弹出的菜单栏中选择 “检查” 来打开开发者工具，然后你会看到在开发者工具的标签栏最右边会出现 React 标签（“⚛️ Components” and “⚛️ Profiler”）</p>
+<h2 id="状态提升"><a href="#状态提升" class="headerlink" title="状态提升"></a>状态提升</h2><p>我们目前已经有了 “井字棋” 游戏的基础骨架。为了完成这个游戏，我们需要在游戏板上交替出现 “X” 和 “O”，并且我们需要一种方式来决定胜者。</p>
+<p>目前，每个 Square 组件都保留着游戏的 state。为了检查胜者，我们需要在一个地方维护这 9 个 Square 的值。</p>
+<p>我们也许可以想到 Board 可以找每个 Square 要它们的 State。尽管这个方法在 React 中是可行的，但我们不建议你这么做，因为这会使代码编写难于理解，造成隐含的 BUG，并且让重构变得困难。然而，最好的方法是将游戏的 state 保存在 Board 组件中而不是每个 Square 组件中。Board 组件能通过传递 props 告诉每个 Square 该展示什么，<a href="%E9%80%9A%E8%BF%87-props-%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">就像我们之前给 Square 传递数字一样</a>。</p>
+<p><strong>为了从多个子组件中收集数据，或者使得两个子组件能相互通信，你需要在它们共有的父组件上面定义共享的 state。父组件能够通过传递 props 将 state 传回给子组件；这使得子组件之间相互同步并且子组件和父组件也保持同步。</strong></p>
+<p>将状态提升到父组件在 React 的组件重构中时很常见的方式 – 让我们抓住这个机会来尝试它。</p>
+<p>在 Board 中添加 constructor，然后设置初始 state 包含一个有 9 个 null 值的数组，对应着 9 个 Square。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Board</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">   <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">     <span class="keyword">super</span>(props);</span><br><span class="line">     <span class="keyword">this</span>.state = &#123;</span><br><span class="line">       squares: <span class="built_in">Array</span>(<span class="number">9</span>).fill(<span class="literal">null</span>),</span><br><span class="line">     &#125;;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> <span class="attr">value</span>=<span class="string">&#123;i&#125;</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们之后填充游戏板时，<code>this.state.squares</code> 数组看起来会像下面这样：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">  <span class="string">'O'</span>, <span class="literal">null</span>, <span class="string">'X'</span>,</span><br><span class="line">  <span class="string">'X'</span>, <span class="string">'X'</span>, <span class="string">'O'</span>,</span><br><span class="line">  <span class="string">'O'</span>, <span class="literal">null</span>, <span class="literal">null</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>Board 的 <code>renderSquare</code> 方法目前看起来是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> <span class="attr">value</span>=<span class="string">&#123;i&#125;</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>一开始，我们从 Board <a href="#%E9%80%9A%E8%BF%87-props-%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">向下传递 props </a>值给 Square 来展示从 0-9 的数字。之后，我们通过 <a href="#%E7%BC%96%E5%86%99%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%BB%84%E4%BB%B6">Square 的自带 state</a> 将数字设置成 “X”。这就是为什么 Square 目前忽略了通过 Board 传下来的 <code>value</code> 值。</p>
+<p>现在，我们将再次使用传递 props 的机制。我们通过修改 Board 组件来指导每个 Square 当前的值（<code>&#39;X&#39;,</code>‘O’<code>, 或者</code>null<code>）。我们已经在 Board 的 constructor 中定义了</code>squares<code>数组，现在我们将修改 Board 的</code>renderSquare` 方法来读取它。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Square</span> <span class="attr">value</span>=<span class="string">&#123;this.state.squares[i]&#125;</span> /&gt;</span></span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在每个 Square 将会接收 <code>value</code> props，它的值可能是 <code>&#39;X&#39;</code>，<code>&#39;O&#39;</code> 或者 <code>null</code>。</p>
+<p>接下来，当 Square 被点击时，我们需要作出相应的改变。现在 Board 组件维护着 Square 的填充值数组 squares。我们需要创造一种在 Square 中更新 Board 的 state 值的方式。因为 state 被认为是它所在定义的组件的私有属性，我们不能直接在 Square 中更新 Board 的 state 值。</p>
+<p>取而代之的是，我们从 Board 给 Square 传递一个函数，当 Square 被点击时，我们调用这个函数。我们修改 Board 的 <code>renderSquare</code> 方法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Square</span><br><span class="line">        value=&#123;<span class="keyword">this</span>.state.squares[i]&#125;</span><br><span class="line">        onClick=&#123;() =&gt; <span class="keyword">this</span>.handleClick(i)&#125;</span><br><span class="line">      /&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>为了可读性，我们将返回的代码分割成多行代码，然后在两端加上了圆括号，这样 JavaScript 就不会在 return 后面加上分号来破坏我们的代码。</p>
+</blockquote>
+<p>我们现在从 Board 给 Square 传递了两个 props：<code>value</code> 和 <code>onClick</code> 。<code>onClick</code> 参数是是一个函数，当 Square 被点击时就会调用它。我们将对 Square 做如下的修改：</p>
+<ul>
+<li>在 Square 的 <code>render</code> 方法中，用 <code>this.props.value</code> 来替换 <code>this.state.value</code>。</li>
+<li>在 Square 的 <code>render</code> 方法中，用 <code>this.props.onClick()</code> 来替换 <code>this.setState</code>。</li>
+<li>删除 Square 中的 <code>constructor</code> ，因为 Square 不再追踪游戏的 state。</li>
+</ul>
+<p>在做出上面的改变修改之后，Square 组件变成了下面这样：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;button</span><br><span class="line">        className=<span class="string">"square"</span></span><br><span class="line">        onClick=&#123;() =&gt; <span class="keyword">this</span>.props.onClick()&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        &#123;<span class="keyword">this</span>.props.value&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当 Square 被点击时，由 Board 提供的 <code>onClick</code> 函数就会调用。下面是对我们上面所做的一个回顾：</p>
+<ol>
+<li>在内建 DOM 元素  <code>&lt;button&gt;</code> 组件上的 <code>onClick</code> 属性告知 React 要设定一个事件监听器。</li>
+<li>当 button 被点击时，React 将会调用在 Square 的 <code>render()</code> 方法里定义的 <code>onClick</code> 事件处理函数。</li>
+<li>事件处理函数会调用 <code>this.props.onClick()</code>。Square 的 <code>onClick</code> props 是由 Board 传下来的。</li>
+<li>因为 Board 将 <code>onClick={() => this.handleClick(i)} 传给 Square，所以当 Square 被点击时，就会调用 </code>this.handleClick(i)` 方法。</li>
+<li>我们目前还没有定义 <code>handleClick(i)</code> ，所以当点击 Square 之后，我们的程序就崩掉了，你应该可以看到有着像 “this.handleClick is not a function” 这样的红色的错误提示出现在屏幕上。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong><code>button</code> DOM 元素的 <code>onClick</code> 属性对 React 来说有特殊的意义，因为它是内建的组件。对于自定义组件，像 Square ，起名字取决于你。我们可以给 Square 的 <code>onClick</code> props 和 Board 的 <code>handleClick</code> 方法起任何名字，代码都会如期运行。在 React 中，我们约定使用 <code>on[Event]</code> props 来代表事件，<code>handle[Event]</code> 来代表事件处理方法。</p>
+</blockquote>
+<p>当我们尝试点击 Square 时，程序会崩溃，因为我们目前还没有在 Board 定义 <code>handleClick</code>  方法，我们将马上加上它：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Board</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      squares: <span class="built_in">Array</span>(<span class="number">9</span>).fill(<span class="literal">null</span>),</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  handleClick(i) &#123;</span><br><span class="line">    <span class="keyword">const</span> squares = <span class="keyword">this</span>.state.squares.slice();</span><br><span class="line">    squares[i] = <span class="string">'X'</span>;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;<span class="attr">squares</span>: squares&#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  renderSquare(i) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Square</span><br><span class="line">        value=&#123;<span class="keyword">this</span>.state.squares[i]&#125;</span><br><span class="line">        onClick=&#123;() =&gt; <span class="keyword">this</span>.handleClick(i)&#125;</span><br><span class="line">      /&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> status = <span class="string">'Next player: X'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;div className=<span class="string">"status"</span>&gt;&#123;status&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="board-row"&gt;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(0)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(1)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(2)&#125;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">        &lt;div className=<span class="string">"board-row"</span>&gt;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">3</span>)&#125;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">4</span>)&#125;</span><br><span class="line">          &#123;<span class="keyword">this</span>.renderSquare(<span class="number">5</span>)&#125;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="board-row"&gt;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(6)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(7)&#125;</span></span><br><span class="line"><span class="regexp">          &#123;this.renderSquare(8)&#125;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后我们的代码看起来像下面这样：</p>
+<figure class="highlight js"><figcaption><span>src/index.js</span><a href="https://github.com/pftom/react101/blob/08c001e/src/index.js" target="_blank" rel="external nofollow noopener noreferrer">查看完整代码</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">"./index.css"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">[tuture-del]  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">[tuture-del]    <span class="keyword">super</span>(props);</span><br><span class="line">[tuture-del]    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">[tuture-del]      value: <span class="literal">null</span></span><br><span class="line">[tuture-del]    &#125;;</span><br><span class="line">[tuture-del]  &#125;</span><br><span class="line">[tuture-del] </span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">[tuture-del]      &lt;button className=<span class="string">"square"</span> onClick=&#123;() =&gt; <span class="keyword">this</span>.setState(&#123; <span class="attr">value</span>: <span class="string">"X"</span> &#125;)&#125;&gt;</span><br><span class="line">[tuture-del]        &#123;<span class="keyword">this</span>.state.value&#125;</span><br><span class="line">[tuture-add]      &lt;button className=<span class="string">"square"</span> onClick=&#123;() =&gt; <span class="keyword">this</span>.props.onClick()&#125;&gt;</span><br><span class="line">[tuture-add]        &#123;<span class="keyword">this</span>.props.value&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">class Board extends React.Component &#123;</span></span><br><span class="line"><span class="regexp">[tuture-add]  constructor(props) &#123;</span></span><br><span class="line"><span class="regexp">[tuture-add]    super(props);</span></span><br><span class="line"><span class="regexp">[tuture-add]    this.state = &#123;</span></span><br><span class="line"><span class="regexp">[tuture-add]      squares: Array(9).fill(null)</span></span><br><span class="line"><span class="regexp">[tuture-add]    &#125;;</span></span><br><span class="line"><span class="regexp">[tuture-add]  &#125;</span></span><br><span class="line"><span class="regexp">[tuture-add] </span></span><br><span class="line"><span class="regexp">[tuture-add]  handleClick(i) &#123;</span></span><br><span class="line"><span class="regexp">[tuture-add]    const squares = this.state.squares.slice();</span></span><br><span class="line"><span class="regexp">[tuture-add]    squares[i] = "X";</span></span><br><span class="line"><span class="regexp">[tuture-add]    this.setState(&#123; squares: squares &#125;);</span></span><br><span class="line"><span class="regexp">[tuture-add]  &#125;</span></span><br><span class="line"><span class="regexp">[tuture-add] </span></span><br><span class="line"><span class="regexp">  renderSquare(i) &#123;</span></span><br><span class="line"><span class="regexp">[tuture-del]    return &lt;Square value=&#123;i&#125; /</span>&gt;;</span><br><span class="line">[tuture-add]    <span class="keyword">return</span> (</span><br><span class="line">[tuture-add]      &lt;Square</span><br><span class="line">[tuture-add]        value=&#123;<span class="keyword">this</span>.state.squares[i]&#125;</span><br><span class="line">[tuture-add]        onClick=&#123;() =&gt; <span class="keyword">this</span>.handleClick(i)&#125;</span><br><span class="line">[tuture-add]      /&gt;</span><br><span class="line">[tuture-add]    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/pftom/react101/tree/08c001e3dd2fd255ebb842f65a697344cf090c44" target="_blank" rel="external nofollow noopener noreferrer">查看目前所有的项目代码</a></p>
+<p>在经过上面的修改之后，我们现在应该又可以点击 Square 然后填充 “X” 了，就像我们之前的效果一样。然而，现在游戏的 state 统一保存在 Board 组件中而不是各个 Square 组件中。当 Board 的 state 改变时，Square 组件将会自动重新渲染。将所有的 Square 的 state 保存在 Board 组件中能让我们在之后判断获胜者。</p>
+<p>因为 Square 组件不再维护 state，它从 Board 组件接收 <code>value</code> ，然后在被点击时，通知 Board 修改 state。用 React 的术语说，Square 组件现在是一个受控组件。Board 组件现在完全控制着它们。</p>
+<p>注意到在 <code>handleClick</code> 方法中，我们在数组上调用了 <code>.slice()</code> 方法来创建一个 <code>squares</code> 的拷贝而不是直接修改它。我们将在下部分讲解为何我们要创建 <code>squares</code> 的拷贝。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2019/11/13/175b717/" title="用 React 实现一个井字棋游戏（一)">https://tuture.co/2019/11/13/175b717/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/React/" rel="tag"><i class="fa fa-tag"></i> React</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/13/3697248/" rel="next" title="用 React 实现一个井字棋游戏（二）">
+                  <i class="fa fa-chevron-left"></i> 用 React 实现一个井字棋游戏（二）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/18/07acf61/" rel="prev" title="一杯茶的时间，上手 React 框架开发">
+                  一杯茶的时间，上手 React 框架开发 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码准备"><span class="nav-number">1.</span> <span class="nav-text">代码准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#我们将要做什么"><span class="nav-number">1.1.</span> <span class="nav-text">我们将要做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前提条件"><span class="nav-number">1.2.</span> <span class="nav-text">前提条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发环境准备"><span class="nav-number">1.3.</span> <span class="nav-text">开发环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#帮帮忙，我遇到了问题！"><span class="nav-number">1.4.</span> <span class="nav-text">帮帮忙，我遇到了问题！</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-Props-传递数据"><span class="nav-number">2.</span> <span class="nav-text">通过 Props 传递数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-React？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是 React？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解初始代码"><span class="nav-number">2.2.</span> <span class="nav-text">了解初始代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写交互式组件"><span class="nav-number">3.</span> <span class="nav-text">编写交互式组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发工具"><span class="nav-number">3.1.</span> <span class="nav-text">开发工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态提升"><span class="nav-number">4.</span> <span class="nav-text">状态提升</span></a></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">891k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:30</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '6310753ce4e95163d2b0',
+      clientSecret: '4fd6839b697f9d50e01eebbb9566d8bdf3bd75b4',
+      repo: 'comments',
+      owner: 'tuture-dev',
+      admin: 'pftom,mRcfps,tuture-dev'.split(','),
+      id: '435cb5782148bd39ad3b2d837037d94f',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

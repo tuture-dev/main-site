@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="上一篇介绍了如何创建项目、路由的访问以及如何创建模块，这篇来讲讲数据库的连接与使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nest.js 从零到壹系列（二）：使用 Sequelize 操作数据库">
+<meta property="og:url" content="https://tuture.co/2020/05/12/@34dvBzFh6/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="上一篇介绍了如何创建项目、路由的访问以及如何创建模块，这篇来讲讲数据库的连接与使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/%4034dvBzFh6/2.jpg">
+<meta property="article:published_time" content="2020-05-11T16:01:00.509Z">
+<meta property="article:modified_time" content="2021-08-08T15:03:20.711Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Nest.js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/%4034dvBzFh6/2.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/05/12/@34dvBzFh6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Nest.js 从零到壹系列（二）：使用 Sequelize 操作数据库 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/05/12/@34dvBzFh6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">Nest.js 从零到壹系列（二）：使用 Sequelize 操作数据库
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-12 00:01:00" itemprop="dateCreated datePublished" datetime="2020-05-12T00:01:00+08:00">2020-05-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 23:03:20" itemprop="dateModified" datetime="2021-08-08T23:03:20+08:00">2021-08-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Node-js/" itemprop="url" rel="index"><span itemprop="name">Node.js</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%90%8E%E7%AB%AF/Node-js/%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">进阶</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>4.6k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>4 分钟</span>
+            </span>
+          
+            <div class="post-description">上一篇介绍了如何创建项目、路由的访问以及如何创建模块，这篇来讲讲数据库的连接与使用。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/%4034dvBzFh6/2.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <a href="https://github.com/SephirothKid/nest-zero-to-one" target="_blank" rel="external nofollow noopener noreferrer"><img src="/images/avatars/bldtp.png" alt class="avatar"></a>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <a href="https://juejin.im/user/5a5ff3e16fb9a01c9526215f" target="_blank" rel="external nofollow noopener noreferrer"><p class="nickName">布拉德特皮</p></a>
+  </div>
+  </div>
+</div>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇介绍了如何创建项目、路由的访问以及如何创建模块，这篇来讲讲数据库的连接与使用。</p>
+<p>既然是后端项目，当然要能连上数据库，否则还不如直接写静态页面。</p>
+<p>本教程使用的是 MySQL，有人可能会问为啥不用 MongoDB。。。呃，因为公司使用 MySQL，我也是结合项目经历写的教程，MongoDB 还没踩过坑，所以就不在这误人子弟了。</p>
+<p><a href="https://github.com/SephirothKid/nest-zero-to-one" target="_blank" rel="external nofollow noopener noreferrer">GitHub 项目地址</a>，欢迎各位大佬 Star。</p>
+<h2 id="一、MySQL-准备"><a href="#一、MySQL-准备" class="headerlink" title="一、MySQL 准备"></a>一、MySQL 准备</h2><p>首先要确保你有数据库可以连接，如果没有，可以在 MySQL 官网下载一个，本地跑起来。安装教程这里就不叙述了，“百度一下，你就知道”。</p>
+<p>推荐使用 Navicat Premium 可视化工具来管理数据库。</p>
+<p>用 Navicat 连接上数据库后，新建一个库：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098161-92c7982f-c049-484e-92d7-9e7afaa428af.webp" alt></p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098122-8c279728-bb7a-47d7-b8dc-d55d8125428c.webp" alt></p>
+<p>点开我们刚创建的库 <code>nest_zero_to_one</code>，点开 Tables，发现里面空空如也，接下来我们创建一张新表，点开上面工具栏的 Query，并新增查询：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098172-12a43b0f-2fa2-43ef-bd5f-b7dc6533719c.webp" alt></p>
+<p>将下列代码复制到框内，点击上面的运行，即可完成表的创建：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line">CREATE TABLE <span class="string">`admin_user`</span> (</span><br><span class="line">  <span class="string">`user_id`</span> smallint(<span class="number">6</span>) NOT NULL AUTO_INCREMENT COMMENT <span class="string">'用户ID'</span>,</span><br><span class="line">  <span class="string">`account_name`</span> varchar(<span class="number">24</span>) NOT NULL COMMENT <span class="string">'用户账号'</span>,</span><br><span class="line">  <span class="string">`real_name`</span> varchar(<span class="number">20</span>) NOT NULL COMMENT <span class="string">'真实姓名'</span>,</span><br><span class="line">  <span class="string">`passwd`</span> char(<span class="number">32</span>) NOT NULL COMMENT <span class="string">'密码'</span>,</span><br><span class="line">  <span class="string">`passwd_salt`</span> char(<span class="number">6</span>) NOT NULL COMMENT <span class="string">'密码盐'</span>,</span><br><span class="line">  <span class="string">`mobile`</span> varchar(<span class="number">15</span>) NOT NULL DEFAULT <span class="string">'0'</span> COMMENT <span class="string">'手机号码'</span>,</span><br><span class="line">  <span class="string">`role`</span> tinyint(<span class="number">4</span>) NOT NULL DEFAULT <span class="string">'3'</span> COMMENT <span class="string">'用户角色：0-超级管理员|1-管理员|2-开发&amp;测试&amp;运营|3-普通用户（只能查看）'</span>,</span><br><span class="line">  <span class="string">`user_status`</span> tinyint(<span class="number">4</span>) NOT NULL DEFAULT <span class="string">'0'</span> COMMENT <span class="string">'状态：0-失效|1-有效|2-删除'</span>,</span><br><span class="line">  <span class="string">`create_by`</span> smallint(<span class="number">6</span>) NOT NULL COMMENT <span class="string">'创建人ID'</span>,</span><br><span class="line">  <span class="string">`create_time`</span> timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT <span class="string">'创建时间'</span>,</span><br><span class="line">  <span class="string">`update_by`</span> smallint(<span class="number">6</span>) NOT NULL DEFAULT <span class="string">'0'</span> COMMENT <span class="string">'修改人ID'</span>,</span><br><span class="line">  <span class="string">`update_time`</span> timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT <span class="string">'修改时间'</span>,</span><br><span class="line">  PRIMARY KEY (<span class="string">`user_id`</span>),</span><br><span class="line">  KEY <span class="string">`idx_m`</span> (<span class="string">`mobile`</span>)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=<span class="number">1</span> DEFAULT CHARSET=utf8 COMMENT=<span class="string">'后台用户表'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098152-6320a371-9605-4c10-93fe-48e75fadc3c4.webp" alt></p>
+<p>然后我们可以看到，左边的 <code>Tables</code> 下多出了 <code>admin_user</code> 表，点开就可以看到字段信息了：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098129-ee898154-d572-40ba-a8cf-8edb1a97bd84.webp" alt></p>
+<p>我们先随便插入 2 条数据，方便后面的查询：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098117-4a0baa06-3231-48b5-b572-b512622a86af.webp" alt></p>
+<h2 id="二、项目的数据库配置"><a href="#二、项目的数据库配置" class="headerlink" title="二、项目的数据库配置"></a>二、项目的数据库配置</h2><p>先在项目根目录创建一个文件夹 <code>config</code>（与 <code>src</code> 同级），专门放置各种配置。</p>
+<p>然后新建一个文件 <code>db.ts</code>:</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// config/db.ts</span></span><br><span class="line"><span class="keyword">const</span> productConfig = &#123;</span><br><span class="line">  mysql: &#123;</span><br><span class="line">    port: <span class="string">'数据库端口'</span>,</span><br><span class="line">    host: <span class="string">'数据库地址'</span>,</span><br><span class="line">    user: <span class="string">'用户名'</span>,</span><br><span class="line">    password: <span class="string">'密码'</span>,</span><br><span class="line">    database: <span class="string">'nest_zero_to_one'</span>, <span class="comment">// 库名</span></span><br><span class="line">    connectionLimit: <span class="number">10</span>, <span class="comment">// 连接限制</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> localConfig = &#123;</span><br><span class="line">  mysql: &#123;</span><br><span class="line">    port: <span class="string">'数据库端口'</span>,</span><br><span class="line">    host: <span class="string">'数据库地址'</span>,</span><br><span class="line">    user: <span class="string">'用户名'</span>,</span><br><span class="line">    password: <span class="string">'密码'</span>,</span><br><span class="line">    database: <span class="string">'nest_zero_to_one'</span>, <span class="comment">// 库名</span></span><br><span class="line">    connectionLimit: <span class="number">10</span>, <span class="comment">// 连接限制</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 本地运行是没有 process.env.NODE_ENV 的，借此来区分[开发环境]和[生产环境]</span></span><br><span class="line"><span class="keyword">const</span> config = process.env.NODE_ENV ? productConfig : localConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> config;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Ps：这个文件是不同步到 github 的，需要各位读者结合实际情况配置</p>
+</blockquote>
+<p>市面上有很多连接数据库的工具，笔者这里使用的是 <code>Sequelize</code>，先安装依赖包：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line">$ npm i sequelize sequelize-typescript mysql2 -S</span><br><span class="line">或</span><br><span class="line">$ yarn add sequelize sequelize-typescript mysql2 -S</span><br></pre></td></tr></table></figure>
+
+<p>然后在 <code>src</code> 目录下创建文件夹 <code>database</code>，然后再创建 <code>sequelize.ts</code>：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// src/database/sequelize.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Sequelize &#125; <span class="keyword">from</span> <span class="string">'sequelize-typescript'</span>;</span><br><span class="line"><span class="keyword">import</span> db <span class="keyword">from</span> <span class="string">'../../config/db'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sequelize = <span class="keyword">new</span> Sequelize(</span><br><span class="line">  db.mysql.database,</span><br><span class="line">  db.mysql.user,</span><br><span class="line">  db.mysql.password || <span class="literal">null</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 自定义主机; 默认值: localhost</span></span><br><span class="line">    host: db.mysql.host, <span class="comment">// 数据库地址</span></span><br><span class="line">    <span class="comment">// 自定义端口; 默认值: 3306</span></span><br><span class="line">    port: db.mysql.port,</span><br><span class="line">    dialect: <span class="string">'mysql'</span>,</span><br><span class="line">    pool: &#123;</span><br><span class="line">      max: db.mysql.connectionLimit, <span class="comment">// 连接池中最大连接数量</span></span><br><span class="line">      min: <span class="number">0</span>, <span class="comment">// 连接池中最小连接数量</span></span><br><span class="line">      acquire: <span class="number">30000</span>,</span><br><span class="line">      idle: <span class="number">10000</span>, <span class="comment">// 如果一个线程 10 秒钟内没有被使用过的话，那么就释放线程</span></span><br><span class="line">    &#125;,</span><br><span class="line">    timezone: <span class="string">'+08:00'</span>, <span class="comment">// 东八时区</span></span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试数据库链接</span></span><br><span class="line">sequelize</span><br><span class="line">  .authenticate()</span><br><span class="line">  .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'数据库连接成功'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .catch(<span class="function">(<span class="params">err: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 数据库连接失败时打印输出</span></span><br><span class="line">    <span class="built_in">console</span>.error(err);</span><br><span class="line">    <span class="keyword">throw</span> err;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> sequelize;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、数据库连接测试"><a href="#三、数据库连接测试" class="headerlink" title="三、数据库连接测试"></a>三、数据库连接测试</h2><p>好了，接下来我们来测试一下数据库的连接情况。</p>
+<p>我们重写 <code>user.service.ts</code> 的逻辑：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// src/logical/user/user.service.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'@nestjs/common'</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Sequelize <span class="keyword">from</span> <span class="string">'sequelize'</span>; <span class="comment">// 引入 Sequelize 库</span></span><br><span class="line"><span class="keyword">import</span> sequelize <span class="keyword">from</span> <span class="string">'../../database/sequelize'</span>; <span class="comment">// 引入 Sequelize 实例</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> UserService &#123;</span><br><span class="line">  <span class="keyword">async</span> findOne(username: <span class="built_in">string</span>): <span class="built_in">Promise</span>&lt;<span class="built_in">any</span> | <span class="literal">undefined</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> sql = <span class="string">`</span></span><br><span class="line"><span class="string">      SELECT</span></span><br><span class="line"><span class="string">        user_id id, real_name realName, role</span></span><br><span class="line"><span class="string">      FROM</span></span><br><span class="line"><span class="string">        admin_user</span></span><br><span class="line"><span class="string">      WHERE</span></span><br><span class="line"><span class="string">        account_name = '<span class="subst">$&#123;username&#125;</span>'</span></span><br><span class="line"><span class="string">    `</span>; <span class="comment">// 一段平淡无奇的 SQL 查询语句</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> res = <span class="keyword">await</span> sequelize.query(sql, &#123;</span><br><span class="line">        <span class="keyword">type</span>: Sequelize.QueryTypes.SELECT, <span class="comment">// 查询方式</span></span><br><span class="line">        raw: <span class="literal">true</span>, <span class="comment">// 是否使用数组组装的方式展示结果</span></span><br><span class="line">        logging: <span class="literal">true</span>, <span class="comment">// 是否将 SQL 语句打印到控制台，默认为 true</span></span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">const</span> user = res[<span class="number">0</span>]; <span class="comment">// 查出来的结果是一个数组，我们只取第一个。</span></span><br><span class="line">      <span class="keyword">if</span> (user) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          code: <span class="number">200</span>, <span class="comment">// 返回状态码，可自定义</span></span><br><span class="line">          data: &#123;</span><br><span class="line">            user,</span><br><span class="line">          &#125;,</span><br><span class="line">          msg: <span class="string">'Success'</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          code: <span class="number">600</span>,</span><br><span class="line">          msg: <span class="string">'查无此人'</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        code: <span class="number">503</span>,</span><br><span class="line">        msg: <span class="string">`Service error: <span class="subst">$&#123;error&#125;</span>`</span>,</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>保存文件，就会看到控制台刷新了（前提是使用 <code>yarn start:dev</code> 启动的），并打印下列语句：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098163-689735e7-c9b3-4cc5-a869-68776586be52.webp" alt></p>
+<p>这说明之前的配置生效了，我们试着用之前的参数请求一下接口：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098174-01e86f33-71bc-4334-ad3d-889ec0422bf2.webp" alt></p>
+<p>返回“查无此人”，说明数据库没有叫“Kid”的用户。</p>
+<p>我们改成正确的已存在的用户名再试试：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098206-f0199b49-b37c-4772-b818-169c15b10787.webp" alt></p>
+<p>然后观察一下控制台，我们的查询语句已经打印出来了，通过 <code>logging: true</code>，可以在调试 Bug 的时候，更清晰的查找 SQL 语句的错误，不过建议测试稳定后，上线前关闭，不然记录的日志会很繁杂：</p>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098175-99c8dfba-b58d-4433-b30f-acb8470aba94.webp" alt></p>
+<p>再对照一下数据库里的表，发现查出来的数据和数据库里的一致，至此，MySQL 连接测试完成，以后就可以愉快的在 Service 里面搬砖了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇介绍了 MySQL 的数据准备、Sequelize 的配置、Nest 怎么通过 Sequelize 连接上 MySQL，以及用一条简单的查询语句去验证连接情况。</p>
+<p>在这里，<strong>强烈建议使用写原生 SQL 语句去操作数据库</strong>。</p>
+<p>虽然 Sequelize 提供了很多便捷的方法，具体可去 <a href="https://sequelize.org/v5/" target="_blank" rel="external nofollow noopener noreferrer">Sequelize v5 官方文档</a> 浏览学习。但笔者通过观察 <code>logging</code> 打印出来的语句发现，其实多了很多无谓的操作，在高并发的情况下，太影响性能了。</p>
+<p>而且如果不使用原生查询，那么就要建立对象映射到数据库表，然后每次工具更新，还要花时间成本去学习，如果数据库改了字段，那么映射关系就会出错，然后项目就会疯狂报错以致宕机（亲身经历）。</p>
+<p>而使用原生 SQL，只需要学一种语言就够了，换个工具，也能用，而且就算改了字段，也只会在请求接口的时候报错，到时候再针对那个语句修改就好了，而且现在查找替换功能这么强大，批量修改也不是难事。</p>
+<p>最重要的是，如果你是从前端转后端，或者根本就是 0 基础到后端，还是建议先把 SQL 的基础打牢，不然连 <code>JOIN</code>、<code>LEFT JOIN</code> 和 <code>RIGHT JOIN</code> 的区别都分不清（我们公司就有个三年经验的后端，乱用 <code>LEFT JOIN</code>，然后被 DB 主管一顿痛骂。。。真事儿）。</p>
+<p>多写、多分析、多看控制台报错、多从性能上考虑，才是最快入门的途径。</p>
+<blockquote>
+<p>注意：在写 UPDATE 更新语句的时候，一定要加上 WHERE 条件，一定要加上 WHERE 条件，一定要加上 WHERE 条件，重要的事情说 3 遍，血与泪的教训！！！</p>
+</blockquote>
+<p><img src="https://static.powerformer.com/c/@34dvBzFh6/1589285098128-2b7c200c-935f-418e-8d46-f1f164453908.webp" alt></p>
+<p>下一篇，将介绍如何使用 JWT（Json Web Token）进行单点登录。</p>
+<blockquote>
+<p>本篇收录于<a href="https://juejin.im/collection/5e893a1b6fb9a04d65a15400" target="_blank" rel="external nofollow noopener noreferrer">NestJS 实战教程</a>，更多文章敬请关注。</p>
+</blockquote>
+<p>`</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/05/12/@34dvBzFh6/" title="Nest.js 从零到壹系列（二）：使用 Sequelize 操作数据库">https://tuture.co/2020/05/12/@34dvBzFh6/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Nest-js/" rel="tag"><i class="fa fa-tag"></i> Nest.js</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/05/12/@pRtgJQ4NP/" rel="next" title="Nest.js 从零到壹系列（一）：项目创建&amp;路由设置&amp;模块">
+                  <i class="fa fa-chevron-left"></i> Nest.js 从零到壹系列（一）：项目创建&amp;路由设置&amp;模块
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/05/12/@sO4iOISav/" rel="prev" title="Nest.js 从零到壹系列（三）：使用 JWT 实现注册、登录">
+                  Nest.js 从零到壹系列（三）：使用 JWT 实现注册、登录 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、MySQL-准备"><span class="nav-number">2.</span> <span class="nav-text">一、MySQL 准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、项目的数据库配置"><span class="nav-number">3.</span> <span class="nav-text">二、项目的数据库配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、数据库连接测试"><span class="nav-number">4.</span> <span class="nav-text">三、数据库连接测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">891k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:30</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '6310753ce4e95163d2b0',
+      clientSecret: '4fd6839b697f9d50e01eebbb9566d8bdf3bd75b4',
+      repo: 'comments',
+      owner: 'tuture-dev',
+      admin: 'pftom,mRcfps,tuture-dev'.split(','),
+      id: '3a90fb2d258ac5d265feb9d05ba4e758',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

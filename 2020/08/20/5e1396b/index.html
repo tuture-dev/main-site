@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="你或许早已经知道“单元测试”“端到端测试”这些名词，但从未真正付诸实践。在这一系列实战教程中，我们将手把手带你掌握 Jest、Enzyme、Cypress 等测试利器，帮助我们从 bug 的沼泽中挣脱出来，成为一个无往不利的高阶前端开发者！本篇教程是 JavaScript 测试系列实战 的第一篇教程，首先介绍了测试的类型，然后主要通过一个 React 项目教会你如何使用 Jest 编写第一个测试，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 测试系列实战（一）：使用 Jest 和 Enzyme 测试 React 组件">
+<meta property="og:url" content="https://tuture.co/2020/08/20/5e1396b/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="你或许早已经知道“单元测试”“端到端测试”这些名词，但从未真正付诸实践。在这一系列实战教程中，我们将手把手带你掌握 Jest、Enzyme、Cypress 等测试利器，帮助我们从 bug 的沼泽中挣脱出来，成为一个无往不利的高阶前端开发者！本篇教程是 JavaScript 测试系列实战 的第一篇教程，首先介绍了测试的类型，然后主要通过一个 React 项目教会你如何使用 Jest 编写第一个测试，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/f40c6ff/js-test-cover-1.jpg">
+<meta property="article:published_time" content="2020-08-20T04:04:01.397Z">
+<meta property="article:modified_time" content="2021-08-08T15:06:11.898Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Jest">
+<meta property="article:tag" content="Enzyme">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/f40c6ff/js-test-cover-1.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/08/20/5e1396b/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>JavaScript 测试系列实战（一）：使用 Jest 和 Enzyme 测试 React 组件 | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/08/20/5e1396b/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">JavaScript 测试系列实战（一）：使用 Jest 和 Enzyme 测试 React 组件
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-20 12:04:01" itemprop="dateCreated datePublished" datetime="2020-08-20T12:04:01+08:00">2020-08-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 23:06:11" itemprop="dateModified" datetime="2021-08-08T23:06:11+08:00">2021-08-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/React/%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">进阶</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>6.6k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>6 分钟</span>
+            </span>
+          
+            <div class="post-description">你或许早已经知道“单元测试”“端到端测试”这些名词，但从未真正付诸实践。在这一系列实战教程中，我们将手把手带你掌握 Jest、Enzyme、Cypress 等测试利器，帮助我们从 bug 的沼泽中挣脱出来，成为一个无往不利的高阶前端开发者！本篇教程是 JavaScript 测试系列实战 的第一篇教程，首先介绍了测试的类型，然后主要通过一个 React 项目教会你如何使用 Jest 编写第一个测试，然后使用 Enzyme 对 React 组件进行浅层渲染，以方便对不同层次的组件进行细粒度测试，当学习了这篇教程之后，你将对基础的测试编写、组件的测试有一个比较好的了解。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/f40c6ff/js-test-cover-1.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcw==" title="https://github.com/tuture-dev/javascript-test-series"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="初识-Jest-单元测试"><a href="#初识-Jest-单元测试" class="headerlink" title="初识 Jest 单元测试"></a>初识 Jest 单元测试</h2><p>测试是检查代码的代码，能够大大增强我们对应用的信心。更重要的是，测试会阻止你在修复一件事情的同时破坏另一件事情，让我们能够放开手脚进行功能的添加与大规模重构。您可以测试应用程序的许多方面，从单个函数及其返回值到在浏览器中运行的复杂应用程序。万丈高楼平地起，让我们先来了解一下有哪些测试。</p>
+<h3 id="测试的类型"><a href="#测试的类型" class="headerlink" title="测试的类型"></a>测试的类型</h3><h4 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h4><p>单元测试的目标可以是一个函数，一个类，或者一个模块。单元测试应该是相互隔离和独立的。对于给定的输入，单元测试检查结果。通过及早发现问题并避免 bug 回归，它可以帮助我们确保代码的各个部分按预期工作。</p>
+<h4 id="集成测试"><a href="#集成测试" class="headerlink" title="集成测试"></a>集成测试</h4><p>即使所有单元测试都通过了，我们的应用仍然可能会崩溃。集成测试则是用来测试跨模单元/模块的过程，可以很好地确保我们的代码能够作为一个整体运行。</p>
+<h4 id="端到端测试-E2E"><a href="#端到端测试-E2E" class="headerlink" title="端到端测试(E2E)"></a>端到端测试(E2E)</h4><p>与其他类型的测试不同，E2E 测试总是在浏览器(或类浏览器)环境中运行。它可能是一个实际的浏览器，可以打开并在其中运行测试；也可能是一个无头（Headless）的浏览器环境，这是一个没有用户界面的浏览器。E2E 测试的重点是在我们正在运行的应用程序中模拟实际用户（例如模拟滚动、单击和键入等行为），并检查我们的应用程序是否从实际用户的角度运行良好。</p>
+<p>在这一系列教程中，我们将会从零开始，一步步带你熟悉从单元测试到端到端测试的方方面面。我们将会在一个 React 项目中实践所学到的自动化测试技术。首先用 Create React App（CRA）搭建项目脚手架：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">create-react-app javascript-test-series</span><br></pre></td></tr></table></figure>
+
+<p>然后我们删除 <code>src</code> 目录下所有预创建的文件（当然你也可以手动删除）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rm src/*</span><br></pre></td></tr></table></figure>
+
+<p>一切准备就绪！让我们开始吧。</p>
+<h3 id="编写第一个单元测试"><a href="#编写第一个单元测试" class="headerlink" title="编写第一个单元测试"></a>编写第一个单元测试</h3><p>编写一个单元测试实际上要比你想象得简单很多。首先创建 <code>divide.js</code> ，在其中编写一个 <code>divide</code> 函数：</p>
+<figure class="highlight js"><figcaption><span>divide.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzBiNzEwZDFkOWVkMDNjNDY2Mzc0OGNjYzEwYjMzN2ExMWJjY2FiM2YvZGl2aWRlLmpz" title="https://github.com/tuture-dev/javascript-test-series/blob/0b710d1d9ed03c4663748ccc10b337a11bccab3f/divide.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">divide</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a / b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = divide;</span><br></pre></td></tr></table></figure>
+
+<p>然后创建测试文件 <code>divide.test.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>divide.test.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzBiNzEwZDFkOWVkMDNjNDY2Mzc0OGNjYzEwYjMzN2ExMWJjY2FiM2YvZGl2aWRlLnRlc3QuanM=" title="https://github.com/tuture-dev/javascript-test-series/blob/0b710d1d9ed03c4663748ccc10b337a11bccab3f/divide.test.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> divide = <span class="built_in">require</span>(<span class="string">'./divide'</span>);</span><br><span class="line"></span><br><span class="line">test(<span class="string">'dividing 6 by 3 equals 2'</span>, () =&gt; &#123;</span><br><span class="line">  expect(divide(<span class="number">6</span>, <span class="number">3</span>)).toBe(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>作为本系列教程的第一个 Jest 测试，我们来详细讲解一下：</p>
+<ul>
+<li>我们先导入需要测试的单元/模块</li>
+<li><code>test</code> 函数定义了一个<strong>测试用例</strong>，第一个参数就是<strong>用例描述</strong>，一般是一句完整的描述，例如上面的 <code>dividing 6 by 3 equals 2</code> ；第二个参数则是一个待执行的<strong>测试函数</strong></li>
+<li>在测试函数中，最重要的组成部分就是<strong>断言</strong>（Assertion），例如上面的 <code>expect(divide(6, 3)).toBe(2)</code> </li>
+<li>断言的核心是 <code>expect</code> 函数，它接受一个表达式，然后后面可以调用 Matcher 来测试该表达式是否符合条件，例如这里我们就使用了最常用的 <code>toBe</code> Matcher；Jest 还提供了大量的 Matcher，可以帮助我们写出更简洁可读的断言语句，可参考 <span class="exturl" data-url="aHR0cHM6Ly9qZXN0anMuaW8vZG9jcy96aC1IYW5zL2V4cGVjdA==" title="https://jestjs.io/docs/zh-Hans/expect">Expect API<i class="fa fa-external-link"></i></span></li>
+</ul>
+<p>CRA 已经为我们配置好了 Jest，这里直接运行 <code>npx jest</code> 命令，就可以看到测试结果了：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PASS  .&#x2F;divide.test.js</span><br><span class="line">  ✓ dividing 6 by 3 equals 2 (5ms)</span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>CRA 也配置了 <code>test</code> 命令，但是提供了比较复杂的功能配置（例如 Watch 模式等），可能会让初学 Jest 的你不知所措。因此这里建议直接使用 <code>npx jest</code> 执行测试。</p>
+          </div>
+
+<h3 id="编写第一组测试"><a href="#编写第一组测试" class="headerlink" title="编写第一组测试"></a>编写第一组测试</h3><p>每个测试文件通常有多个测试用例。Jest 允许我们通过 <code>describe</code> 函数对测试用例进行分组，它创建了一个可以组合多个测试的块。让我们对全局 <code>Math</code> 对象运行一些测试（希望浏览器工程师和 Node 开源项目维护者不要来打我），创建 <code>math.test.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>math.test.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzBiNzEwZDFkOWVkMDNjNDY2Mzc0OGNjYzEwYjMzN2ExMWJjY2FiM2YvbWF0aC50ZXN0Lmpz" title="https://github.com/tuture-dev/javascript-test-series/blob/0b710d1d9ed03c4663748ccc10b337a11bccab3f/math.test.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">describe(<span class="string">'in the math global object'</span>, () =&gt; &#123;</span><br><span class="line">  describe(<span class="string">'the random function'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'should return a number'</span>, () =&gt; &#123;</span><br><span class="line">      expect(<span class="keyword">typeof</span> <span class="built_in">Math</span>.random()).toEqual(<span class="string">'number'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="string">'should return a number between 0 and 1'</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> randomNumber = <span class="built_in">Math</span>.random();</span><br><span class="line">      expect(randomNumber).toBeGreaterThanOrEqual(<span class="number">0</span>);</span><br><span class="line">      expect(randomNumber).toBeLessThan(<span class="number">1</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="string">'the round function'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'should return a rounded value of 4.5 being 5'</span>, () =&gt; &#123;</span><br><span class="line">      expect(<span class="built_in">Math</span>.round(<span class="number">4.5</span>)).toBe(<span class="number">5</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>你也许注意到了这里我们用了 <code>it</code> 函数而不是 <code>test</code> 函数，这两者实际上是完全一样的。</p>
+</blockquote>
+<p>这样对测试进行分组可以使我们的代码更加清晰。在关注应用程序的代码质量的同时，我们也应该确保测试代码的质量，这样我们才有足够的动力不断去维护测试代码，从而确保我们的项目能够保持健壮。</p>
+<p>除了使代码更具可读性之外，它还有助于在出现错误时提供更好的错误消息。如果这里我们将第一条测试用例改为 <code>expect(typeof Math.random()).toEqual(&#39;string&#39;)</code> ，那么再运行 <code>npx jest</code> ，就会出现如下错误信息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">FAIL  .&#x2F;math.test.js</span><br><span class="line">  ● in the math global object › the random function › should return a number</span><br><span class="line"></span><br><span class="line">    expect(received).toEqual(expected)</span><br><span class="line"></span><br><span class="line">    Expected value to equal:</span><br><span class="line">      &quot;string&quot;</span><br><span class="line">    Received:</span><br><span class="line">      &quot;number&quot;</span><br></pre></td></tr></table></figure>
+
+<p>是不是一目了然呢？</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>在这一小节中，我们首先了解了测试有哪些类型。然后我们在 CRA 脚手架中编写了一个简单的函数，并为之编写了第一个单元测试，熟悉了测试用例、断言、Matcher 这些关键概念，并成功地通过了测试。接着，我们又编写了一个包含多个用例的测试文件，并通过 <code>describe</code> 函数将测试用例组织得井井有条。</p>
+<h2 id="初识-Enzyme：编写第一个-React-组件测试"><a href="#初识-Enzyme：编写第一个-React-组件测试" class="headerlink" title="初识 Enzyme：编写第一个  React 组件测试"></a>初识 Enzyme：编写第一个  React 组件测试</h2><p>很显然，我们不会仅仅满足于测试像 <code>divide</code> 那样简单的函数，我们希望能够测试一个 React 组件，但是和一个普通的 JavaScript 函数不同，测试一个 React 组件还需要两个关键的问题：1）怎么渲染待测试的组件；2）怎么测试渲染出来的组件。 </p>
+<p>所幸的是，Airbnb 作为重度使用 React 的先驱，早就提出了专门的解决方案：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2VuenltZWpzL2VuenltZQ==" title="https://github.com/enzymejs/enzyme">Enzyme<i class="fa fa-external-link"></i></span>。</p>
+<h3 id="安装和配置-Enzyme"><a href="#安装和配置-Enzyme" class="headerlink" title="安装和配置 Enzyme"></a>安装和配置 Enzyme</h3><p>首先安装 Enzyme 和相应的 React 适配器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install enzyme enzyme-adapter-react-16</span><br></pre></td></tr></table></figure>
+
+<p>我们需要配置一下 Enzyme，才能在 Jest 测试文件中使用它。创建 <code>src/setupTests.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/setupTests.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzlmZDc2ZTIzYWU3N2RkN2MyZjQ4MTFhZTMyYzE3YTAzMjU2ZDljMjEvc3JjL3NldHVwVGVzdHMuanM=" title="https://github.com/tuture-dev/javascript-test-series/blob/9fd76e23ae77dd7c2f4811ae32c17a03256d9c21/src/setupTests.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; configure &#125; <span class="keyword">from</span> <span class="string">'enzyme'</span>;</span><br><span class="line"><span class="keyword">import</span> Adapter <span class="keyword">from</span> <span class="string">'enzyme-adapter-react-16'</span>;</span><br><span class="line"></span><br><span class="line">configure(&#123; <span class="attr">adapter</span>: <span class="keyword">new</span> Adapter() &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="浅层渲染"><a href="#浅层渲染" class="headerlink" title="浅层渲染"></a>浅层渲染</h3><p>Enzyme 提供的一个重要功能便是组件的<strong>浅层渲染</strong>（Shallow Rendering）。它允许我们在运行测试时，<strong>只渲染父组件而不渲染其所有的子组件</strong>。浅层渲染十分快速，因此非常适合单元测试。</p>
+<p>首先让我们创建一个简单的 React 组件，创建 <code>src/App.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/App.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzlmZDc2ZTIzYWU3N2RkN2MyZjQ4MTFhZTMyYzE3YTAzMjU2ZDljMjEvc3JjL0FwcC5qcw==" title="https://github.com/tuture-dev/javascript-test-series/blob/9fd76e23ae77dd7c2f4811ae32c17a03256d9c21/src/App.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+
+<p>编写 <code>App</code> 组件对应的测试文件 <code>src/App.test.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/App.test.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzlmZDc2ZTIzYWU3N2RkN2MyZjQ4MTFhZTMyYzE3YTAzMjU2ZDljMjEvc3JjL0FwcC50ZXN0Lmpz" title="https://github.com/tuture-dev/javascript-test-series/blob/9fd76e23ae77dd7c2f4811ae32c17a03256d9c21/src/App.test.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">'enzyme'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'app component'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'contains a header with the "Hello world!"'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> app = shallow(<span class="xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>);</span><br><span class="line">    expect(app.containsMatchingElement(<span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>)).toEqual(<span class="literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这里我们用 <code>shallow</code> 函数来浅层渲染 <code>App</code> 组件得到 <code>app</code> ，并且调用其 <code>containsMatchingElement</code> 来判断渲染后的 <code>App</code> 组件是否包含 <code>&lt;h1&gt;Hello world!&lt;/h1&gt;</code> 元素。</p>
+<blockquote>
+<p>Enzyme 浅层渲染后的组件还包括其他测试方法，可参考 <span class="exturl" data-url="aHR0cHM6Ly9lbnp5bWVqcy5naXRodWIuaW8vZW56eW1lL2RvY3MvYXBpL3NoYWxsb3cuaHRtbA==" title="https://enzymejs.github.io/enzyme/docs/api/shallow.html">https://enzymejs.github.io/enzyme/docs/api/shallow.html<i class="fa fa-external-link"></i></span>。</p>
+</blockquote>
+<p>通过 <code>npm test</code> 命令，我们就可以看到刚才的测试通过了：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PASS  app&#x2F;App.test.js</span><br><span class="line">  app component</span><br><span class="line">    ✓ contains a header with the &quot;Hello world!&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试更复杂的组件"><a href="#测试更复杂的组件" class="headerlink" title="测试更复杂的组件"></a>测试更复杂的组件</h2><p>在实际的前端开发中，我们的组件要复杂很多。本着循序渐进的原则，我们稍微前进一步：来编写一个接受 <code>props</code> 的组件，并根据数据来决定渲染结果。</p>
+<h3 id="配置-jest-enzyme"><a href="#配置-jest-enzyme" class="headerlink" title="配置 jest-enzyme"></a>配置 jest-enzyme</h3><p>你应该还记得，在刚才的测试代码中，我们还是使用了 Jest 自带的 Matcher（<code>toEqual</code>）。但实际上，社区还提供了更好的选择——专门为 Enzyme 定制的 Matcher 库：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Zvcm1pZGFibGVMYWJzL2VuenltZS1tYXRjaGVycw==" title="https://github.com/FormidableLabs/enzyme-matchers">enzyme-matchers<i class="fa fa-external-link"></i></span>。这些 Matcher 使得编写断言语句更轻松、更具可读性。</p>
+<p>我们通过 npm 来安装 jest-enzyme：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install jest-enzyme</span><br></pre></td></tr></table></figure>
+
+<p>相应地在 <code>src/setupTests.js</code> 中添加相应的配置：</p>
+<figure class="highlight js"><figcaption><span>src/setupTests.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzJlZTZiNTg0NDlmNzU3MGE0NjViMzQ5NDU1MTg2ZTU5MTYwNTgwODAvc3JjL3NldHVwVGVzdHMuanM=" title="https://github.com/tuture-dev/javascript-test-series/blob/2ee6b58449f7570a465b349455186e5916058080/src/setupTests.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; configure &#125; <span class="keyword">from</span> <span class="string">'enzyme'</span>;</span><br><span class="line"><span class="keyword">import</span> Adapter <span class="keyword">from</span> <span class="string">'enzyme-adapter-react-16'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">import</span> <span class="string">'jest-enzyme'</span>;</span><br><span class="line"></span><br><span class="line">configure(&#123; <span class="attr">adapter</span>: <span class="keyword">new</span> Adapter() &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写-TodoList-组件"><a href="#编写-TodoList-组件" class="headerlink" title="编写 TodoList 组件"></a>编写 TodoList 组件</h3><p>这次，我们还是编写一个熟悉的 <code>TodoList</code> 组件。创建 <code>src/TodoList.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/TodoList.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzJlZTZiNTg0NDlmNzU3MGE0NjViMzQ5NDU1MTg2ZTU5MTYwNTgwODAvc3JjL1RvZG9MaXN0Lmpz" title="https://github.com/tuture-dev/javascript-test-series/blob/2ee6b58449f7570a465b349455186e5916058080/src/TodoList.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ToDoList = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &#123;props.tasks.map(<span class="function">(<span class="params">taskName, index</span>) =&gt;</span> (</span><br><span class="line">        &lt;li key=&#123;index&#125;&gt;&#123;taskName&#125;&lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">      ))&#125;</span></span><br><span class="line"><span class="regexp">    &lt;/u</span>l&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> ToDoList;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这个组件接受一个 <code>tasks</code> 数组，并将其渲染成一个列表。</p>
+<h3 id="编写-TodoList-组件测试"><a href="#编写-TodoList-组件测试" class="headerlink" title="编写 TodoList 组件测试"></a>编写 TodoList 组件测试</h3><p>先思考一下，如果要测试上面的 <code>TodoList</code> 组件，要考虑哪些情况？不难想到主要是两种情况：</p>
+<ul>
+<li>传入的 <code>tasks</code> 数组为空</li>
+<li>传入的 <code>tasks</code> 数组不为空</li>
+</ul>
+<p>对应这两种情况，我们开始编写测试。创建 <code>src/TodoList.test.js</code> ，代码如下：</p>
+<figure class="highlight js"><figcaption><span>src/TodoList.test.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvamF2YXNjcmlwdC10ZXN0LXNlcmllcy9ibG9iLzJlZTZiNTg0NDlmNzU3MGE0NjViMzQ5NDU1MTg2ZTU5MTYwNTgwODAvc3JjL1RvZG9MaXN0LnRlc3QuanM=" title="https://github.com/tuture-dev/javascript-test-series/blob/2ee6b58449f7570a465b349455186e5916058080/src/TodoList.test.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; shallow &#125; <span class="keyword">from</span> <span class="string">'enzyme'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ToDoList <span class="keyword">from</span> <span class="string">'./ToDoList'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'ToDoList component'</span>, () =&gt; &#123;</span><br><span class="line">  describe(<span class="string">'when provided with an empty array of tasks'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'contains an empty &lt;ul&gt; element'</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> toDoList = shallow(<span class="xml"><span class="tag">&lt;<span class="name">ToDoList</span> <span class="attr">tasks</span>=<span class="string">&#123;[]&#125;</span> /&gt;</span></span>);</span><br><span class="line">      expect(toDoList).toContainReact(<span class="xml"><span class="tag">&lt;<span class="name">ul</span> /&gt;</span></span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="string">'does not contain any &lt;li&gt; elements'</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> toDoList = shallow(<span class="xml"><span class="tag">&lt;<span class="name">ToDoList</span> <span class="attr">tasks</span>=<span class="string">&#123;[]&#125;</span> /&gt;</span></span>);</span><br><span class="line">      expect(toDoList.find(<span class="string">'li'</span>).length).toEqual(<span class="number">0</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="string">'when provided with an array of tasks'</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">'contains a matching number of &lt;li&gt; elements'</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> tasks = [<span class="string">'Wash the dishes'</span>, <span class="string">'Make the bed'</span>];</span><br><span class="line">      <span class="keyword">const</span> toDoList = shallow(<span class="xml"><span class="tag">&lt;<span class="name">ToDoList</span> <span class="attr">tasks</span>=<span class="string">&#123;tasks&#125;</span> /&gt;</span></span>);</span><br><span class="line">      expect(toDoList.find(<span class="string">'li'</span>).length).toEqual(tasks.length);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在第一个测试用例中，我们使用了 <code>toContainReact</code> 这个 Matcher，它的含义十分明显，一目了然；在后面的测试用例中，我们通过 <code>todoList.find(&#39;li&#39;)</code> 来获取 <code>li</code> 元素数组，并判断它的长度是否符合要求。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>你也许发现我们并没有去验证 <code>TodoList</code> 每一项是否符合，这是因为我们用了 Enzyme 的浅层渲染，这意味着所有的 <code>children</code> 都是处于未渲染状态，当然就无法验证内容是否正确了。我们将在下一篇教程中讲解如何去更“深层”地去测试我们的组件。</p>
+          </div>
+
+<p>运行 <code>npm test</code> ，查看测试结果，全部通过：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PASS  app&#x2F;App.test.js</span><br><span class="line">PASS  app&#x2F;components&#x2F;ToDoList&#x2F;ToDoList.test.js</span><br><span class="line"></span><br><span class="line">Test Suites: 2 passed, 2 total</span><br><span class="line">Tests:       4 passed, 4 total</span><br><span class="line">Snapshots:   0 total</span><br><span class="line">Time:        1.41s</span><br><span class="line">Ran all test suites.</span><br></pre></td></tr></table></figure>
+
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>在过去的两个小节中，我们了解、安装和配置了 Enzyme，并且接触了 <code>shallow</code> 浅层渲染这个单元测试利器，并且循序渐进测试了两个 React 组件。但是你应该也注意到了，有些时候浅层渲染并不能完全满足我们的需求，Enzyme 还提供了其他渲染方式以供测试。我们在下篇教程中将讲解新的渲染方式，并介绍快照测试以及 mock 数据，不见不散哦！</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/08/20/5e1396b/" title="JavaScript 测试系列实战（一）：使用 Jest 和 Enzyme 测试 React 组件">https://tuture.co/2020/08/20/5e1396b/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/React/" rel="tag"><i class="fa fa-tag"></i> React</a>
+            
+              <a href="/tags/Jest/" rel="tag"><i class="fa fa-tag"></i> Jest</a>
+            
+              <a href="/tags/Enzyme/" rel="tag"><i class="fa fa-tag"></i> Enzyme</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/05/22/fac8401/" rel="next" title="一杯茶的时间，上手 Koa2 + MySQL 开发">
+                  <i class="fa fa-chevron-left"></i> 一杯茶的时间，上手 Koa2 + MySQL 开发
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/08/27/387f95a/" rel="prev" title="JavaScript 测试系列实战（二）：深层渲染和快照测试">
+                  JavaScript 测试系列实战（二）：深层渲染和快照测试 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#初识-Jest-单元测试"><span class="nav-number">1.</span> <span class="nav-text">初识 Jest 单元测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试的类型"><span class="nav-number">1.1.</span> <span class="nav-text">测试的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单元测试"><span class="nav-number">1.1.1.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集成测试"><span class="nav-number">1.1.2.</span> <span class="nav-text">集成测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端到端测试-E2E"><span class="nav-number">1.1.3.</span> <span class="nav-text">端到端测试(E2E)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写第一个单元测试"><span class="nav-number">1.2.</span> <span class="nav-text">编写第一个单元测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写第一组测试"><span class="nav-number">1.3.</span> <span class="nav-text">编写第一组测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初识-Enzyme：编写第一个-React-组件测试"><span class="nav-number">2.</span> <span class="nav-text">初识 Enzyme：编写第一个  React 组件测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装和配置-Enzyme"><span class="nav-number">2.1.</span> <span class="nav-text">安装和配置 Enzyme</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浅层渲染"><span class="nav-number">2.2.</span> <span class="nav-text">浅层渲染</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试更复杂的组件"><span class="nav-number">3.</span> <span class="nav-text">测试更复杂的组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-jest-enzyme"><span class="nav-number">3.1.</span> <span class="nav-text">配置 jest-enzyme</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-TodoList-组件"><span class="nav-number">3.2.</span> <span class="nav-text">编写 TodoList 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写-TodoList-组件测试"><span class="nav-number">3.3.</span> <span class="nav-text">编写 TodoList 组件测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">3.4.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">891k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:30</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '6310753ce4e95163d2b0',
+      clientSecret: '4fd6839b697f9d50e01eebbb9566d8bdf3bd75b4',
+      repo: 'comments',
+      owner: 'tuture-dev',
+      admin: 'pftom,mRcfps,tuture-dev'.split(','),
+      id: '44b68faa1729f1c84b66f062e5ba3ef2',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>

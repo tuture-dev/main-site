@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <meta name="keywords" content="图雀社区,Tuture,Vue.js实战教程,微信小程序,Kotlin,React Native,Webpack,MVVM,React.js,Node.js,Redux,Django,MongoDB,Docker,JavaScript,Java,Go,Kubernetes,Nuxt,vue-router,react-router,小程序,跨端开发,Taro,react hooks,redux-saga,learn by doing,Web 前端实战教程,后端实战教程,小程序实战教程,移动端实战教程">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <link rel="alternate" href="/atom.xml" title="图雀社区" type="application/atom+xml">
+  <meta name="google-site-verification" content="uDCHIeBD5phhUIjsHM8GYeoNBYWJuQIJBjgchamUcAI">
+  <meta name="yandex-verification" content="90341ba6c811f41d">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: true,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      appID: '73BSUE4RKU',
+      apiKey: '0b7cce26a4734cb760080065b3c4a4a1',
+      indexName: 'Tuture',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索教程","hits_empty":"我们找不到你搜索的教程: ${query}","hits_stats":"在 ${time} ms 内找到 ${hits} 条结果"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本篇是系列文章终篇，我们将实现应用的部署，这篇教程将首先 Docker 来容器化你的应用，接着教你配置 MongoDB 的身份验证机制，给你的数据库添加一份安全守护，最后我们会带你使用阿里云的容器镜像服务将整个全栈应用部署到云端，使得你互联网上的用户可以访问你的网站，希望这篇教程能解决长期困扰你的部署上云的问题！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（八）">
+<meta property="og:url" content="https://tuture.co/2020/03/14/-td0ssr/index.html">
+<meta property="og:site_name" content="图雀社区">
+<meta property="og:description" content="本篇是系列文章终篇，我们将实现应用的部署，这篇教程将首先 Docker 来容器化你的应用，接着教你配置 MongoDB 的身份验证机制，给你的数据库添加一份安全守护，最后我们会带你使用阿里云的容器镜像服务将整个全栈应用部署到云端，使得你互联网上的用户可以访问你的网站，希望这篇教程能解决长期困扰你的部署上云的问题！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.powerformer.com/c/092faf4/vue-cover-8-squashed.jpg">
+<meta property="article:published_time" content="2020-03-13T19:10:55.150Z">
+<meta property="article:modified_time" content="2021-08-08T15:06:53.177Z">
+<meta property="article:author" content="图雀社区">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Docker Compose">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.powerformer.com/c/092faf4/vue-cover-8-squashed.jpg">
+  <link rel="canonical" href="https://tuture.co/2020/03/14/-td0ssr/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（八） | 图雀社区</title>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124499211-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-124499211-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <style>
+    span.line.tuture-add {
+      font-weight: bold;
+    }
+
+    span.line.tuture-del {
+      opacity: 0.3;
+    }
+
+    .profileBox {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profileBox i {
+      display: none;
+    }
+
+    .profileBox p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .avatarBox {
+      min-width: 60px;
+    }
+
+    .avatarBox .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0;
+    }
+
+    .avatarBox .avatar:hover {
+      cursor: pointer;
+    }
+
+    .avatarBox {
+      margin-right: 20px;
+    }
+
+    .rightBox {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .infoBox {
+      min-width: 100px;
+    }
+
+    .infoBox p {
+      padding: 0;
+      margin: 0;
+    }
+
+    .infoBox .nickName {
+      font-weight: bold;
+      font-size: 20px;
+      color: #979797;
+      text-decoration: none;
+    }
+
+    .infoBox .nickName:hover {
+      cursor: pointer;
+    }
+
+    .infoBox .motto {
+      font-size: 16px;
+      color: #979797;
+    }
+
+    .codeBox {
+      margin-left: 49px;
+      min-width: 100px;
+    }
+
+    .codeBox a {
+      text-decoration: none;
+    }
+
+    .codeBox .exturl {
+      border: none;
+    }
+
+    .codeBox span.codeText {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #979797;
+      color: #979797;
+      text-align: center;
+      line-height: 40px;
+      text-decoration: none;;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .codeBox .codeText:hover {
+      cursor: pointer;
+      background-color: #979797;
+      color: #ffffff;
+    }
+
+    @media screen and (max-width:652px) {
+      .profileBox {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .rightBox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .codeBox {
+        margin-left: 0;
+      }
+
+      .avatarBox {
+        margin-right: 0;
+      }
+    }
+
+    @media screen and (max-width:500px) {
+      .rightBox {
+        align-items: center;
+      }
+
+      .infoBox {
+        margin-bottom: 20px;
+      }
+
+      .infoBox .nickName {
+        text-align: center;
+      }
+
+      .infoBox .motto {
+        text-align: center;
+      }
+    }
+
+    .vsys {
+      display:none !important;
+      }
+
+      figcaption .exturl {
+        float: right;
+      }
+  </style>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/default.min.css">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">图雀社区</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">汇集精彩的实战技术教程</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">45</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">22</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">58</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-早报">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvZGFpbHk="><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>早报</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-文档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVxdWUuY29tL3R1dHVyZS9wcm9kdWN0LW1hbnVhbHM="><i class="menu-item-icon fa fa-fw fa-book"></i> <br>文档</span>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-faq">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/FAQ" rel="section"><i class="menu-item-icon fa fa-fw fa-question"></i> <br>FAQ</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input" id="search-input"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+  
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZXByb2plY3QvaHVi" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></span>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://tuture.co/2020/03/14/-td0ssr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="图雀社区">
+      <meta itemprop="description" content="图雀社区是一个供大家分享用 Tuture 写作工具完成的教程的一个平台。在这里，读者们可以尽情享受高质量且免费的实战教程，并能与作者和其他读者互动和讨论；而作者们也可以借此传播他们的技术知识，宣传他们的开源项目，找到自己输出内容的受众，加速技术的传播。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="图雀社区">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（八）
+
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-14 03:10:55" itemprop="dateCreated datePublished" datetime="2020-03-14T03:10:55+08:00">2020-03-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 23:06:53" itemprop="dateModified" datetime="2021-08-08T23:06:53+08:00">2021-08-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%89%8D%E7%AB%AF/Vue/%E5%85%A5%E9%97%A8/" itemprop="url" rel="index"><span itemprop="name">入门</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span>8.4k</span>
+            </span>
+          
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span>8 分钟</span>
+            </span>
+          
+            <div class="post-description">本篇是系列文章终篇，我们将实现应用的部署，这篇教程将首先 Docker 来容器化你的应用，接着教你配置 MongoDB 的身份验证机制，给你的数据库添加一份安全守护，最后我们会带你使用阿里云的容器镜像服务将整个全栈应用部署到云端，使得你互联网上的用户可以访问你的网站，希望这篇教程能解决长期困扰你的部署上云的问题！</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <div class="post-gallery-row">
+              <img src="https://static.powerformer.com/c/092faf4/vue-cover-8-squashed.jpg" itemprop="contentUrl">
+            
+          
+
+          </div>
+        </div>
+        <div class="profileBox">
+  <div class="avatarBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><img alt class="avatar" data-src="/images/avatars/tuture-dev.jpg"><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="rightBox">
+    <div class="infoBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY=" title="https://github.com/tuture-dev"><p class="nickName">@tuture-dev</p><i class="fa fa-external-link"></i></span>
+  </div>
+  <div class="codeBox">
+    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5k" title="https://github.com/tuture-dev/vue-online-shop-frontend"><span class="codeText">查看代码</span><i class="fa fa-external-link"></i></span>
+  </div>
+  </div>
+</div><a id="more"></a>
+
+<h2 id="应用容器化和-Docker-Compose-配置"><a href="#应用容器化和-Docker-Compose-配置" class="headerlink" title="应用容器化和 Docker Compose 配置"></a>应用容器化和 Docker Compose 配置</h2><p>首先，如果你是一路跟着前面七篇教程一路敲过来的，那么将整个 Vue 前端项目放到新创建的 <code>client</code> 目录中，把整个 Express 后端项目放到新创建的 <code>server</code> 目录。如果你打算直接从这一篇开始学习部署，可以通过直接下载我们提供的代码：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b deploy-start https://github.com/tuture-dev/vue-online-shop-frontend.git</span><br></pre></td></tr></table></figure>
+
+<p>在正式开始整个全栈应用的容器化之前，让我们通过一张图来梳理一下思路：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df21624b4e9.png"></p>
+<p>可以看到，我们将使用三个容器：</p>
+<ul>
+<li><code>nginx</code> 容器包括了 Nginx 服务器（存放了 Vue 框架实现的前端静态页面）</li>
+<li><code>api</code> 容器则包括了我们用 Express 框架实现的 API 服务器</li>
+<li><code>db</code> 容器则是 MongoDB 数据库</li>
+</ul>
+<p>我们将整个应用通过 Nginx 实现反向代理。也就是说，用户想要访问我们的应用，必须得先经过 Nginx。并且，所有获取前端资源的请求（例如 HTML、CSS、JS 等静态文件资源），Nginx 可以直接返回；所有获取 API 端点的请求（例如 <code>/api/v1/products</code> ），则将请求转交给给 API 服务器，然后再将 API 服务器返回的 JSON 数据返回给用户。</p>
+<p>这种经典的架构有以下优势：</p>
+<ul>
+<li>通过 Nginx 可以实现访问控制，过滤掉不合法的请求</li>
+<li>解决了前后端跨域的问题，因为前端页面和后端 API 都通过同一个端点访问</li>
+<li>整个应用架构对用户透明，可以轻松进行配置扩容，并且 Nginx 搭配了负载均衡</li>
+</ul>
+<h3 id="前端应用的容器化"><a href="#前端应用的容器化" class="headerlink" title="前端应用的容器化"></a>前端应用的容器化</h3><p>首先，让我们来容器化之前用 Vue 完成的前端应用。进入 <code>client</code> 目录，然后把 Vue 前端项目构建成静态页面：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm run build</span><br><span class="line"><span class="comment"># 或者 yarn build</span></span><br></pre></td></tr></table></figure>
+
+<p>然后添加 <code>client/config/nginx.conf</code> 配置文件，代码如下：</p>
+<figure class="highlight plain"><figcaption><span>client/config/nginx.conf</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9jbGllbnQvY29uZmlnL25naW54LmNvbmY=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/client/config/nginx.conf">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    root &#x2F;www;</span><br><span class="line">    index index.html;</span><br><span class="line">    sendfile on;</span><br><span class="line">    sendfile_max_chunk 1M;</span><br><span class="line">    tcp_nopush on;</span><br><span class="line">    gzip_static on;</span><br><span class="line"></span><br><span class="line">    location &#x2F;api&#x2F;v1 &#123;</span><br><span class="line">      proxy_pass http:&#x2F;&#x2F;api:3000;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中需要关注的就是两条 <code>location</code> 规则：</p>
+<ul>
+<li>如果访问 <code>/api/v1</code> ，那么一律把请求传递给 <code>api</code> 容器</li>
+<li>如果访问 <code>/</code> ，则直接返回前端静态页面（index.html）</li>
+</ul>
+<p>然后在前端访问后端的代码中，我们需要做一点改变。打开 <code>client/src/store/actions.js</code> 文件，修改 <code>API_BASE</code> 常量如下：</p>
+<figure class="highlight js"><figcaption><span>client/src/store/actions.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9jbGllbnQvc3JjL3N0b3JlL2FjdGlvbnMuanM=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/client/src/store/actions.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">import</span> &#123; Message &#125; <span class="keyword">from</span> <span class="string">'element-ui'</span>;</span><br><span class="line"></span><br><span class="line">[tuture-del]<span class="keyword">const</span> API_BASE = <span class="string">'http://localhost:3000/api/v1'</span>;</span><br><span class="line">[tuture-add]<span class="keyword">const</span> API_BASE = <span class="string">'/api/v1'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> productActions = &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> manufacturerActions = &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样修改后，前端实际访问的 API 就取决于当前该页面的 URL，而不是硬编码的 <code>localhost:3000</code> 。</p>
+<p>在做好准备工作后，我们就要正式开始容器化了。</p>
+<div class="note info">
+            <p><strong>提示</strong></p><p>如果你对 Docker 的核心概念不太熟悉，推荐学习一波我们图雀社区的<a href="https://tuture.co/2020/01/01/442cc8d/">《一杯茶的时间，上手 Docker》</a>，帮助你快速掌握<strong>镜像</strong>和<strong>容器</strong>这两个重要概念，并手把手带你容器化第一个应用。</p>
+          </div>
+
+<p>在 <code>client</code> 目录下创建 <code>Dockerfile</code> 文件，代码如下：</p>
+<figure class="highlight dockerfile"><figcaption><span>client/Dockerfile</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9jbGllbnQvRG9ja2VyZmlsZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/client/Dockerfile">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> nginx:<span class="number">1.13</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 Nginx 的默认配置</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> rm /etc/nginx/conf.d/default.conf</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加自定义 Nginx 配置</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> config/nginx.conf /etc/nginx/conf.d/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将前端静态文件拷贝到容器的 /www 目录下</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> dist /www</span></span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>client/.dockerignore</code> 文件，确保在构建镜像时忽略掉 <code>node_modules</code> ：</p>
+<figure class="highlight plain"><figcaption><span>client/.dockerignore</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9jbGllbnQvLmRvY2tlcmlnbm9yZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/client/.dockerignore">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">node_modules</span><br></pre></td></tr></table></figure>
+
+<h3 id="后端应用的容器化"><a href="#后端应用的容器化" class="headerlink" title="后端应用的容器化"></a>后端应用的容器化</h3><p>容器化前端应用之后，接下来就开始准备后端应用的容器化。首先我们要把硬编码的 MongoDB 连接字符串改成通过环境变量注入。修改 <code>server/app.js</code> 文件，代码如下：</p>
+<figure class="highlight js"><figcaption><span>server/app.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9zZXJ2ZXIvYXBwLmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/server/app.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">// view engine setup</span></span><br><span class="line">app.set(<span class="string">'views'</span>, path.join(__dirname, <span class="string">'views'</span>));</span><br><span class="line">app.set(<span class="string">'view engine'</span>, <span class="string">'ejs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Datbase connection here</span></span><br><span class="line">[tuture-del]mongoose.connect(<span class="string">`mongodb://localhost:27017/test`</span>);</span><br><span class="line">[tuture-add]mongoose.connect(process.env.MONGO_URI || <span class="string">`mongodb://localhost:27017/test`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>接着创建 <code>server/Dockerfile</code> ，代码如下：</p>
+<figure class="highlight dockerfile"><figcaption><span>server/Dockerfile</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9zZXJ2ZXIvRG9ja2VyZmlsZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/server/Dockerfile">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定工作目录为 /usr/src/app，接下来的命令全部在这个目录下操作</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/src/app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 package.json 拷贝到工作目录</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> package.json .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 npm 依赖</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org &amp;&amp; npm install</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拷贝源代码</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line"><span class="keyword">ENV</span> NODE_ENV=production</span><br><span class="line"><span class="keyword">ENV</span> MONGO_URI=mongodb://db:<span class="number">27017</span>/test</span><br><span class="line"><span class="keyword">ENV</span> HOST=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="keyword">ENV</span> PORT=<span class="number">3000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开放 3000 端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">3000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置镜像运行命令</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">"node"</span>, <span class="string">"./bin/www"</span> ]</span></span><br></pre></td></tr></table></figure>
+
+<p>和前端一样，创建 <code>server/.dockerignore</code> 文件，确保 <code>node_modules</code> 不会被打包到镜像中去：</p>
+<figure class="highlight plain"><figcaption><span>server/.dockerignore</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9zZXJ2ZXIvLmRvY2tlcmlnbm9yZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/server/.dockerignore">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">node_modules</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker-Compose-配置"><a href="#Docker-Compose-配置" class="headerlink" title="Docker Compose 配置"></a>Docker Compose 配置</h3><p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLmRvY2tlci5jb20vY29tcG9zZS8=" title="https://docs.docker.com/compose/">Docker Compose<i class="fa fa-external-link"></i></span> 是一个强大的多容器管理工具，通过一个 YAML 文件配置完成后，只需要一个命令就可以启动全部容器（服务）。在项目根目录创建 <code>docker-compose.yml</code> ，代码如下：</p>
+<figure class="highlight yml"><figcaption><span>docker-compose.yml</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvNDBlOTg3MjJhYzM5NWRiMDU0NmFjODk2ZDc0OTczMTNlNDYwODFhMS9kb2NrZXItY29tcG9zZS55bWw=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/40e98722ac395db0546ac896d7497313e46081a1/docker-compose.yml">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span> </span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mongo</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">api:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">client</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:80</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们创建了三个 <code>service</code> ，对应我们的三个容器（<code>db</code> ，<code>api</code> 和 <code>nginx</code> ）：</p>
+<ul>
+<li><code>db</code> 服务指定镜像为 <code>mongo</code> ，然后设置 <code>restart: always</code> ，确保因某种原因停止后自动重启</li>
+<li><code>api</code> 服务指定镜像通过 <code>server</code> 目录构建，端口映射规则为 <code>3000:3000</code> </li>
+<li><code>nginx</code> 服务指定镜像通过 <code>client</code> 目录构建，端口映射规则为 <code>8080:80</code> </li>
+</ul>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>在指定每个 service 时，如果使用 <code>image</code> 字段指定镜像，那么就会直接从镜像仓库拉取该镜像，这里我们的 <code>db</code> 服务就是如此。如果使用 <code>build</code> 字段指定镜像，则会根据指定的目录下的 <code>Dockerfile</code> 文件构建镜像，例如这里我们指定 <code>server</code> 和 <code>client</code> 目录分别构建 <code>api</code> 和 <code>nginx</code>。</p>
+          </div>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>Docker Compose 默认为所有服务创建了一个 Docker 网络，使得容器之间可以通过服务发现的机制进行相互通信（而不是通过固定 IP），这也就是为什么在 Nginx 配置中可以直接指定 <code>http://api:3000</code> ，以及将 MongoDB 连接字符串设置为 <code>mongodb://db:27017/test</code> 。如果想要透彻理解 Docker 网络，可浏览之前发布的<a href="https://tuture.co/2020/01/12/cd44c84/">《Docker 筑梦师系列（一）：实现容器互联》</a>。</p>
+          </div>
+
+<p>一切就绪，我们在电商根目录下通过一个命令实现整个应用的构建 + 运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up --build</span><br></pre></td></tr></table></figure>
+
+<p>初次构建可能需要相当久的时间（拉取基础镜像），这时候不妨给自己点一杯咖啡☕️，静静等待结果的到来~ 如果你在控制台看到了如下输出，就代表镜像已经构建完毕了：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df21661b0dd.png"></p>
+<p>接着每个镜像会输出各自的日志信息。我们通过 <code>docker ps</code> 命令进一步确认三个容器的状态：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df219c9c305.png"></p>
+<p>OK，我们可以通过 <code>localhost:8080</code> 访问我们的站点了！</p>
+<p>并且，我们还通过内网（例如同一 WiFi 下的其他设备）访问我们的站点，通过查询本机的内网 IP（例如 <code>192.168.1.1</code> ），然后在手机的浏览器里面输入这个 IP 地址，就可以通过 <code>192.168.1.1:8080</code> 访问。查询本机内网 IP 可以自行去搜索引擎找答案哦。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>在这一小节中，我们学习了：</p>
+<ul>
+<li>通过 Nginx 容器提供前端静态页面，并将后端请求转发给 API 容器</li>
+<li>容器化后端应用，建立与数据库的连接</li>
+<li>通过 Docker Compose 一键构建和启动应用</li>
+</ul>
+<h2 id="配置-MongoDB-的身份验证"><a href="#配置-MongoDB-的身份验证" class="headerlink" title="配置 MongoDB 的身份验证"></a>配置 MongoDB 的身份验证</h2><p>在之前的部署配置中，有一个重大的安全隐患：我们的 MongoDB 数据库没有配置任何的身份验证措施，这意味着所有能够访问数据库的请求都可以对数据库作出任何修改！接下来，我们就来搞定 MongoDB 的身份验证，为我们的数据安全保驾护航。</p>
+<h3 id="修改-MongoDB-连接设置"><a href="#修改-MongoDB-连接设置" class="headerlink" title="修改 MongoDB 连接设置"></a>修改 MongoDB 连接设置</h3><p>首先，我们修改 <code>server/app.js</code> 中的 MongoDB 连接设置，代码如下：</p>
+<figure class="highlight js"><figcaption><span>server/app.js</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvY2M0ZDU5Yzk3NjA1MDA2NDg4MmQxZTA4ZjQ0OGM0NTI1ZDM1YjJkYy9zZXJ2ZXIvYXBwLmpz" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/cc4d59c976050064882d1e08f448c4525d35b2dc/server/app.js">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Datbase connection here</span></span><br><span class="line">[tuture-del]mongoose.connect(process.env.MONGO_URI || <span class="string">`mongodb://localhost:27017/test`</span>);</span><br><span class="line">[tuture-add]mongoose.connect(process.env.MONGO_URI || <span class="string">`mongodb://localhost:27017/test`</span>, &#123;</span><br><span class="line">[tuture-add]  useNewUrlParser: <span class="literal">true</span>,</span><br><span class="line">[tuture-add]  useUnifiedTopology: <span class="literal">true</span>,</span><br><span class="line">[tuture-add]  user: process.env.MONGO_USER,</span><br><span class="line">[tuture-add]  pass: process.env.MONGO_PASSWORD,</span><br><span class="line">[tuture-add]&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>四个选项的含义分别如下：</p>
+<ul>
+<li><code>useNewUrlParser</code> ：使用新的 MongoDB 驱动 URL 解析器</li>
+<li><code>useUnifiedTopology</code> ：使用新的连接管理引擎，能够大大提高连接的稳定性，支持重连</li>
+<li><code>user</code> ：连接用户名，通过环境变量注入</li>
+<li><code>pass</code> ：连接密码，通过环境变量注入</li>
+</ul>
+<h3 id="Dockerfile-中注入环境变量"><a href="#Dockerfile-中注入环境变量" class="headerlink" title="Dockerfile 中注入环境变量"></a>Dockerfile 中注入环境变量</h3><p>然后在 <code>server/Dockerfile</code> 中加入这些环境变量：</p>
+<figure class="highlight dockerfile"><figcaption><span>server/Dockerfile</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvY2M0ZDU5Yzk3NjA1MDA2NDg4MmQxZTA4ZjQ0OGM0NTI1ZDM1YjJkYy9zZXJ2ZXIvRG9ja2VyZmlsZQ==" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/cc4d59c976050064882d1e08f448c4525d35b2dc/server/Dockerfile">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line">// ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line"><span class="keyword">ENV</span> NODE_ENV=production</span><br><span class="line">[tuture-del]<span class="keyword">ENV</span> MONGO_URI=mongodb://db:<span class="number">27017</span>/test</span><br><span class="line">[tuture-<span class="keyword">add</span><span class="bash">]ENV MONGO_URI=mongodb://db:27017/admin</span></span><br><span class="line">[tuture-<span class="keyword">add</span><span class="bash">]ENV MONGO_USER=mongoadmin</span></span><br><span class="line">[tuture-<span class="keyword">add</span><span class="bash">]ENV MONGO_PASSWORD=secret</span></span><br><span class="line"><span class="keyword">ENV</span> HOST=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"><span class="keyword">ENV</span> PORT=<span class="number">3000</span></span><br><span class="line"></span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
+
+<p>注意到我们调整了 <code>MONGO_URI</code> ，把数据库从 <code>test</code> 设置为默认生成的 <code>admin</code> ，这是为了使用 <code>admin</code> 作为<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1vbmdvZGIuY29tL21hbnVhbC9jb3JlL3NlY3VyaXR5LXVzZXJzLyN1c2VyLWF1dGhlbnRpY2F0aW9uLWRhdGFiYXNl" title="https://docs.mongodb.com/manual/core/security-users/#user-authentication-database">鉴权数据库<i class="fa fa-external-link"></i></span>（Authentication Database）。</p>
+<h3 id="Docker-Compose-中配置初始密码"><a href="#Docker-Compose-中配置初始密码" class="headerlink" title="Docker Compose 中配置初始密码"></a>Docker Compose 中配置初始密码</h3><p>最后在 <code>docker-compose.yml</code> 里面为 <code>db</code> 服务添加初始密码环境变量：</p>
+<figure class="highlight yml"><figcaption><span>docker-compose.yml</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvY2M0ZDU5Yzk3NjA1MDA2NDg4MmQxZTA4ZjQ0OGM0NTI1ZDM1YjJkYy9kb2NrZXItY29tcG9zZS55bWw=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/cc4d59c976050064882d1e08f448c4525d35b2dc/docker-compose.yml">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="string">//</span> <span class="string">...</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mongo</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"><span class="string">[tuture-add]</span>    <span class="attr">environment:</span></span><br><span class="line"><span class="string">[tuture-add]</span>      <span class="attr">MONGO_INITDB_ROOT_USERNAME:</span> <span class="string">mongoadmin</span></span><br><span class="line"><span class="string">[tuture-add]</span>      <span class="attr">MONGO_INITDB_ROOT_PASSWORD:</span> <span class="string">secret</span></span><br><span class="line">  <span class="attr">api:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="string">//</span> <span class="string">...</span></span><br></pre></td></tr></table></figure>
+
+<p>OK，一切就绪，首先把之前创建的容器群彻底删除：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose down --volumes</span><br></pre></td></tr></table></figure>
+
+<p><code>down</code> 命令的含义就和之前的 <code>up</code> 刚好相反，把 <code>up</code> 创建的所有镜像、容器、网络、数据卷全部删除，并且我们通过 <code>--volumes</code> 参数删除 MongoDB 容器创建的数据卷。</p>
+<div class="note warning">
+            <p><strong>注意</strong></p><p>如果不把之前 MongoDB 容器的数据卷删干净，接下来创建带有身份验证的 MongoDB 容器就会复用之前的数据卷，直接跳过初始化用户的过程（笔者在这个地方踩了接近两个小时的坑）。如果你担心数据卷还没删干净，可以运行 <code>docker volume prune</code> 。</p>
+          </div>
+
+<p>然后重新构建并开启容器群：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up --build</span><br></pre></td></tr></table></figure>
+
+<p>这时候再检查我们的应用（访问 <code>localhost:8080</code> ），应该看到一切正常。不过一颗悬着的心终于放下了——这次我们的数据库不再处于“裸奔”状态了！</p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>这一节中，我们完整地实践了一波如何为 MongoDB 容器配备身份验证。不过平心而论，我们采用的方法还是相当原始的，把机密信息明文写在代码文件中。在大型的容器编排系统中（例如 Kubernetes 和 Docker Swarm），都集成了完善的、企业级的机密信息管理方案。由于这一系列教程的入门性质，我们就点到为止啦。</p>
+<p>此外，我们也没有讲 MongoDB 数据库备份和恢复的细节，如果想要了解和学习，可以阅读我们之前的<a href="https://tuture.co/2020/03/06/0X8ssR3/">《Docker 筑梦师系列（二）：上手容器数据管理》</a>。</p>
+<h2 id="使用阿里云镜像仓库服务"><a href="#使用阿里云镜像仓库服务" class="headerlink" title="使用阿里云镜像仓库服务"></a>使用阿里云镜像仓库服务</h2><p>到了这一步，实际上我们已经可以轻松地进行应用部署了。通过 SSH（或其他方式）连接到远程主机后，然后运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把仓库抓下来</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/tuture-dev/vue-online-shop-frontend.git</span><br><span class="line"><span class="built_in">cd</span> vue-online-shop-frontend</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建前端代码</span></span><br><span class="line"><span class="built_in">cd</span> client &amp;&amp; npm install &amp;&amp; npm run build &amp;&amp; <span class="built_in">cd</span> ..</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 Docker Compose 启动所有容器，并进入守护态运行</span></span><br><span class="line">docker-compose up -d --build</span><br></pre></td></tr></table></figure>
+
+<p>这个时候，通过远程主机的 IP（或域名）加上端口号（这里是 <code>8080</code> ，当然你可以在 <code>docker-compose.yml</code> 中自行修改 <code>nginx</code> 服务的端口配置）。例如我们远程主机的 IP 是 <code>1.2.3.4</code> ，那么就可以通过 <code>1.2.3.4:8080</code> 访问我们的网站啦！</p>
+<p>实际上，我们还可以通过一种更高效的方式进行镜像的分发与部署——<strong>云端的镜像仓库服务</strong>。</p>
+<h3 id="Docker-Hub-和镜像命名规则"><a href="#Docker-Hub-和镜像命名规则" class="headerlink" title="Docker Hub 和镜像命名规则"></a>Docker Hub 和镜像命名规则</h3><p>实际上，Docker 公司已经做了一个叫 <span class="exturl" data-url="aHR0cHM6Ly9odWIuZG9ja2VyLmNvbS8=" title="https://hub.docker.com/">Docker Hub<i class="fa fa-external-link"></i></span> 的镜像仓库，提供了丰富的官方维护镜像，以及自定义镜像的存储和分发。我们在平时用的镜像（例如 <code>mongo</code> 、<code>nginx</code> 、<code>node</code> 等）都是 Docker Hub 上的官方镜像（或者是其他代理加速器）。</p>
+<p>镜像的命名规则如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;registry_name&gt;&#x2F;&lt;username&gt;&#x2F;&lt;image_name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>registry_name</code> 代表镜像仓库的名称，如果省略的话就是 Docker Hub</li>
+<li><code>username</code> 代表镜像仓库的用户名，如果和 <code>registry_name</code> 一起省略的话就是 Docker 官方镜像</li>
+<li><code>image_name</code> 就是镜像名称</li>
+</ul>
+<p>Docker Hub 虽说是官方出品，但实际上存在以下问题：</p>
+<ol>
+<li>免费用户支持 1 个私有镜像</li>
+<li>上传和拉取的速度在国内不稳定</li>
+<li>没有镜像安全扫描功能</li>
+</ol>
+<p>而我们接下来要体验的阿里云镜像仓库服务则能很好地解决以上问题。</p>
+<h3 id="体验阿里云镜像仓库服务"><a href="#体验阿里云镜像仓库服务" class="headerlink" title="体验阿里云镜像仓库服务"></a>体验阿里云镜像仓库服务</h3><p>首先让我们访问<span class="exturl" data-url="aHR0cHM6Ly93d3cuYWxpeXVuLmNvbS8=" title="https://www.aliyun.com/">阿里云<i class="fa fa-external-link"></i></span>的官方网站，然后在产品列表中找到“镜像仓库服务”，点击开通。开通后进入控制台，创建镜像命名空间，如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df21636b67e.png"></p>
+<p>名称随意填写，这里我们填的是 <code>vue-online-shop</code> 。创建后如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df21a7ca3b2.png"></p>
+<p>创建好命名空间后，就可以为我们应用的每个镜像（除了 MongoDB 数据库镜像）创建相应的镜像仓库。点击“创建镜像仓库”按钮，如下图所示：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df21cb0520a.jpeg"></p>
+<p>第一步，填写镜像仓库相关信息：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df248bd0cc9.jpeg"></p>
+<p>第二步，选择代码源，这里我们选择“本地仓库”：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df248d09a1e.jpeg"></p>
+<p>创建好两个镜像仓库（<code>api</code> 和 <code>nginx</code> ）后，可以看到镜像列表如下：</p>
+<p><img alt data-src="https://static.powerformer.com/c/092faf4/170e3df24a00c61c.jpeg"></p>
+<p>OK，然后点击单个仓库的“管理”按钮，按照指示进行镜像的上传。在这里我们贴一下示例代码（<strong>实际操作时按自己控制台的指示说明为准</strong>）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 登录阿里云镜像仓库，aliyunUser 改成自己的账户名</span></span><br><span class="line">docker login --username=aliyunUser registry.cn-shanghai.aliyuncs.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建和推送 api 镜像</span></span><br><span class="line">docker build -t registry.cn-shanghai.aliyuncs.com/vue-online-shop/api server</span><br><span class="line">docker push registry.cn-shanghai.aliyuncs.com/vue-online-shop/api</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建和推送 nginx 镜像</span></span><br><span class="line">docker build -t registry.cn-shanghai.aliyuncs.com/vue-online-shop/nginx client</span><br><span class="line">docker push registry.cn-shanghai.aliyuncs.com/vue-online-shop/nginx</span><br></pre></td></tr></table></figure>
+
+<div class="note info">
+            <p><strong>提示</strong></p><p>实际部署时，建议给每个镜像加上一个标签，推荐是当前 Git 提交的 Hash，例如：</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t registry.cn-shanghai.aliyuncs.com/vue-online-shop/api:9ca500a server</span><br></pre></td></tr></table></figure>
+          </div>
+
+<p>在镜像推送完成后，我们把 <code>docker-compose.yml</code> 中的 <code>api</code> 和 <code>nginx</code> 服务改成使用云端镜像（<em>下面是我的镜像仓库地址，记得改成你自己的喔</em>）：</p>
+<figure class="highlight yml"><figcaption><span>docker-compose.yml</span><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXYvdnVlLW9ubGluZS1zaG9wLWZyb250ZW5kL2Jsb2IvYjhhZmU2ODM3ODQ5ZTI1ZTEzODZmNzhjODk3ODZjY2UyMzE1OTI3Mi9kb2NrZXItY29tcG9zZS55bWw=" title="https://github.com/tuture-dev/vue-online-shop-frontend/blob/b8afe6837849e25e1386f78c89786cce23159272/docker-compose.yml">查看完整代码<i class="fa fa-external-link"></i></span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="string">//</span> <span class="string">...</span></span><br><span class="line">      <span class="attr">MONGO_INITDB_ROOT_USERNAME:</span> <span class="string">mongoadmin</span></span><br><span class="line">      <span class="attr">MONGO_INITDB_ROOT_PASSWORD:</span> <span class="string">secret</span></span><br><span class="line">  <span class="attr">api:</span></span><br><span class="line"><span class="string">[tuture-del]</span>    <span class="attr">build:</span> <span class="string">server</span></span><br><span class="line"><span class="string">[tuture-add]</span>    <span class="attr">image:</span> <span class="string">registry.cn-shanghai.aliyuncs.com/vue-online-shop/api</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line"><span class="string">[tuture-del]</span>    <span class="attr">build:</span> <span class="string">client</span></span><br><span class="line"><span class="string">[tuture-add]</span>    <span class="attr">image:</span> <span class="string">registry.cn-shanghai.aliyuncs.com/vue-online-shop/nginx</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:80</span></span><br></pre></td></tr></table></figure>
+
+<p>搞定之后，我们只需把这个 <code>docker-compose.yml</code> 文件放到远程主机上，然后在所在的目录开启 Docker Compose 容器群即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉取所有镜像的最新版本</span></span><br><span class="line">docker-compose pull</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动所有容器</span></span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><p>在这一步中，我们：</p>
+<ul>
+<li>首先了解了如何通过 Git 抓取代码的方式在远程主机上进行部署</li>
+<li>然后了解了 Docker Hub 及镜像命名的规则，并分析了一波 Docker Hub 的缺陷</li>
+<li>接着一步步带你体验和使用阿里云镜像仓库服务，轻松实现镜像的分发与部署</li>
+</ul>
+<p>终于，我们的迷你全栈电商系列实战就到此为止啦🎉🎉，感谢一路看下来始终不离不弃、热爱学习的你😘！让我们在接下来更精彩的文章中再见👋~</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div id="qrcode_subscriber-container">
+  <div></div>
+
+  <div id="qrocde-qr">
+        
+      
+      <div style="display: inline-block">
+        <img src="/uploads/wechat-qcode.png" alt="图雀社区 微信公众号">
+        <p>扫一扫关注上方公众号，拉学习群和答疑解惑</p>
+      </div>
+
+  </div>
+</div>
+
+      
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>图雀社区</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://tuture.co/2020/03/14/-td0ssr/" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（八）">https://tuture.co/2020/03/14/-td0ssr/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+            
+              <a href="/tags/Docker-Compose/" rel="tag"><i class="fa fa-tag"></i> Docker Compose</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/13/tc1c9oD/" rel="next" title="从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（七）">
+                  <i class="fa fa-chevron-left"></i> 从零到部署：用 Vue 和 Express 实现迷你全栈电商应用（七）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/03/16/@2629c44/" rel="prev" title="爬虫养成记--顺藤摸瓜回首掏（女生定制篇）">
+                  爬虫养成记--顺藤摸瓜回首掏（女生定制篇） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div>
+          
+          
+          
+          
+        
+
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview">
+            站点概览
+          </li>
+        </ul>
+
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用容器化和-Docker-Compose-配置"><span class="nav-number">1.</span> <span class="nav-text">应用容器化和 Docker Compose 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端应用的容器化"><span class="nav-number">1.1.</span> <span class="nav-text">前端应用的容器化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端应用的容器化"><span class="nav-number">1.2.</span> <span class="nav-text">后端应用的容器化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Compose-配置"><span class="nav-number">1.3.</span> <span class="nav-text">Docker Compose 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-MongoDB-的身份验证"><span class="nav-number">2.</span> <span class="nav-text">配置 MongoDB 的身份验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-MongoDB-连接设置"><span class="nav-number">2.1.</span> <span class="nav-text">修改 MongoDB 连接设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile-中注入环境变量"><span class="nav-number">2.2.</span> <span class="nav-text">Dockerfile 中注入环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Compose-中配置初始密码"><span class="nav-number">2.3.</span> <span class="nav-text">Docker Compose 中配置初始密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">2.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用阿里云镜像仓库服务"><span class="nav-number">3.</span> <span class="nav-text">使用阿里云镜像仓库服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Hub-和镜像命名规则"><span class="nav-number">3.1.</span> <span class="nav-text">Docker Hub 和镜像命名规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#体验阿里云镜像仓库服务"><span class="nav-number">3.2.</span> <span class="nav-text">体验阿里云镜像仓库服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-2"><span class="nav-number">3.3.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+          
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="图雀社区">
+  <p class="site-author-name" itemprop="name">图雀社区</p>
+  <div class="site-description" itemprop="description">由 <a href="https://github.com/tuture-dev/tuture" target="_blank" rel="external nofollow noopener noreferrer">Tuture</a> 工具写成，这里汇集了能够让你从头敲到尾并做出可运行项目的精彩的免费技术教程</div>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vdXNlci81YjMzNDE0MzUxODgyNTc0Yjk2OTRkMjg="><i class="fa fa-fw fa-custom juejin"></i>掘金</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="/images/social/wechat.png"><i class="fa fa-fw fa-custom wechat"></i>微信</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vdHV0dXJl"><i class="fa fa-fw fa-custom zhihu"></i>知乎</span>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3R1dHVyZS1kZXY="><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">沪ICP备19039313号 </span><span><img src="/images/gongan-url.png" style="display:inline-block;">
+  
+  <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5nb3YuY24vcG9ydGFsL3JlZ2lzdGVyU3lzdGVtSW5mbz9yZWNvcmRjb2RlPTMxMDExNzAyMDA3MTMw">沪公网安备 31011702007130号 </span>&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">图雀社区</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">891k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:30</span>
+</span></div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.1</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.4.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js?v=7.4.0.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.0.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.0.js"></script>
+
+<script src="/js/bookmark.js?v=7.4.0.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.css">
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@2/dist/instantsearch.min.js"></script>
+<script src="/js/algolia-search.js?v=7.4.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '6310753ce4e95163d2b0',
+      clientSecret: '4fd6839b697f9d50e01eebbb9566d8bdf3bd75b4',
+      repo: 'comments',
+      owner: 'tuture-dev',
+      admin: 'pftom,mRcfps,tuture-dev'.split(','),
+      id: '1b748e3de957dab9ffb01d2e0596d036',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+
+  <script>
+    const line = document.getElementsByClassName('line');
+    const arrLine = Array.from(line);
+
+    const delRegex = /\[.*tuture.*-.*del.*?\]/;
+    const addRegex = /\[.*tuture.*-.*add.*?\]/;
+    const omitRegex = /\[.*tuture.*-.*omit.*?\]/;
+
+    const delSpaceRegex = /^\s*\[.*tuture.*-.*del.*?\]\s*$/;
+    const addSpaceRegex = /^\s*\[.*tuture.*-.*add.*?\]\s*$/;
+    const omitSpaceRegex = /^\s*\[.*tuture.*-.*omit.*?\]\s*$/;
+
+    arrLine.map(item => {
+      if (item.innerText.startsWith('[tuture-add]')) {
+        if (addSpaceRegex.test(item.innerText)) {
+          item.innerHTML = item.innerHTML.replace(addRegex, ' ');
+        } else {
+          item.innerHTML = item.innerHTML.replace(addRegex, '');
+        }
+
+          item.className = item.className + ' tuture-add';
+      } else if (item.innerText.startsWith('[tuture-del]')) {
+          if (delSpaceRegex.test(item.innerText)) {
+            item.innerHTML = item.innerHTML.replace(delRegex, ' ');
+          } else {
+            item.innerHTML = item.innerHTML.replace(delRegex, '');
+          }
+
+          item.className = item.className + ' tuture-del';
+      } else if (item.innerText.startsWith('[tuture-omit]')) {
+        item.innerHTML = item.innerHTML.replace(omitRegex, '...');
+        item.className = item.className + ' tuture-omit';
+      }
+    })
+  </script>
+</body>
+</html>
